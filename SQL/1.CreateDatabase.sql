@@ -136,6 +136,7 @@ CREATE TABLE [User] (
 	[Pin] nvarchar(8) NOT NULL,
 	[CreateDateTime] datetime NOT NULL,
 	[EndDateTime] datetime,
+	[IsActive] bit DEFAULT 1,
 
 	CONSTRAINT [FK_User_UserType] FOREIGN KEY ([UserTypeId]) REFERENCES [UserType] ([Id])
 )
@@ -181,6 +182,7 @@ CREATE TABLE [BarUser] (
 	[PayRateTypeId] integer NOT NULL,
 	[CreateDateTime] datetime NOT NULL,
 	[EndDateTime] datetime,
+	[IsActive] bit DEFAULT 1,
 
 	CONSTRAINT [FK_BarUser_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
 	CONSTRAINT [FK_BarUser_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
@@ -211,6 +213,7 @@ CREATE TABLE [Component] (
 	[Name] nvarchar(50) NOT NULL,
 	[Abv] decimal (4,2) NOT NULL,
 	[Ibu] decimal (5,2),
+	[Year] datetime,
 	[Description] text,
 	
 	CONSTRAINT [FK_Component_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
