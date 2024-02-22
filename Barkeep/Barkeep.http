@@ -1,0 +1,6 @@
+@Barkeep_HostAddress = http://localhost:5019
+
+GET {{Barkeep_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
