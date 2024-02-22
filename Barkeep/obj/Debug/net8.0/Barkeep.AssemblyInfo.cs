@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Barkeep")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ee1ed2cc50613359185f7a3458aac958d9bfd15")]
 [assembly: System.Reflection.AssemblyProductAttribute("Barkeep")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Barkeep")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
