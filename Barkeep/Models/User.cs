@@ -41,6 +41,8 @@ namespace Barkeep.Models
 
         public bool IsActive {  get; set; }
 
+        public string Password { get; set; }
+
         public UserType? UserType { get; set; }
 
         public string FullName

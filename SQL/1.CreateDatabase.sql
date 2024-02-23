@@ -9,9 +9,9 @@ GO
 
 DROP TABLE IF EXISTS [UserType];
 DROP TABLE IF EXISTS [Day];
+DROP TABLE IF EXISTS [Country];
 DROP TABLE IF EXISTS [PayRateType];
 DROP TABLE IF EXISTS [UnitType];
-DROP TABLE IF EXISTS [Region];
 DROP TABLE IF EXISTS [VarietalType];
 DROP TABLE IF EXISTS [Category];
 DROP TABLE IF EXISTS [ComponentType];
@@ -19,6 +19,8 @@ DROP TABLE IF EXISTS [Unit];
 DROP TABLE IF EXISTS [InventoryAdjustmentType];
 DROP TABLE IF EXISTS [Discount];
 DROP TABLE IF EXISTS [PaymentType];
+DROP TABLE IF EXISTS [Region];
+DROP TABLE IF EXISTS [City];
 DROP TABLE IF EXISTS [User];
 DROP TABLE IF EXISTS [Bar];
 DROP TABLE IF EXISTS [Season];
@@ -64,6 +66,11 @@ CREATE TABLE [Day] (
 	[Name] nvarchar(50) NOT NULL
 )
 
+CREATE TABLE [Country] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL
+)
+
 CREATE TABLE [PayRateType] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL
@@ -77,11 +84,6 @@ CREATE TABLE [UnitType] (
 	[IsByWeight] bit NOT NULL,
 )
 
-CREATE TABLE [Region] (
-	[Id] integer PRIMARY KEY IDENTITY,
-	[Name] nvarchar(50) NOT NULL,
-	[Country] nvarchar(50) NOT NULL
-)
 
 CREATE TABLE [VarietalType] (
 	[Id] integer PRIMARY KEY IDENTITY,
@@ -123,6 +125,22 @@ CREATE TABLE [Discount] (
 CREATE TABLE [PaymentType] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50)
+)
+
+CREATE TABLE [Region] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[CountryId] integer NOT NULL,
+
+	CONSTRAINT [FK_Region_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
+)
+
+CREATE TABLE [City] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[RegionId] integer NOT NULL,
+
+	CONSTRAINT [FK_City_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id])
 )
 
 CREATE TABLE [User] (
@@ -210,7 +228,9 @@ CREATE TABLE [Component] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[BarId] integer NOT NULL,
 	[ComponentTypeId] integer NOT NULL,
+	[CityId] integer,
 	[RegionId] integer,
+	[CountryId] intger NOT NULL,
 	[Name] nvarchar(50) NOT NULL,
 	[Abv] decimal (4,2) NOT NULL,
 	[Ibu] decimal (5,2),
@@ -219,7 +239,9 @@ CREATE TABLE [Component] (
 	
 	CONSTRAINT [FK_Component_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
 	CONSTRAINT [FK_Component_ComponentType] FOREIGN KEY ([ComponentTypeId]) REFERENCES [ComponentType] ([Id]),
-	CONSTRAINT [FK_Component_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id])
+	CONSTRAINT [FK_Component_City] FOREIGN KEY ([CityId]) REFERENCES [City] ([Id]),
+	CONSTRAINT [FK_Component_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id]),
+	CONSTRAINT [FK_Component_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
 )
 
 CREATE TABLE [Varietal] (
