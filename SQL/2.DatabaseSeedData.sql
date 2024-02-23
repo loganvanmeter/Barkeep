@@ -86,7 +86,9 @@ INSERT INTO [User] ([Id],
 [Phone], 
 [Email], 
 [Pin], 
-[CreateDateTime]) 
+[CreateDateTime],
+[IsActive],
+[Password]) 
 VALUES (1, 
 1, 
 'Adminastrator', 
@@ -95,5 +97,7 @@ VALUES (1,
 '0000000000', 
 'admin@example.com', 
 '0000', 
-'2024-02-22');
+'2024-02-22',
+1,
+'password');
 SET identity_insert [User] OFF

@@ -137,6 +137,7 @@ CREATE TABLE [User] (
 	[CreateDateTime] datetime NOT NULL,
 	[EndDateTime] datetime,
 	[IsActive] bit DEFAULT 1,
+	[Password] nvarchar(50) NOT NULL,
 
 	CONSTRAINT [FK_User_UserType] FOREIGN KEY ([UserTypeId]) REFERENCES [UserType] ([Id])
 )
