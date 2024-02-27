@@ -4,6 +4,7 @@ GO
 DELETE FROM UserType;
 DELETE FROM PayRateType;
 DELETE FROM UnitType;
+DELETE FROM VarietalType;
 DELETE FROM ComponentType;
 DELETE FROM Unit;
 DELETE FROM InventoryAdjustmentType;
@@ -27,6 +28,7 @@ INSERT INTO [Day] ([Id], [Name]) VALUES(1, 'Sunday'),
 (7, 'Saturday');
 SET identity_insert [Day] OFF
 
+
 SET identity_insert [PayRateType] ON
 INSERT INTO [PayRateType] ([Id], [Name]) VALUES(1, 'Salary'), 
 (2, 'Hourly');
@@ -47,6 +49,12 @@ INSERT INTO [ComponentType] ([Id], [Name]) VALUES(1, 'Liquor'),
 (4, 'Mixer'), 
 (5, 'Garnish');
 SET identity_insert [ComponentType] OFF
+
+SET identity_insert [VarietalType] ON
+INSERT INTO [VarietalType] ([Id], [Name], [Description]) VALUES(1, 'Hop', NULL), 
+(2, 'Grape', NULL), 
+(3, 'Coffee Bean', NULL);
+SET identity_insert [VarietalType] OFF
 
 SET identity_insert [Unit] ON
 INSERT INTO [Unit] ([Id], [Name], [Size], [Measurement]) VALUES(1, 'Dash(es)', 0.03125, 'oz'),
@@ -86,7 +94,9 @@ INSERT INTO [User] ([Id],
 [Phone], 
 [Email], 
 [Pin], 
-[CreateDateTime]) 
+[CreateDateTime],
+[IsActive],
+[Password]) 
 VALUES (1, 
 1, 
 'Adminastrator', 
@@ -95,5 +105,7 @@ VALUES (1,
 '0000000000', 
 'admin@example.com', 
 '0000', 
-'2024-02-22');
+'2024-02-22',
+1,
+'password');
 SET identity_insert [User] OFF

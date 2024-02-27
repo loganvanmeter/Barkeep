@@ -9,9 +9,9 @@ GO
 
 DROP TABLE IF EXISTS [UserType];
 DROP TABLE IF EXISTS [Day];
+DROP TABLE IF EXISTS [Country];
 DROP TABLE IF EXISTS [PayRateType];
 DROP TABLE IF EXISTS [UnitType];
-DROP TABLE IF EXISTS [Region];
 DROP TABLE IF EXISTS [VarietalType];
 DROP TABLE IF EXISTS [Category];
 DROP TABLE IF EXISTS [ComponentType];
@@ -19,6 +19,9 @@ DROP TABLE IF EXISTS [Unit];
 DROP TABLE IF EXISTS [InventoryAdjustmentType];
 DROP TABLE IF EXISTS [Discount];
 DROP TABLE IF EXISTS [PaymentType];
+DROP TABLE IF EXISTS [State];
+DROP TABLE IF EXISTS [Region];
+DROP TABLE IF EXISTS [City];
 DROP TABLE IF EXISTS [User];
 DROP TABLE IF EXISTS [Bar];
 DROP TABLE IF EXISTS [Season];
@@ -64,6 +67,11 @@ CREATE TABLE [Day] (
 	[Name] nvarchar(50) NOT NULL
 )
 
+CREATE TABLE [Country] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL
+)
+
 CREATE TABLE [PayRateType] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL
@@ -77,21 +85,11 @@ CREATE TABLE [UnitType] (
 	[IsByWeight] bit NOT NULL,
 )
 
-CREATE TABLE [Region] (
-	[Id] integer PRIMARY KEY IDENTITY,
-	[Name] nvarchar(50) NOT NULL,
-	[Country] nvarchar(50) NOT NULL
-)
 
 CREATE TABLE [VarietalType] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL,
 	[Description] text
-)
-
-CREATE TABLE [Category] (
-	[Id] integer PRIMARY KEY IDENTITY,
-	[Name] nvarchar(50) NOT NULL
 )
 
 CREATE TABLE [ComponentType] (
@@ -122,7 +120,45 @@ CREATE TABLE [Discount] (
 
 CREATE TABLE [PaymentType] (
 	[Id] integer PRIMARY KEY IDENTITY,
-	[Name] nvarchar(50)
+	[Name] nvarchar(50) NOT NULL,
+)
+
+CREATE TABLE [Producer] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[Website] nvarchar(50),
+	[Description] text
+)
+
+CREATE TABLE [Importer] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[Website] nvarchar(50),
+	[Description] text
+)
+
+CREATE TABLE [State] (
+	[Id] integer PRIMARY KEY,
+	[Name] nvarchar(50) NOT NULL,
+	[CountryId] integer NOT NULL,
+
+	CONSTRAINT [FK_State_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
+)
+
+CREATE TABLE [Region] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[StateId] integer NOT NULL,
+
+	CONSTRAINT [FK_Region_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id])
+)
+
+CREATE TABLE [City] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[RegionId] integer NOT NULL,
+
+	CONSTRAINT [FK_City_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id])
 )
 
 CREATE TABLE [User] (
@@ -136,29 +172,30 @@ CREATE TABLE [User] (
 	[Pin] nvarchar(8) NOT NULL,
 	[CreateDateTime] datetime NOT NULL,
 	[EndDateTime] datetime,
+	[IsActive] bit DEFAULT 1,
+	[Password] nvarchar(50) NOT NULL,
 
 	CONSTRAINT [FK_User_UserType] FOREIGN KEY ([UserTypeId]) REFERENCES [UserType] ([Id])
 )
 
-CREATE TABLE [Bar] (
-	[Id] integer PRIMARY KEY IDENTITY,
-	[UserId] integer NOT NULL,
-	[Name] nvarchar(50) NOT NULL,
-	[Phone] nvarchar(10) NOT NULL,
-	[Street] nvarchar(50) NOT NULL,
-	[City] nvarchar (50) NOT NULL,
-	[State] nvarchar(5) NOT NULL,
-	[Country] nvarchar (25) NOT NULL,
-	[Email] nvarchar(50) NOT NULL,
-	[Wesbite] nvarchar(50)
 
-	CONSTRAINT [FK_Bar_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
+
+CREATE TABLE [Category] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[Name] nvarchar(50) NOT NULL,
+	[Description] text,
+	[ProviderBarId] integer,
+	[IsAdminApproved] bit NOT NULL,
+
+	CONSTRAINT [FK_Category_Provider_Bar] FOREIGN KEY ([ProviderBarId]) REFERENCES [Bar] ([Id])
 )
 
 CREATE TABLE [Season] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[BarId] integer NOT NULL,
 	[Name] nvarchar(50) NOT NULL,
+	StartDateTime datetime,
+	EndDateTime datetime,
 
 	CONSTRAINT [FK_Season_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id])
 )
@@ -172,6 +209,26 @@ CREATE TABLE [Tax] (
 	CONSTRAINT [FK_Tax_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id])
 )
 
+CREATE TABLE [Bar] (
+	[Id] integer PRIMARY KEY IDENTITY,
+	[UserId] integer NOT NULL,
+	[Name] nvarchar(50) NOT NULL,
+	[Phone] nvarchar(10) NOT NULL,
+	[Street] nvarchar(50) NOT NULL,
+	[CityId] integer,
+	[RegionId] integer,
+	[StateId] integer NOT NULL,
+	[CountryId] integer NOT NULL,
+	[Email] nvarchar(50) NOT NULL,
+	[Wesbite] nvarchar(50)
+
+	CONSTRAINT [FK_Bar_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
+	CONSTRAINT [FK_Bar_City] FOREIGN KEY ([CityId]) REFERENCES [City] ([Id]),
+	CONSTRAINT [FK_Bar_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id]),
+	CONSTRAINT [FK_Bar_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id]),
+	CONSTRAINT [FK_Bar_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
+)
+
 CREATE TABLE [BarUser] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[UserId] integer NOT NULL,
@@ -181,6 +238,7 @@ CREATE TABLE [BarUser] (
 	[PayRateTypeId] integer NOT NULL,
 	[CreateDateTime] datetime NOT NULL,
 	[EndDateTime] datetime,
+	[IsActive] bit DEFAULT 1,
 
 	CONSTRAINT [FK_BarUser_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
 	CONSTRAINT [FK_BarUser_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
@@ -205,23 +263,35 @@ CREATE TABLE [Distributor] (
 
 CREATE TABLE [Component] (
 	[Id] integer PRIMARY KEY IDENTITY,
-	[BarId] integer NOT NULL,
+	[ProviderBarId] integer,
 	[ComponentTypeId] integer NOT NULL,
+	[CityId] integer,
 	[RegionId] integer,
+	[StateId] integer,
+	[CountryId] intger,
+	[ProducerId] integer,
+	[ImporterId] integer,
 	[Name] nvarchar(50) NOT NULL,
 	[Abv] decimal (4,2) NOT NULL,
 	[Ibu] decimal (5,2),
+	[Year] datetime,
 	[Description] text,
+	[IsAdminApproved] bit NOT NULL,
 	
-	CONSTRAINT [FK_Component_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
+	CONSTRAINT [FK_Component__Provider_Bar] FOREIGN KEY ([ProviderBarId]) REFERENCES [Bar] ([Id]),
 	CONSTRAINT [FK_Component_ComponentType] FOREIGN KEY ([ComponentTypeId]) REFERENCES [ComponentType] ([Id]),
-	CONSTRAINT [FK_Component_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id])
+	CONSTRAINT [FK_Component_City] FOREIGN KEY ([CityId]) REFERENCES [City] ([Id]),
+	CONSTRAINT [FK_Component_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id]),
+	CONSTRAINT [FK_Component_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id]),
+	CONSTRAINT [FK_Component_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id]),
+	CONSTRAINT [FK_Component_Producer] FOREIGN KEY ([ProducerId]) REFERENCES [Producer] ([Id]),
+	CONSTRAINT [FK_Component_Importer] FOREIGN KEY ([ImporterId]) REFERENCES [Importer] ([Id]),
 )
 
 CREATE TABLE [Varietal] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[VarietalTypeId] integer NOT NULL,
-	[Name] nvarchar(50) NOT NULL,
+	[Name] nvarchar(255) NOT NULL,
 	[Description] text,
 
 	CONSTRAINT [FK_Varietal_VarietalType] FOREIGN KEY ([VarietalTypeId]) REFERENCES [VarietalType] ([Id])
@@ -245,22 +315,12 @@ CREATE TABLE [ComponentCategory] (
 	CONSTRAINT [FK_ComponentCategory_Category] FOREIGN KEY ([CategoryId]) REFERENCES [Category] ([Id])
 )
 
-CREATE TABLE [Ingredient] (
-	[Id] integer PRIMARY KEY IDENTITY,
-	[BarId] integer NOT NULL,
-	[Name] nvarchar(50) NOT NULL,
-	[Description] text,
-
-	CONSTRAINT [FK_Ingredient_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id])
-)
-
 
 
 CREATE TABLE [Inventory] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[BarId] integer NOT NULL,
 	[ComponentId] integer,
-	[IngredientId] integer,
 	[Quantity] decimal (6,2) NOT NULL,
 	[UnitId] integer,
 	[UnitTypeId] integer,
@@ -270,7 +330,6 @@ CREATE TABLE [Inventory] (
 
 	CONSTRAINT [FK_Inventory_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
 	CONSTRAINT [FK_Inventory_Component] FOREIGN KEY ([ComponentId]) REFERENCES [Component] ([Id]),
-	CONSTRAINT [FK_Inventory_Ingredient] FOREIGN KEY ([IngredientId]) REFERENCES [Ingredient] ([Id]),
 	CONSTRAINT [FK_Inventory_Unit] FOREIGN KEY ([UnitId]) REFERENCES [Unit] ([Id]),
 	CONSTRAINT [FK_Inventory_UnitType] FOREIGN KEY ([UnitTypeId]) REFERENCES [UnitType] ([Id])
 )
@@ -321,6 +380,7 @@ CREATE TABLE [InventoryAdjustment] (
 	[UnitId] integer NOT NULL,
 	[UnitTypeId] integer NOT NULL,
 	[IncludeInInvetoryCostPerOunce] bit NOT NULL,
+	[ExpirationDate] datetime,
 	
 	CONSTRAINT [FK_InventoryAdjustment_Inventory] FOREIGN KEY ([InventoryId]) REFERENCES [Inventory] ([Id]),
 	CONSTRAINT [FK_InventoryAdjustment_Distributor] FOREIGN KEY ([DistributorId]) REFERENCES [Distributor] ([Id]),

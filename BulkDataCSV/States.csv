@@ -1,0 +1,507 @@
+Id,Name,CountryId
+1,Alabama,187
+2,Alaska,187
+3,Arizona,187
+4,Arkansas,187
+5,California,187
+6,Colorado,187
+7,Connecticut,187
+8,Delaware,187
+9,Florida,187
+10,Georgia,187
+11,Hawaii,187
+12,Idaho,187
+13,Illinois,187
+14,Indiana,187
+15,Iowa,187
+16,Kansas,187
+17,Kentucky,187
+18,Louisiana,187
+19,Maine,187
+20,Maryland,187
+21,Massachusetts,187
+22,Michigan,187
+23,Minnesota,187
+24,Mississippi,187
+25,Missouri,187
+26,Montana,187
+27,Nebraska,187
+28,Nevada,187
+29,New Hampshire,187
+30,New Jersey,187
+31,New Mexico,187
+32,New York,187
+33,North Carolina,187
+34,North Dakota,187
+35,Ohio,187
+36,Oklahoma,187
+37,Oregon,187
+38,Pennsylvania,187
+39,Rhode Island,187
+40,South Carolina,187
+41,South Dakota,187
+42,Tennessee,187
+43,Texas,187
+44,Utah,187
+45,Vermont,187
+46,Virginia,187
+47,Washington,187
+48,West Virginia,187
+49,Wisconsin,187
+50,Wyoming,187
+51,Alberta,33
+52,British Columbia,33
+53,Manitoba,33
+54,New Brunswick,33
+55,Newfoundland and Labrador,33
+56,Northwest Territories,33
+57,Nova Scotia,33
+58,Nunavut,33
+59,Ontario,33
+60,Prince Edward Island,33
+61,Quebec,33
+62,Saskatchewan,33
+63,Yukon,33
+64,Auvergne-Rhône-Alpes,61
+65,Bourgogne-Franche-Comté,61
+66,Brittany,61
+67,Centre-Val de Loire,61
+68,French Guiana,61
+69,Grand Est,61
+70,Guadeloupe,61
+71,Ile-de-France,61
+72,Limousin,61
+73,Martinique,61
+74,Mayotte,61
+75,Normandy,61
+76,Nouvelle-Aquitaine,61
+77,Occitanie,61
+78,Pays de la Loire,61
+79,Provence-Alpes-Côte d'Azur,61
+80,Réunion,61
+81,Upper France,61
+82,Andalusia,165
+83,Aragon,165
+84,Basque Country,165
+85,Cantabria,165
+86,Castile and León,165
+87,Castile-La Mancha,165
+88,Catalonia,165
+89,Ceuta,165
+90,Extremadura,165
+91,Galicia,165
+92,Illes Balears,165
+93,La Rioja,165
+94,Melilla,165
+95,Principality of Asturias,165
+96,Region of Murcia,165
+97,Valencian Communit,165
+98,Abruzzo,84
+99,Basilicata,84
+100,Calabria,84
+101,Campania,84
+102,Emilia-Romagna,84
+103,Friuli Venezia Giulia,84
+104,Lazio,84
+105,Liguria,84
+106,Lombardy,84
+107,Marche,84
+108,Molise,84
+109,Piemonte,84
+110,Puglia,84
+111,Sardinia,84
+112,Sicily,84
+113,Trentino-Alto Adige/Südtirol,84
+114,Tuscany,84
+115,Umbria,84
+116,Valle d'Aosta,84
+117,Veneto,84
+118,Azores,141
+119,Aveiro,141
+120,Beja,141
+121,Braga,141
+122,Bragança,141
+123,Castelo Branco,141
+124,Coimbra,141
+125,Évora,141
+126,Faro,141
+127,Guarda,141
+128,Leiria,141
+129,Lisbon,141
+130,Madeira,141
+131,Portalegre,141
+132,Porto,141
+133,Santarém,141
+134,Setúbal,141
+135,Viana do Castelo,141
+136,Vila Real,141
+137,Viseu,141
+138,Baden-Württemberg,65
+139,Bavaria,65
+140,Berlin,65
+141,Brandenburg,65
+142,Bremen,65
+143,Hamburg,65
+144,Hesse,65
+145,Lower Saxony,65
+146,Mecklenburg-Vorpommern,65
+147,North Rhine-Westphalia,65
+148,Rhineland-Palatinate,65
+149,Saarland,65
+150,Saxony,65
+151,Saxony-Anhalt,65
+152,Schleswig-Holstein,65
+153,Thuringia,65
+154,Burgenland,10
+155,Carinthia,10
+156,Lower Austria,10
+157,Salzburg(erland),10
+158,Styria,10
+159,Tyrol,10
+160,Upper Austria,10
+161,Vienna,10
+162,Vorarlberg,10
+163,Connacht,82
+164,Leinster,82
+165,Munster,82
+166,Ulster,82
+167,Scotland,186
+168,Northern Ireland,186
+169,England,186
+170,Wales,186
+171,Drenthe,123
+172,Flevoland,123
+173,Friesland,123
+174,Gelderland,123
+175,Groningen,123
+176,Limburg,123
+177,North Brabant,123
+178,North Holland,123
+179,Overijssel,123
+180,South Holland,123
+181,Utrecht,123
+182,Zeeland,123
+183,Bonaire,123
+184,Sint Eustatius,123
+185,Saba,123
+186,New South Wales,9
+187,Victoria,9
+188,Queensland,9
+189,Western Australia,9
+190,South Australia,9
+191,Tasmania,9
+192,Australian Capital Territory,9
+193,Northern Territory,9
+194,Jervis Bay Territory,9
+195,Norfolk Island,9
+196,Christmas Island,9
+197,Cocos (Keeling) Islands,9
+198,Australian Antarctic Territory,9
+199,Coral Sea Islands,9
+200,Ashmore and Cartier Islands,9
+201,Heard Island and McDonald Islands,9
+202,Northland (Te Tai Tokerau),124
+203,Auckland (Tāmaki-makau-rau),124
+204,Waikato,124
+205,Bay of Plenty (Te Moana-a-Toi),124
+206,Gisborne (Te Tairāwhiti),124
+207,Hawke's Bay (Te Matau-a-Māui),124
+208,Taranaki,124
+209,Manawatū-Whanganui,124
+210,Wellington (Te Whanga-nui-a-Tara),124
+211,Tasman (Te Tai-o-Aorere),124
+212,Nelson (Whakatū),124
+213,Marlborough (Te Tauihu-o-te-waka),124
+214,West Coast (Te Tai Poutini),124
+215,Canterbury (Waitaha),124
+216,Otago (Ōtākou),124
+217,Southland (Murihiku),124
+218,Aguascalientes,111
+219,Baja California,111
+220,Baja California Sur,111
+221,Campeche,111
+222,Chiapas,111
+223,Chihuahua,111
+224,Coahuila,111
+225,Colima,111
+226,Durango,111
+227,Guanajuato,111
+228,Guerrero,111
+229,Hidalgo,111
+230,Jalisco,111
+231,México,111
+232,Mexico City,111
+233,Michoacán,111
+234,Morelos,111
+235,Nayarit,111
+236,Nuevo León,111
+237,Oaxaca,111
+238,Puebla,111
+239,Querétaro,111
+240,Quintana Roo,111
+241,San Luis Potosí,111
+242,Sinaloa,111
+243,Sonora,111
+244,Tabasco,111
+245,Tamaulipas,111
+246,Tlaxcala,111
+247,Veracruz,111
+248,Yucatán,111
+249,Zacatecas,111
+250,Amazonas,138
+251,Ancash,138
+252,Apurímac,138
+253,Arequipa,138
+254,Ayacucho,138
+255,Cajamarca,138
+256,Callao,138
+257,Cusco,138
+258,Huancavelica,138
+259,Huánuco,138
+260,Ica,138
+261,Junín,138
+262,La Libertad,138
+263,Lambayeque,138
+264,Lima,138
+265,Loreto,138
+266,Madre de Dios,138
+267,Moquegua,138
+268,Pasco,138
+269,Piura,138
+270,Puno,138
+271,San Martín,138
+272,Tacna,138
+273,Tumbes,138
+274,Ucayali,138
+275,Arica and Parinacota,36
+276,Tarapacá,36
+277,Antofagasta,36
+278,Atacama,36
+279,Coquimbo,36
+280,Valparaíso,36
+281,Metropolitan,36
+282,O'Higgins,36
+283,Maule,36
+284,Ñuble,36
+285,Biobío,36
+286,Araucanía,36
+287,Los Ríos,36
+288,Los Lagos,36
+289,Aysén,36
+290,Magallanes,36
+291,Acre,24
+292,Alagoas,24
+293,Amapá,24
+294,Amazonas,24
+295,Bahia,24
+296,Ceará,24
+297,Distrito Federal,24
+298,Espírito Santo,24
+299,Goiás,24
+300,Maranhão,24
+301,Mato Grosso,24
+302,Mato Grosso do Sul,24
+303,Minas Gerais,24
+304,Pará,24
+305,Paraíba,24
+306,Paraná,24
+307,Pernambuco,24
+308,Piauí,24
+309,Rio de Janeiro,24
+310,Rio Grande do Norte,24
+311,Rio Grande do Sul,24
+312,Rondônia,24
+313,Roraima,24
+314,Santa Catarina,24
+315,São Paulo,24
+316,Sergipe,24
+317,Tocantins,24
+318,Puerto Rico,187
+319,Camagüey,43
+320,Ciego de Ávila,43
+321,Cienfuegos,43
+322,La Habana,43
+323,Granma,43
+324,Guantánamo,43
+325,Holguín,43
+326,Isla de la Juventud†,43
+327,Artemisa,43
+328,Las Tunas,43
+329,Matanzas,43
+330,Mayabeque,43
+331,Pinar del Río,43
+332,Sancti Spíritus,43
+333,Santiago de Cuba,43
+334,Villa Clara,43
+335,Artibonite,73
+336,Centre,73
+337,Grand'Anse,73
+338,Nippes,73
+339,Nord,73
+340,Nord-Est,73
+341,Nord-Ouest,73
+342,Ouest,73
+343,Sud-Est,73
+344,Sud,73
+345,Cornwall,85
+346,Middlesex,85
+347,Surrey,85
+348,Luzon,139
+349,Mindanao,139
+350,Visayas,139
+351,Hokkaidō,86
+352,Tōhoku,86
+353,Kantō,86
+354,Chūbu,86
+355,Kansai (also known as Kinki),86
+356,Chūgoku,86
+357,Shikoku,86
+358,Kyūshū & Okinawa,86
+359,Northen,196
+360,Central,196
+361,Southern,196
+362,Eastern,196
+363,Outlying Islands,196
+364,Ångermanland,169
+365,Blekinge,169
+366,Bohuslän,169
+367,Dalarna,169
+368,Dalsland,169
+369,Gästrikland,169
+370,Gotland,169
+371,Halland,169
+372,Hälsingland,169
+373,Härjedalen,169
+374,Jämtland,169
+375,Lappland,169
+376,Medelpad,169
+377,Närke,169
+378,Norrbotten,169
+379,Öland,169
+380,Östergötland,169
+381,Skåne,169
+382,Småland,169
+383,Södermanland,169
+384,Uppland,169
+385,Värmland,169
+386,Västerbotten,169
+387,Västergötland,169
+388,Västmanland,169
+389,Adygea,144
+390,Bashkortostan,144
+391,Buryatia,144
+392,Altai Republic,144
+393,Dagestan,144
+394,Ingushetia,144
+395,Kabardino-Balkaria,144
+396,Kalmykia,144
+397,Karachay-Cherkessia,144
+398,Karelia,144
+399,Komi Republic,144
+400,Mari El,144
+401,Mordovia,144
+402,Sakha (Yakutia),144
+403,North Ossetia–Alania,144
+404,Tatarstan,144
+405,Tuva,144
+406,Udmurtia,144
+407,Khakassia,144
+408,Chechnya,144
+409,Chuvashia,144
+410,Altai Krai,144
+411,Krasnodar Krai,144
+412,Krasnoyarsk Krai,144
+413,Primorsky Krai,144
+414,Stavropol Krai,144
+415,Khabarovsk Krai,144
+416,Amur Oblast,144
+417,Arkhangelsk Oblast,144
+418,Astrakhan Oblast,144
+419,Belgorod Oblast,144
+420,Bryansk Oblast,144
+421,Vladimir Oblast,144
+422,Volgograd Oblast,144
+423,Vologda Oblast,144
+424,Voronezh Oblast,144
+425,Ivanovo Oblast,144
+426,Irkutsk Oblast,144
+427,Kaliningrad Oblast,144
+428,Kaluga Oblast,144
+429,Kamchatka Krai,144
+430,Kemerovo Oblast,144
+431,Kirov Oblast,144
+432,Kostroma Oblast,144
+433,Kurgan Oblast,144
+434,Kursk Oblast,144
+435,Leningrad Oblast,144
+436,Lipetsk Oblast,144
+437,Magadan Oblast,144
+438,Moscow Oblast,144
+439,Murmansk Oblast,144
+440,Nizhny Novgorod Oblast,144
+441,Novgorod Oblast,144
+442,Novosibirsk Oblast,144
+443,Omsk Oblast,144
+444,Orenburg Oblast,144
+445,Oryol Oblast,144
+446,Penza Oblast,144
+447,Perm Krai,144
+448,Pskov Oblast,144
+449,Rostov Oblast,144
+450,Ryazan Oblast,144
+451,Samara Oblast,144
+452,Saratov Oblast,144
+453,Sakhalin Oblast,144
+454,Sverdlovsk Oblast,144
+455,Smolensk Oblast,144
+456,Tambov Oblast,144
+457,Tver Oblast,144
+458,Tomsk Oblast,144
+459,Tula Oblast,144
+460,Tyumen Oblast,144
+461,Ulyanovsk Oblast,144
+462,Chelyabinsk Oblast,144
+463,Zabaykalsky Krai,144
+464,Yaroslavl Oblast,144
+465,Moscow,144
+466,Saint Petersburg,144
+467,Jewish Autonomous Oblast,144
+468,Nenets Autonomous Okrug,144
+469,Khanty–Mansi Autonomous Okrug – Yugra,144
+470,Chukotka Autonomous Okrug,144
+471,Yamalo-Nenets Autonomous Okrug,144
+472,Lower Silesian,140
+473,Kuyavian-Pomeranian,140
+474,Lublin,140
+475,Lubusz,140
+476,Łódź,140
+477,Lesser Poland,140
+478,Masovian,140
+479,Opole,140
+480,Subcarpathian,140
+481,Podlaskie,140
+482,Pomeranian,140
+483,Silesian,140
+484,Holy Cross,140
+485,Warmian-Masurian,140
+486,Greater Poland,140
+487,West Pomeranian,140
+488,Lapland,60
+489,North Ostrobothnia,60
+490,Kainuu,60
+491,North Karelia,60
+492,North Savo,60
+493,South Savo,60
+494,South Karelia,60
+495,Central Finland,60
+496,South Ostrobothnia,60
+497,Ostrobothnia,60
+498,Central Ostrobothnia,60
+499,Pirkanmaa,60
+500,Satakunta,60
+501,Päijät-Häme,60
+502,Kanta-Häme,60
+503,Kymenlaakso,60
+504,Uusimaa,60
+505,Southwest Finland,60
+506,Åland,60
