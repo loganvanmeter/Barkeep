@@ -9,7 +9,6 @@ export const Search = ({ setSearchTerms }) => {
 						type='text'
 						placeholder='Search...'
 						onChange={(e) => {
-							e.preventDefault();
 							setSearchTerms(e.target.value);
 						}}
 					/>

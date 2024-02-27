@@ -1,6 +1,7 @@
 ﻿using Barkeep.Models;
 using Barkeep.Utils;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
 
 namespace Barkeep.Repositories
 {
@@ -116,6 +117,76 @@ namespace Barkeep.Repositories
 
                     reader.Close();
                     return category;
+                }
+            }
+        }
+
+        public void Add(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Category ([Id], [Name], [Description], [ProviderBarId], [IsAdminApproved])
+                        OUTPUT INSERTED.ID
+                        VALUES (@Id, @Name, @Description, @ProviderBarId, @IsAdminApproved)";
+
+
+                    DbUtils.AddParameter(cmd, "@Name", category.Name);
+                    DbUtils.AddParameter(cmd, "@Description", DbUtils.ValueOrDBNull(category.Description));
+                    DbUtils.AddParameter(cmd, "@ProviderBarId", DbUtils.ValueOrDBNull(category.ProviderBarId));
+                    DbUtils.AddParameter(cmd, "@IsAdminApproved", category.IsAdminApproved);
+
+                    category.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public void Update(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE Category
+                        SET
+                        [Name] = @Name,
+                        Description = @Description,
+                        ProviderBarId = @ProviderBarId,
+                        IsAdminApproved = @IsAdminApproved
+                        WHERE Id = @Id;
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@Id", category.Id);
+                    DbUtils.AddParameter(cmd, "@Name", category.Name);
+                    DbUtils.AddParameter(cmd, "@Description", DbUtils.ValueOrDBNull(category.Description));
+                    DbUtils.AddParameter(cmd, "@ProviderBarId", DbUtils.ValueOrDBNull(category.ProviderBarId));
+                    DbUtils.AddParameter(cmd, "@IsAdminApproved", category.IsAdminApproved);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM Category
+                        WHERE Id = @Id;
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@Id", id);
+
+                    cmd.ExecuteNonQuery ();
                 }
             }
         }

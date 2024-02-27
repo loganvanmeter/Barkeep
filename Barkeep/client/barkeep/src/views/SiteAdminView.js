@@ -6,7 +6,6 @@ export const SiteAdminView = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<Hello />} />
-			<Route path='/category' element={<CategoryContainer />} />
 		</Routes>
 	);
 };
