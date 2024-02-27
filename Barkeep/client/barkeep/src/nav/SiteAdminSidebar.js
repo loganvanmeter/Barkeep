@@ -1,10 +1,14 @@
-import { useState } from "react";
-import { Container, Navbar, Row } from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
 
 export const SiteAdminSidebar = () => {
-	const [isOpen, setIsOpen] = useState(false);
-	const toggle = () => setIsOpen(!isOpen);
-
-	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
-	return <Navbar className='sidebar'></Navbar>;
+	return (
+		<Navbar className='sidebar'>
+			<Container>
+				<Navbar.Brand href='/'>Barkeep</Navbar.Brand>
+				<Nav className='me-auto'>
+					<Nav.Link href='/category'>Categories</Nav.Link>
+				</Nav>
+			</Container>
+		</Navbar>
+	);
 };

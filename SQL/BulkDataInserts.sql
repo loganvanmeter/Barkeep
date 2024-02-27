@@ -12,7 +12,8 @@ BULK INSERT [Country]
 FROM 'C:\Users\Molly Blossom\workspace\Barkeep\BulkDataCSV\Countries.csv'
 WITH (
 	FORMAT='CSV',
-	FIRSTROW=2
+	FIRSTROW=2,
+	CODEPAGE='65001'
 )
 GO
 ALTER TABLE [Component] ADD CONSTRAINT [FK_Component_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id]);
@@ -32,7 +33,8 @@ BULK INSERT [State]
 FROM 'C:\Users\Molly Blossom\workspace\Barkeep\BulkDataCSV\States.csv'
 WITH (
 	FORMAT='CSV',
-	FIRSTROW=2
+	FIRSTROW=2,
+	CODEPAGE='65001'
 )
 GO
 ALTER TABLE [State] ADD CONSTRAINT [FK_State_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id]);
@@ -56,7 +58,8 @@ BULK INSERT [Category]
 FROM 'C:\Users\Molly Blossom\workspace\Barkeep\BulkDataCSV\Categories.csv'
 WITH (
 	FORMAT='CSV',
-	FIRSTROW=2
+	FIRSTROW=2,
+	CODEPAGE='65001'
 )
 GO
 ALTER TABLE [Category] ADD CONSTRAINT [FK_Category_Provider_Bar] FOREIGN KEY ([ProviderBarId]) REFERENCES [Bar] ([Id]);
@@ -73,7 +76,8 @@ BULK INSERT [Varietal]
 FROM 'C:\Users\Molly Blossom\workspace\Barkeep\BulkDataCSV\Varietals.csv'
 WITH (
 	FORMAT='CSV',
-	FIRSTROW=2
+	FIRSTROW=2,
+	CODEPAGE='65001'
 )
 GO
 
