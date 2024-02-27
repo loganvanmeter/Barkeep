@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Router } from "react-router-dom";
 import { SiteAdminView } from "./views/SiteAdminView";
 import { Authorize } from "./authorization/Authorize";
+import { SiteAdminSidebar } from "./nav/SiteAdminSidebar";
 
 const App = () => {
 	const [isSiteAdminLoggedIn, setIsSiteAdminLoggedIn] = useState(true);
@@ -14,7 +15,12 @@ const App = () => {
 	}, [isSiteAdminLoggedIn]);
 
 	if (isSiteAdminLoggedIn) {
-		return <SiteAdminView />;
+		return (
+			<>
+				<SiteAdminSidebar />
+				<SiteAdminView />
+			</>
+		);
 	} else {
 		return <Authorize setIsSiteAdminLoggedIn={setIsSiteAdminLoggedIn} />;
 	}

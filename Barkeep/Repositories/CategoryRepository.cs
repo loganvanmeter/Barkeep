@@ -17,6 +17,11 @@ namespace Barkeep.Repositories
                     FROM [Category] c";
         }
 
+        private string OrderByName()
+        {
+            return "ORDER BY c.Name";
+        }
+
         private Category CategoryObject(SqlDataReader reader)
         {
             Category category = new()
@@ -39,6 +44,7 @@ namespace Barkeep.Repositories
                 {
                     var sql = GetCategories();
                     sql += " WHERE c.IsAdminApproved = 1";
+                    sql += OrderByName();
                     cmd.CommandText = sql;
 
                     var categories = new List<Category>();
@@ -67,6 +73,7 @@ namespace Barkeep.Repositories
                 {
                     var sql = GetCategories();
                     sql += " WHERE c.IsAdminApproved = 0";
+                    sql += OrderByName();
                     cmd.CommandText = sql;
 
                     var categories = new List<Category>();
