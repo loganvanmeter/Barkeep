@@ -35,7 +35,7 @@ namespace Barkeep.Controllers
         {
             var category = _categoryRepository.GetById(id);
 
-            if (id == null || category == null)
+            if (category == null)
             {
                 return NotFound();
             }
