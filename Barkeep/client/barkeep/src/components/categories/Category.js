@@ -1,7 +1,8 @@
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Stack } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
 export const Category = ({ category }) => {
+	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
 	return (
 		<Card>
 			<Card.Header>Category #{category.id}</Card.Header>
@@ -14,11 +15,19 @@ export const Category = ({ category }) => {
 				</Card.Text>
 			</Card.Body>
 			<Card.Footer>
-				<Card.Link href='/category'>Back to list</Card.Link>
-				<Button variant='outline-secondary' className='me-3'>
-					Edit
-				</Button>
-				<Button variant='danger'>Delete</Button>
+				<Stack direction='horizontal' className='justify-content-between'>
+					<Card.Link href='/category'>Back to list</Card.Link>
+					{siteAdmin ? (
+						<>
+							<Stack gap={3} direction='horizontal'>
+								<Button variant='primary'>Edit</Button>
+								<Button variant='danger'>Delete</Button>
+							</Stack>
+						</>
+					) : (
+						""
+					)}
+				</Stack>
 			</Card.Footer>
 		</Card>
 	);

@@ -10,6 +10,7 @@ export const CategoryList = ({ filteredCategories }) => {
 						<th>#</th>
 						<th>Name</th>
 						<th>Description</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>

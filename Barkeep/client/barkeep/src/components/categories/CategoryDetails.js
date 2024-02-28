@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCategoryById } from "../../managers/CategoryManager";
 import { Category } from "./Category";
+import { Container } from "react-bootstrap";
 
 export const CategoryDetails = () => {
 	const { categoryId } = useParams();
@@ -15,5 +16,9 @@ export const CategoryDetails = () => {
 		getCategory();
 	}, [categoryId]);
 
-	return <Category category={category} />;
+	return (
+		<Container>
+			<Category category={category} />
+		</Container>
+	);
 };
