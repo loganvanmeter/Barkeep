@@ -9,6 +9,7 @@ import { VarietalTypeList } from "../components/varietalTypes/VarietalTypeList";
 import { EditVarietalType } from "../components/varietalTypes/EditVarietalType";
 import { AddVarietalType } from "../components/varietalTypes/AddVarietalType";
 import { DeleteVarietalType } from "../components/varietalTypes/DeleteVarietalType";
+import { VarietalContainer } from "../components/varietals/VarietalContainer";
 
 export const SiteAdminView = () => {
 	return (
@@ -31,7 +32,8 @@ export const SiteAdminView = () => {
 				path='/varietalType/:varietalTypeId/delete'
 				element={<DeleteVarietalType />}
 			/>
-			{/*varietal type routes*/}
+			{/*varietal routes*/}
+			<Route path='/varietal' element={<VarietalContainer />} />
 		</Routes>
 	);
 };
