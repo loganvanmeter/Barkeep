@@ -129,9 +129,9 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Category ([Id], [Name], [Description], [ProviderBarId], [IsAdminApproved])
+                        INSERT INTO Category ([Name], [Description], [ProviderBarId], [IsAdminApproved])
                         OUTPUT INSERTED.ID
-                        VALUES (@Id, @Name, @Description, @ProviderBarId, @IsAdminApproved)";
+                        VALUES (@Name, @Description, @ProviderBarId, @IsAdminApproved)";
 
 
                     DbUtils.AddParameter(cmd, "@Name", category.Name);

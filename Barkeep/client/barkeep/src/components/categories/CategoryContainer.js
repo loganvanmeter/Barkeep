@@ -3,6 +3,8 @@ import { useState } from "react";
 import { getAllApprovedCategories } from "../../managers/CategoryManager";
 import { Search } from "../forms/Search";
 import { CategoryList } from "./CategoryList";
+import { Button, Container, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export const CategoryContainer = () => {
 	const [categories, setCategories] = useState([]);
@@ -10,7 +12,7 @@ export const CategoryContainer = () => {
 	const [matchedByName, setMatchedByName] = useState([]);
 	const [matchedByDescription, setMatchedByDescription] = useState([]);
 	const [searchTerms, setSearchTerms] = useState("");
-
+	const navigate = useNavigate();
 	const getApprovedCategories = () => {
 		return getAllApprovedCategories().then((res) => setCategories(res));
 	};
@@ -68,7 +70,19 @@ export const CategoryContainer = () => {
 	}, [matchedByName, matchedByDescription]);
 
 	return (
-		<>
+		<Stack gap={3}>
+			<Container className='d-flex justify-content-end'>
+				<Button
+					variant='primary'
+					onClick={(e) => {
+						e.preventDefault();
+						navigate("/category/add");
+					}}
+				>
+					Add new category
+				</Button>
+			</Container>
+
 			<Search setSearchTerms={setSearchTerms} />
 			{filteredCategories.length ? (
 				<CategoryList filteredCategories={filteredCategories} />
@@ -87,6 +101,6 @@ export const CategoryContainer = () => {
 					category.
 				</span>
 			)}
-		</>
+		</Stack>
 	);
 };

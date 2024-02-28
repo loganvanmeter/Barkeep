@@ -20,7 +20,6 @@ const App = () => {
 			<>
 				<SiteAdminSidebar />
 				<SiteAdminView />
-				<AllView />
 			</>
 		);
 	} else {

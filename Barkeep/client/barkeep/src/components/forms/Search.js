@@ -2,7 +2,7 @@ import { Container, Form } from "react-bootstrap";
 
 export const Search = ({ setSearchTerms }) => {
 	return (
-		<Container className='mb-3'>
+		<Container>
 			<Form>
 				<Form.Group controlId='search'>
 					<Form.Control

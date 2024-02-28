@@ -23,3 +23,13 @@ export const updateCategory = (category) => {
 		body: JSON.stringify(category),
 	});
 };
+
+export const addCategory = (category) => {
+	return fetch(categoryApiUrl, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(category),
+	});
+};
