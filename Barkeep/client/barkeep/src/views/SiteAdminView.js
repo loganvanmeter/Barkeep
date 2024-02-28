@@ -31,6 +31,7 @@ export const SiteAdminView = () => {
 				path='/varietalType/:varietalTypeId/delete'
 				element={<DeleteVarietalType />}
 			/>
+			{/*varietal type routes*/}
 		</Routes>
 	);
 };
