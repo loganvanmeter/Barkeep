@@ -11,6 +11,9 @@ export const SiteAdminSidebar = () => {
 				<Nav className='me-auto'>
 					<Nav.Link href='/varietalType'>Varietal Types</Nav.Link>
 				</Nav>
+				<Nav className='me-auto'>
+					<Nav.Link href='/varietal'>Varietals</Nav.Link>
+				</Nav>
 			</Container>
 		</Navbar>
 	);
