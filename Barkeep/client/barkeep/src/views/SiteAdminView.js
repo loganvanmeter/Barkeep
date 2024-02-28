@@ -10,6 +10,10 @@ import { EditVarietalType } from "../components/varietalTypes/EditVarietalType";
 import { AddVarietalType } from "../components/varietalTypes/AddVarietalType";
 import { DeleteVarietalType } from "../components/varietalTypes/DeleteVarietalType";
 import { VarietalContainer } from "../components/varietals/VarietalContainer";
+import { AddVarietal } from "../components/varietals/AddVarietal";
+import { EditVarietal } from "../components/varietals/EditVarietal";
+import { DeleteVarietal } from "../components/varietals/DeleteVarietal";
+import { VarietalDetails } from "../components/varietals/VarietalDetails";
 
 export const SiteAdminView = () => {
 	return (
@@ -34,6 +38,10 @@ export const SiteAdminView = () => {
 			/>
 			{/*varietal routes*/}
 			<Route path='/varietal' element={<VarietalContainer />} />
+			<Route path='/varietal/add' element={<AddVarietal />} />
+			<Route path='/varietal/:varietalId' element={<VarietalDetails />} />
+			<Route path='/varietal/:varietalId/edit' element={<EditVarietal />} />
+			<Route path='/varietal/:varietalId/delete' element={<DeleteVarietal />} />
 		</Routes>
 	);
 };

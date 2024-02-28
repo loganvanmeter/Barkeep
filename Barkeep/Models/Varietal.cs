@@ -13,7 +13,7 @@ namespace Barkeep.Models
 
         public int VarietalTypeId { get; set; }
 
-        public VarietalType VarietalType { get; set; }
+        public VarietalType? VarietalType { get; set; }
 
 
     }

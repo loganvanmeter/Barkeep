@@ -138,7 +138,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@Id", varietal.Id);
                     DbUtils.AddParameter(cmd, "@Name", varietal.Name);
                     DbUtils.AddParameter(cmd, "@Description", DbUtils.ValueOrDBNull(varietal.Description));
-                    DbUtils.AddParameter(cmd, "@Name", varietal.VarietalTypeId);
+                    DbUtils.AddParameter(cmd, "@VarietalTypeId", varietal.VarietalTypeId);
 
 
                     cmd.ExecuteNonQuery();

@@ -116,10 +116,12 @@ export const VarietalContainer = () => {
 					</Button>
 				</Container>
 				<Search setSearchTerms={setSearchTerms} />
-				<VarietalTypeDropDown
-					varietalTypeId={varietalTypeId}
-					setVarietalTypeId={setVarietalTypeId}
-				/>
+				<Container>
+					<VarietalTypeDropDown
+						varietalTypeId={varietalTypeId}
+						setVarietalTypeId={setVarietalTypeId}
+					/>
+				</Container>
 				{filteredVarietals.length ? (
 					<VarietalList filteredVarietals={filteredVarietals} />
 				) : (
