@@ -5,6 +5,7 @@ import { Router } from "react-router-dom";
 import { SiteAdminView } from "./views/SiteAdminView";
 import { Authorize } from "./authorization/Authorize";
 import { SiteAdminSidebar } from "./nav/SiteAdminSidebar";
+import { AllView } from "./views/AllView";
 
 const App = () => {
 	const [isSiteAdminLoggedIn, setIsSiteAdminLoggedIn] = useState(true);

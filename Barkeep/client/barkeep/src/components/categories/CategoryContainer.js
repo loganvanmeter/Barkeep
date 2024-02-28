@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { getAllApprovedCategories } from "../../managers/CategoryManager";
-import { Container, Table } from "react-bootstrap";
-import { CategoryTableRow } from "./CategoryTableRow";
 import { Search } from "../forms/Search";
+import { CategoryList } from "./CategoryList";
+import { Button, Container, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export const CategoryContainer = () => {
 	const [categories, setCategories] = useState([]);
@@ -11,33 +12,24 @@ export const CategoryContainer = () => {
 	const [matchedByName, setMatchedByName] = useState([]);
 	const [matchedByDescription, setMatchedByDescription] = useState([]);
 	const [searchTerms, setSearchTerms] = useState("");
-
+	const navigate = useNavigate();
 	const getApprovedCategories = () => {
 		return getAllApprovedCategories().then((res) => setCategories(res));
 	};
 
 	const filterCategoriesByName = () => {
-		const matchedCategories = categories.filter((category) => {
-			if (category.name) {
-				const splitCategoryName = category.name.split(" ");
-				return splitCategoryName.find((name) => {
-					return name.toLowerCase().startsWith(searchTerms.toLowerCase());
-				});
-			}
-		});
+		const searchRegex = new RegExp(`${searchTerms}`, "i");
+		const matchedCategories = categories.filter(
+			(category) => category.name.search(searchRegex) >= 0
+		);
 		setMatchedByName(matchedCategories);
 	};
 	const filterCategoriesByDescription = () => {
-		const matchedCategories = categories.filter((category) => {
-			if (category.description) {
-				const splitCategoryDescription = category.description.split(" ");
-				return splitCategoryDescription.find((description) => {
-					return description
-						.toLowerCase()
-						.startsWith(searchTerms.toLowerCase());
-				});
-			}
-		});
+		const searchRegex = new RegExp(`${searchTerms}`, "i");
+		const matchedCategories = categories.filter(
+			(category) =>
+				category.description && category.description.search(searchRegex) >= 0
+		);
 		setMatchedByDescription(matchedCategories);
 	};
 
@@ -66,39 +58,49 @@ export const CategoryContainer = () => {
 	}, [categories]);
 
 	useEffect(() => {
+		searchCategories();
+	}, [searchTerms]);
+
+	useEffect(() => {
 		if (searchTerms) {
-			searchCategories();
-			matchedByName && matchedByDescription
-				? setFilteredCategories([...matchedByName, ...filteredSearchResults()])
-				: matchedByName && !matchedByDescription
-				? setFilteredCategories(matchedByName)
-				: matchedByDescription && !matchedByName
-				? setFilteredCategories(matchedByDescription)
-				: setFilteredCategories([]);
+			setFilteredCategories([...matchedByName, ...filteredSearchResults()]);
 		} else if (!searchTerms) {
 			setFilteredCategories(categories);
 		}
-	}, [searchTerms]);
+	}, [matchedByName, matchedByDescription]);
 
 	return (
-		<>
-			<Search setSearchTerms={setSearchTerms} />
-			<Container>
-				<Table striped>
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Name</th>
-							<th>Description</th>
-						</tr>
-					</thead>
-					<tbody>
-						{filteredCategories.map((category) => {
-							return <CategoryTableRow category={category} key={category.id} />;
-						})}
-					</tbody>
-				</Table>
+		<Stack gap={3}>
+			<Container className='d-flex justify-content-end'>
+				<Button
+					variant='primary'
+					onClick={(e) => {
+						e.preventDefault();
+						navigate("/category/add");
+					}}
+				>
+					Add new category
+				</Button>
 			</Container>
-		</>
+
+			<Search setSearchTerms={setSearchTerms} />
+			{filteredCategories.length ? (
+				<CategoryList filteredCategories={filteredCategories} />
+			) : (
+				<span
+					style={{
+						position: "fixed",
+						left: 0,
+						right: 0,
+						top: "50%",
+						marginTop: "-0.5rem",
+						textAlign: "center",
+					}}
+				>
+					No categories match your search. Please try again or add a new
+					category.
+				</span>
+			)}
+		</Stack>
 	);
 };

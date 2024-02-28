@@ -1,4 +1,5 @@
 ﻿using Barkeep.Repositories;
+using Barkeep.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,8 +31,8 @@ namespace Barkeep.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("GetById")]
-        public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
             var category = _categoryRepository.GetById(id);
 
@@ -40,6 +41,32 @@ namespace Barkeep.Controllers
                 return NotFound();
             }
             return Ok(category);
+        }
+
+        [HttpPost]
+        public IActionResult Post(Category category)
+        {
+            _categoryRepository.Add(category);
+            return CreatedAtAction("Get", new { id = category.Id }, category);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _categoryRepository.Delete(id);
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id,  Category category)
+        {
+            if (id != category.Id)
+            {
+                return BadRequest();
+            }
+
+            _categoryRepository.Update(category);
+            return NoContent();
         }
     }
 }
