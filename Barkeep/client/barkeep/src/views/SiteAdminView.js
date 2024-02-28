@@ -4,15 +4,18 @@ import { CategoryContainer } from "../components/categories/CategoryContainer";
 import { EditCategory } from "../components/categories/EditCategory";
 import { AddCategory } from "../components/categories/AddCategory";
 import { CategoryDetails } from "../components/categories/CategoryDetails";
+import { DeleteCategory } from "../components/categories/DeleteCategory";
 
 export const SiteAdminView = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<Hello />} />
+			{/*category routes*/}
 			<Route path='/category/:categoryId/edit' element={<EditCategory />} />
 			<Route path='/category/add' element={<AddCategory />} />
 			<Route path='/category' element={<CategoryContainer />} />
 			<Route path='/category/:categoryId' element={<CategoryDetails />} />
+			<Route path='/category/:categoryId/delete' element={<DeleteCategory />} />
 		</Routes>
 	);
 };

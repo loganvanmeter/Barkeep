@@ -23,7 +23,7 @@ export const AddCategory = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...category };
-		siteAdmin ? (copy.isAdminApproved = true) : (copy.isAdminApproved = false);
+		copy.isAdminApproved = siteAdmin ? true : false;
 		return addCategory(copy)
 			.then((res) => res.json())
 			.then((newCategory) => navigate(`/category/${newCategory.id}`));
