@@ -1,7 +1,8 @@
 import { Button, Card, Stack } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Category = ({ category }) => {
+	const navigate = useNavigate();
 	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
 	return (
 		<Card>
@@ -20,7 +21,15 @@ export const Category = ({ category }) => {
 					{siteAdmin ? (
 						<>
 							<Stack gap={3} direction='horizontal'>
-								<Button variant='primary'>Edit</Button>
+								<Button
+									variant='primary'
+									onClick={(e) => {
+										e.preventDefault();
+										navigate(`/category/${category.id}/edit`);
+									}}
+								>
+									Edit
+								</Button>
 								<Button variant='danger'>Delete</Button>
 							</Stack>
 						</>

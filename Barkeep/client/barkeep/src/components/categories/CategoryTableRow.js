@@ -19,7 +19,15 @@ export const CategoryTableRow = ({ category }) => {
 					>
 						View
 					</Button>
-					<Button variant='primary'>Edit</Button>
+					<Button
+						variant='primary'
+						onClick={(e) => {
+							e.preventDefault();
+							navigate(`/category/${category.id}/edit`);
+						}}
+					>
+						Edit
+					</Button>
 					<Button variant='danger'>Delete</Button>
 				</Stack>
 			</td>
