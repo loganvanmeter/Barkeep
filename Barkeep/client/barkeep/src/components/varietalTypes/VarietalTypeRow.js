@@ -9,7 +9,7 @@ export const VarietalTypeRow = ({ varietalType }) => {
 			<td>{varietalType.name}</td>
 			<td>{varietalType.description ? varietalType.description : ""}</td>
 			<td>
-				<Stack gap={1}>
+				<Stack direction='horizontal' gap={1} className='justify-content-end'>
 					<Button
 						variant='primary'
 						onClick={(e) => {

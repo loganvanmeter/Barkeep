@@ -24,10 +24,8 @@ export const EditVarietalType = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const copy = { ...category };
-		return updateVarietalType(copy).then((res) =>
-			navigate(`/varietalType/${varietalTypeId}`)
-		);
+		const copy = { ...varietalType };
+		return updateVarietalType(copy).then((res) => navigate(`/varietalType/`));
 	};
 	useEffect(() => {
 		getVarietalType();
@@ -57,22 +55,19 @@ export const EditVarietalType = () => {
 							onChange={(e) => handleChange(e)}
 						/>
 					</Form.Group>
-					<Stack direction='horizontal' className='justify-content-between'>
-						<Link to='/varietalType'>Back to list</Link>
-						<Stack direction='horizontal' gap={3}>
-							<Button
-								variant='outline-secondary'
-								onClick={(e) => {
-									e.preventDefault();
-									navigate(`/varietalType/${varietalType.id}`);
-								}}
-							>
-								Cancel
-							</Button>
-							<Button variant='primary' type='sumbit'>
-								Save
-							</Button>
-						</Stack>
+					<Stack direction='horizontal' className='justify-content-end' gap={3}>
+						<Button
+							variant='outline-secondary'
+							onClick={(e) => {
+								e.preventDefault();
+								navigate(`/varietalType`);
+							}}
+						>
+							Cancel
+						</Button>
+						<Button variant='primary' type='sumbit'>
+							Save
+						</Button>
 					</Stack>
 				</Stack>
 			</Form>

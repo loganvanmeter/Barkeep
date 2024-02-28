@@ -94,7 +94,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Category ([Name], [Description])
+                        INSERT INTO VarietalType ([Name], [Description])
                         OUTPUT INSERTED.ID
                         VALUES (@Name, @Description)";
 

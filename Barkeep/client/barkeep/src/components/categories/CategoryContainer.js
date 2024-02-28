@@ -70,37 +70,40 @@ export const CategoryContainer = () => {
 	}, [matchedByName, matchedByDescription]);
 
 	return (
-		<Stack gap={3}>
-			<Container className='d-flex justify-content-end'>
-				<Button
-					variant='primary'
-					onClick={(e) => {
-						e.preventDefault();
-						navigate("/category/add");
-					}}
-				>
-					Add new category
-				</Button>
-			</Container>
+		<Container>
+			<Stack gap={3}>
+				<h2>Categories</h2>
+				<Container className='d-flex justify-content-end'>
+					<Button
+						variant='primary'
+						onClick={(e) => {
+							e.preventDefault();
+							navigate("/category/add");
+						}}
+					>
+						Add new category
+					</Button>
+				</Container>
 
-			<Search setSearchTerms={setSearchTerms} />
-			{filteredCategories.length ? (
-				<CategoryList filteredCategories={filteredCategories} />
-			) : (
-				<span
-					style={{
-						position: "fixed",
-						left: 0,
-						right: 0,
-						top: "50%",
-						marginTop: "-0.5rem",
-						textAlign: "center",
-					}}
-				>
-					No categories match your search. Please try again or add a new
-					category.
-				</span>
-			)}
-		</Stack>
+				<Search setSearchTerms={setSearchTerms} />
+				{filteredCategories.length ? (
+					<CategoryList filteredCategories={filteredCategories} />
+				) : (
+					<span
+						style={{
+							position: "fixed",
+							left: 0,
+							right: 0,
+							top: "50%",
+							marginTop: "-0.5rem",
+							textAlign: "center",
+						}}
+					>
+						No categories match your search. Please try again or add a new
+						category.
+					</span>
+				)}
+			</Stack>
+		</Container>
 	);
 };
