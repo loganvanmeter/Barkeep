@@ -20,20 +20,20 @@ namespace Barkeep.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var varietalTypes = _varietalRepository.GetAll();
-            return Ok(varietalTypes);
+            var varietals = _varietalRepository.GetAll();
+            return Ok(varietals);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var varietalType = _varietalRepository.GetById(id);
+            var varietal = _varietalRepository.GetById(id);
 
-            if (varietalType == null)
+            if (varietal == null)
             {
                 return NotFound();
             }
-            return Ok(varietalType);
+            return Ok(varietal);
         }
 
         [HttpPost]
