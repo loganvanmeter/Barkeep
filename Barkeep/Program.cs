@@ -19,6 +19,10 @@ namespace Barkeep
             builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
             builder.Services.AddTransient<IVarietalTypeRepository, VarietalTypeRepository>();
             builder.Services.AddTransient<IVarietalRepository, VarietalRepository>();
+            builder.Services.AddTransient<ICountryRepository, CountryRepository>();
+            builder.Services.AddTransient<IStateRepository, StateRepository>();
+            builder.Services.AddTransient<IRegionRepository, RegionRepository>();
+            builder.Services.AddTransient<ICityRepository, CityRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
