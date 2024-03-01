@@ -20,7 +20,7 @@ namespace Barkeep.Repositories
 
         private string OrderByName()
         {
-            return "ORDER BY c.Name";
+            return " ORDER BY c.Name";
         }
 
         private Category CategoryObject(SqlDataReader reader)
