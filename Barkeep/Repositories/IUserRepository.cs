@@ -6,5 +6,8 @@ namespace Barkeep.Repositories
     {
         List<User> GetAllActive();
         User GetByEmail(string email);
+        
+        void Update(User user);
+        void Add(User user);
     }
 }

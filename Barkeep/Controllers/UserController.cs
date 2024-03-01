@@ -35,5 +35,24 @@ namespace Barkeep.Controllers
             }
             return Ok(user);
         }
+
+        [HttpPost]
+        public IActionResult Post(User user)
+        {
+            _userRepository.Add(user);
+            return CreatedAtAction("Get", new { id = user.Id }, user);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, User user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            _userRepository.Update(user);
+            return NoContent();
+        }
     }
 }

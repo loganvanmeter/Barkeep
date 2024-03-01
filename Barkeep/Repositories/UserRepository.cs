@@ -103,6 +103,82 @@ namespace Barkeep.Repositories
             }
         }
 
+        public void Add(User user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO User (DisplayName, FirstName, LastName, Phone, Email, 
+                        Pin, CreateDateTime, EndDateTime, UserTypeId, IsActive,
+                        Password)
+                        OUTPUT INSERTED.ID
+                        VALUES (@DisplayName, @FirstName, @LastName, @Phone, @Email, 
+                        @Pin, @CreateDateTime, @EndDateTime, @UserTypeId, @IsActive,
+                        @Password)";
+
+
+                    DbUtils.AddParameter(cmd, "@DisplayName", user.DisplayName);
+                    DbUtils.AddParameter(cmd, "@FirstName", user.FirstName);
+                    DbUtils.AddParameter(cmd, "@LastName", user.LastName);
+                    DbUtils.AddParameter(cmd, "@Phone", user.Phone);
+                    DbUtils.AddParameter(cmd, "@Email", user.Email);
+                    DbUtils.AddParameter(cmd, "@Pin", user.Pin);
+                    DbUtils.AddParameter(cmd, "@CreateDateTime", user.CreateDateTime);
+                    DbUtils.AddParameter(cmd, "@EndDateTime", DbUtils.ValueOrDBNull(user.EndDateTime));
+                    DbUtils.AddParameter(cmd, "@UserTypeId", user.UserTypeId);
+                    DbUtils.AddParameter(cmd, "@IsActive", user.IsActive);
+                    DbUtils.AddParameter(cmd, "@Password", user.Password);
+
+                    user.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public void Update(User user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE User
+                        SET
+                        DisplayName = @DisplayName,
+                        FirstName = @FirstName,
+                        LastName = @LastName,
+                        Phone = @Phone,
+                        Email = @Email, 
+                        Pin = @Pin,
+                        CreateDateTime = @CreateDateTime,
+                        EndDateTime = @EndDateTime,
+                        UserTypeId = @UserTypeId,
+                        IsActive = @IsActive,
+                        Password = @Password
+                        WHERE Id = @Id;
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@Id", user.Id);
+                    DbUtils.AddParameter(cmd, "@DisplayName", user.DisplayName);
+                    DbUtils.AddParameter(cmd, "@FirstName", user.FirstName);
+                    DbUtils.AddParameter(cmd, "@LastName", user.LastName);
+                    DbUtils.AddParameter(cmd, "@Phone", user.Phone);
+                    DbUtils.AddParameter(cmd, "@Email", user.Email);
+                    DbUtils.AddParameter(cmd, "@Pin", user.Pin);
+                    DbUtils.AddParameter(cmd, "@CreateDateTime", user.CreateDateTime);
+                    DbUtils.AddParameter(cmd, "@EndDateTime", DbUtils.ValueOrDBNull(user.EndDateTime));
+                    DbUtils.AddParameter(cmd, "@UserTypeId", user.UserTypeId);
+                    DbUtils.AddParameter(cmd, "@IsActive", user.IsActive);
+                    DbUtils.AddParameter(cmd, "@Password", user.Password);
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }

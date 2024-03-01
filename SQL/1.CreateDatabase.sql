@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS [Region];
 DROP TABLE IF EXISTS [City];
 DROP TABLE IF EXISTS [User];
 DROP TABLE IF EXISTS [Bar];
+DROP TABLE IF EXISTS [Role];
 DROP TABLE IF EXISTS [Season];
 DROP TABLE IF EXISTS [Tax];
 DROP TABLE IF EXISTS [BarUser];
@@ -148,17 +149,23 @@ CREATE TABLE [State] (
 CREATE TABLE [Region] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL,
-	[StateId] integer NOT NULL,
+	[StateId] integer,
+	[CountryId] integer,
 
-	CONSTRAINT [FK_Region_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id])
+	CONSTRAINT [FK_Region_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id]),
+	CONSTRAINT [FK_Region_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
 )
 
 CREATE TABLE [City] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL,
-	[RegionId] integer NOT NULL,
+	[RegionId] integer,
+	[StateId] integer,
+	[CountryId] integer,
 
-	CONSTRAINT [FK_City_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id])
+	CONSTRAINT [FK_City_Region] FOREIGN KEY ([RegionId]) REFERENCES [Region] ([Id]),
+	CONSTRAINT [FK_City_State] FOREIGN KEY ([StateId]) REFERENCES [State] ([Id]),
+	CONSTRAINT [FK_City_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
 )
 
 CREATE TABLE [User] (
@@ -215,11 +222,11 @@ CREATE TABLE [Bar] (
 	[Name] nvarchar(50) NOT NULL,
 	[Phone] nvarchar(10) NOT NULL,
 	[Street] nvarchar(50) NOT NULL,
-	[CityId] integer,
+	[CityId] integer NOT NULL,
 	[RegionId] integer,
-	[StateId] integer NOT NULL,
-	[CountryId] integer NOT NULL,
-	[Email] nvarchar(50) NOT NULL,
+	[StateId] integer,
+	[CountryId] integer,
+	[Email] nvarchar(50),
 	[Wesbite] nvarchar(50)
 
 	CONSTRAINT [FK_Bar_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
@@ -229,10 +236,19 @@ CREATE TABLE [Bar] (
 	CONSTRAINT [FK_Bar_Country] FOREIGN KEY ([CountryId]) REFERENCES [Country] ([Id])
 )
 
+CREATE TABLE [Role] (
+	[Id] integer PRIMARY KEY,
+	[Name] nvarchar(50) NOT NULL,
+	[BarId] integer NOT NULL,
+
+	CONSTRAINT [FK_Role_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id])
+)
+
 CREATE TABLE [BarUser] (
 	[Id] integer PRIMARY KEY IDENTITY,
 	[UserId] integer NOT NULL,
 	[BarId] integer NOT NULL,
+	[RoleId] integer NOT NULL,
 	[UserTypeId] integer NOT NULL,
 	[PayRate] decimal(9,2) NOT NULL,
 	[PayRateTypeId] integer NOT NULL,
@@ -242,6 +258,7 @@ CREATE TABLE [BarUser] (
 
 	CONSTRAINT [FK_BarUser_User] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
 	CONSTRAINT [FK_BarUser_Bar] FOREIGN KEY ([BarId]) REFERENCES [Bar] ([Id]),
+	CONSTRAINT [FK_BarUser_Role] FOREIGN KEY ([RoleId]) REFERENCES [Role] ([Id]),
 	CONSTRAINT [FK_BarUser_UserType] FOREIGN KEY ([UserTypeId]) REFERENCES [UserType] ([Id]),
 	CONSTRAINT [FK_BarUser_PayRateType] FOREIGN KEY ([PayRateTypeId]) REFERENCES [PayRateType] ([Id])
 )
