@@ -31,6 +31,13 @@ namespace Barkeep.Controllers
             return Ok(categories);
         }
 
+        [HttpGet("GetMyCategories/{barId}")]
+        public IActionResult GetMyCategories(int barId)
+        {
+            var categories = _categoryRepository.GetAllMyCategories(barId);
+            return Ok(categories);
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {

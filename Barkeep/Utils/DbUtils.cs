@@ -33,25 +33,34 @@ namespace Barkeep.Utils
                 return reader.GetInt32(reader.GetOrdinal(column));
             }
 
-            /// <summary>
-            ///  Get a DateTime from a data reader object.
-            ///  This method assumes the value is not NULL.
-            /// </summary>
-            /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
-            /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
-            /// <returns>The value of the given column.</returns>
-            public static DateTime GetDateTime(SqlDataReader reader, string column)
+            public static double GetDouble(SqlDataReader reader, string column)
+            {
+                return reader.GetDouble(reader.GetOrdinal(column));
+            }
+        /// <summary>
+        ///  Get a DateTime from a data reader object.
+        ///  This method assumes the value is not NULL.
+        /// </summary>
+        /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
+        /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
+        /// <returns>The value of the given column.</returns>
+        public static DateTime GetDateTime(SqlDataReader reader, string column)
             {
                 return reader.GetDateTime(reader.GetOrdinal(column));
             }
 
-            /// <summary>
-            ///  Get an int? (nullable int) from a data reader object and gracefully handle NULL values
-            /// </summary>
-            /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
-            /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
-            /// <returns>The value of the given column or null.</returns>
-            public static int? GetNullableInt(SqlDataReader reader, string column)
+        public static bool GetBoolean(SqlDataReader reader, string column)
+        {
+            return reader.GetBoolean(reader.GetOrdinal(column));
+        }
+
+        /// <summary>
+        ///  Get an int? (nullable int) from a data reader object and gracefully handle NULL values
+        /// </summary>
+        /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
+        /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
+        /// <returns>The value of the given column or null.</returns>
+        public static int? GetNullableInt(SqlDataReader reader, string column)
             {
                 var ordinal = reader.GetOrdinal(column);
                 if (reader.IsDBNull(ordinal))
@@ -62,13 +71,23 @@ namespace Barkeep.Utils
                 return reader.GetInt32(ordinal);
             }
 
-            /// <summary>
-            ///  Get a DateTime? (nullable DateTime) from a data reader object and gracefully handle NULL values
-            /// </summary>
-            /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
-            /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
-            /// <returns>The value of the given column or null.</returns>
-            public static DateTime? GetNullableDateTime(SqlDataReader reader, string column)
+        public static double? GetNullableDouble(SqlDataReader reader, string column)
+        {
+            var ordinal = reader.GetOrdinal(column);
+            if (reader.IsDBNull(ordinal))
+            {
+                return null;
+            }
+
+            return reader.GetDouble(ordinal);
+        }
+        /// <summary>
+        ///  Get a DateTime? (nullable DateTime) from a data reader object and gracefully handle NULL values
+        /// </summary>
+        /// <param name="reader">A SqlDataReader that has not exhausted it's result set.</param>
+        /// <param name="column">The name of the column from the result set refereed to by the reader.</param>
+        /// <returns>The value of the given column or null.</returns>
+        public static DateTime? GetNullableDateTime(SqlDataReader reader, string column)
             {
                 var ordinal = reader.GetOrdinal(column);
                 if (reader.IsDBNull(ordinal))

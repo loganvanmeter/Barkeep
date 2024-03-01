@@ -25,7 +25,7 @@ namespace Barkeep.Repositories
 
                     sc.Id, sc.Name AS SCName,
 
-                    cc.Id, cc.Name AS COName
+                    cc.Id, cc.Name AS CCName
                     
                     FROM [City] c
                     LEFT JOIN [Region] r ON r.Id = c.RegionId

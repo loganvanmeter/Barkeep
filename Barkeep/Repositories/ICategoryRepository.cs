@@ -6,6 +6,7 @@ namespace Barkeep.Repositories
     {
         List<Category> GetAllApproved();
         List<Category> GetAllNotApproved();
+        List<Category> GetAllMyCategories(int barId);
         Category GetById(int id);
 
         void Add(Category category);
