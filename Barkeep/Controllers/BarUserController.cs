@@ -31,6 +31,13 @@ namespace Barkeep.Controllers
             return Ok(barUsers);
         }
 
+        [HttpGet("GetByUserId/{userId}/IsActive={isActive}")]
+        public IActionResult GetByUserId(int userId, bool isActive)
+        {
+            var barUsers = _barUserRepository.GetAllByUserId(userId, isActive);
+            return Ok(barUsers);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetByEmail(int id)
         {

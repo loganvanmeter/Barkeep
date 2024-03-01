@@ -27,8 +27,8 @@ namespace Barkeep.Repositories
                     FROM [BarUser] bu
                     LEFT JOIN [User] u ON u.Id = bu.UserId
                     LEFT JOIN [UserType] ut ON ut.Id = bu.UserTypeId
-                    LEFT JOIN [PayRateType] prt ON prt.Id = but.PayRateTypeId
-                    LEFT JOIN [RoleId] r ON r.Id = bu.RoleId
+                    LEFT JOIN [PayRateType] prt ON prt.Id = bu.PayRateTypeId
+                    LEFT JOIN [Role] r ON r.Id = bu.RoleId
                     ";
         }
 
@@ -39,7 +39,7 @@ namespace Barkeep.Repositories
 
         private string OrderByBarUserUserName()
         {
-            return " ORDER BY u.Name";
+            return " ORDER BY u.LastName";
         }
 
         private BarUser BarUserObject(SqlDataReader reader)
