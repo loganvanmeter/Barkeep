@@ -14,7 +14,7 @@ namespace Barkeep.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Name FROM UserType;";
+                    cmd.CommandText = @"SELECT Id, [Name] FROM UserType WHERE [Name] NOT LIKE '%Site Admin%' AND [Name] NOT LIKE '%Account Admin%';";
 
                     var userTypes = new List<UserType>();
 
