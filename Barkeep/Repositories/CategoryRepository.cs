@@ -65,6 +65,8 @@ namespace Barkeep.Repositories
             }
         }
 
+
+
         public List<Category> GetAllNotApproved()
         {
             using (var conn = Connection)
@@ -94,6 +96,36 @@ namespace Barkeep.Repositories
             }
         }
 
+        public List<Category> GetAllMyCategories(int barId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetCategories();
+                    sql += " WHERE c.IsAdminApproved = 1 OR c.ProviderBarId = @BarId";
+                    sql += OrderByName();
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@BarId", barId);
+
+                    var categories = new List<Category>();
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Category category = CategoryObject(reader);
+
+                        categories.Add(category);
+                    }
+
+                    reader.Close();
+                    return categories;
+                }
+            }
+        }
         public Category GetById(int id)
         {
             using (var conn = Connection)
