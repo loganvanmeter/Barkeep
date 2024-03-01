@@ -42,3 +42,23 @@ export const adminLogin = (email, password) => {
 		}
 	});
 };
+
+export const updateUser = (user) => {
+	return fetch(`${userApiUrl}${user.id}`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(user),
+	});
+};
+
+export const addUser = (user) => {
+	return fetch(userApiUrl, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(user),
+	});
+};
