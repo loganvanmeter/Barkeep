@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllStates } from "../../../managers/LocationsManager";
 import { StateList } from "./StateList";
 import { Button, Container, Stack } from "react-bootstrap";
-import { Search } from "../forms/Search";
+import { Search } from "../../forms/Search";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 
 export const StateContainer = () => {

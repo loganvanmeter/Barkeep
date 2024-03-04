@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { getAllCountries } from "../../../managers/LocationsManager";
-import { Search } from "../forms/Search";
+import { Search } from "../../forms/Search";
 import { CountryList } from "./CountryList";
 import { Container, Stack } from "react-bootstrap";
 

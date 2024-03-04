@@ -4,7 +4,7 @@ import { Button, Container, Stack, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { getAllComponentTypes } from "../../managers/ComponentTypeManager";
 
-export const ComponentTypesList = () => {
+export const ComponentTypeList = () => {
 	const [componentTypes, setComponentTypes] = useState([]);
 	const navigate = useNavigate();
 

@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { getAllStates } from "../../managers/LocationsManager";
 
-export const StateDropDown = ({ stateId, setStateId }) => {
-	const [state, setStates] = useState([]);
-
+export const StateDropDown = ({ stateId, setStateId, countryId }) => {
+	const [states, setStates] = useState([]);
+	const [filteredStates, setFilteredStates] = useState([]);
 	const getStates = () => {
 		return getAllStates().then((res) => setStates(res));
 	};
 
+	const getAllCountryStates = () => {
+		return states.filter((state) => state.countryId == countryId);
+	};
 	const handleChange = (e) => {
 		e.preventDefault();
 		setStateId(parseInt(e.target.value));
@@ -17,6 +20,14 @@ export const StateDropDown = ({ stateId, setStateId }) => {
 	useEffect(() => {
 		getStates();
 	}, []);
+
+	useEffect(() => {
+		if (countryId) {
+			setFilteredStates(getAllCountryStates());
+		} else {
+			setFilteredStates(states);
+		}
+	}, [countryId]);
 
 	return (
 		<Form.Group>
@@ -31,7 +42,7 @@ export const StateDropDown = ({ stateId, setStateId }) => {
 				<option value={0}>
 					{window.location.pathname !== "/state" ? "All" : "Select state"}
 				</option>
-				{state.map((state) => {
+				{filteredStates.map((state) => {
 					return (
 						<option key={state.id} value={state.id}>
 							{state.name}

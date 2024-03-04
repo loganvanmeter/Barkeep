@@ -22,7 +22,7 @@ export const CountryDropDown = ({ countryId, setCountryId }) => {
 		<Form.Group>
 			<Form.Label>
 				{window.location.pathname !== "/country"
-					? "Filter by country type"
+					? "Filter by country"
 					: "Country"}
 			</Form.Label>
 			<Form.Select

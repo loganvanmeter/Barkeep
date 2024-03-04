@@ -29,6 +29,12 @@ import { AddImporter } from "../components/importers/AddImporter";
 import { ImporterDetails } from "../components/importers/ImporterDetails";
 import { DeleteImporter } from "../components/importers/DeleteImporter";
 import { CountryContainer } from "../components/locations/countries/CountryContainer";
+import { StateContainer } from "../components/locations/states/StateContainer";
+import { AddState } from "../components/locations/states/AddState";
+import { EditState } from "../components/locations/states/EditState";
+import { DeleteState } from "../components/locations/states/DeleteState";
+import { StateDetails } from "../components/locations/states/StateDetails";
+import { RegionContainer } from "../components/locations/regions/RegionContainer";
 
 export const SiteAdminView = () => {
 	return (
@@ -82,6 +88,14 @@ export const SiteAdminView = () => {
 			<Route path='/importer/:importerId/delete' element={<DeleteImporter />} />
 			{/*country routes*/}
 			<Route path='/country' element={<CountryContainer />} />
+			{/*state routes*/}
+			<Route path='/state' element={<StateContainer />} />
+			<Route path='/state/add' element={<AddState />} />
+			<Route path='/state/:stateId' element={<StateDetails />} />
+			<Route path='/state/:stateId/edit' element={<EditState />} />
+			<Route path='/state/:stateId/delete' element={<DeleteState />} />
+			{/*region routes*/}
+			<Route path='/region' element={<RegionContainer />} />
 		</Routes>
 	);
 };

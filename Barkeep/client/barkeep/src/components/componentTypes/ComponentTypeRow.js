@@ -1,4 +1,5 @@
 import { Button, Stack } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export const ComponentTypeRow = ({ componentType }) => {
 	const navigate = useNavigate();
