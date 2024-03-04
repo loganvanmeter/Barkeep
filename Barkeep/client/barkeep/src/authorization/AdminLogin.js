@@ -1,11 +1,21 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { adminLogin } from "../managers/UserManager";
-import { Alert, Button, Container, Form, InputGroup } from "react-bootstrap";
+import {
+	Alert,
+	Button,
+	Container,
+	Form,
+	InputGroup,
+	Stack,
+} from "react-bootstrap";
 import { LoginAlert } from "./LoginAlert";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
 
-export const AdminLogin = ({ setIsSiteAdminLoggedIn }) => {
+export const AdminLogin = ({
+	setIsSiteAdminLoggedIn,
+	setIsAccountAdminLoggedIn,
+}) => {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
@@ -14,8 +24,11 @@ export const AdminLogin = ({ setIsSiteAdminLoggedIn }) => {
 	const loginSubmit = (e) => {
 		e.preventDefault();
 		adminLogin(email, password).then((res) => {
-			if (res) {
+			if (res.userType.name === "Site Admin") {
 				setIsSiteAdminLoggedIn(true);
+				navigate("/");
+			} else if (res.userType.name === "Account Admin") {
+				setIsAccountAdminLoggedIn(true);
 				navigate("/");
 			} else {
 				setShow(true);
@@ -57,6 +70,10 @@ export const AdminLogin = ({ setIsSiteAdminLoggedIn }) => {
 					</Button>
 				</Form.Group>
 			</Form>
+			<Stack direction='horizontal' className='justify-content-end' gap={1}>
+				<p>New to Barkeep?</p>
+				<Link to='/register'>Register here</Link>{" "}
+			</Stack>
 		</Container>
 	);
 };

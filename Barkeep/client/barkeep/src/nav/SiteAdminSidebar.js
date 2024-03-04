@@ -1,6 +1,7 @@
 import { Container, Nav, Navbar } from "react-bootstrap";
+import { Logout } from "../authorization/Logout";
 
-export const SiteAdminSidebar = () => {
+export const SiteAdminSidebar = ({ setIsLoggedIn }) => {
 	return (
 		<Navbar className='sidebar'>
 			<Container>
@@ -14,6 +15,7 @@ export const SiteAdminSidebar = () => {
 				<Nav className='me-auto'>
 					<Nav.Link href='/varietal'>Varietals</Nav.Link>
 				</Nav>
+				<Logout setIsLoggedIn={setIsLoggedIn} />
 			</Container>
 		</Navbar>
 	);

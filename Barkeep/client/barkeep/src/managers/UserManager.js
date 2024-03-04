@@ -11,7 +11,7 @@ export const getUserByEmail = (email) => {
 export const adminLogin = (email, password) => {
 	//get user by email
 	return getUserByEmail(email).then((user) => {
-		//checkk to see user has an id, the entered password matches the user password, the user is currently active, and the userType is either "Site Admin", "Account Admin", or "Bar Admin"
+		//check to see user has an id, the entered password matches the user password, the user is currently active, and the userType is either "Site Admin", "Account Admin", or "Bar Admin"
 		if (
 			user.id &&
 			user.password === password &&
@@ -25,13 +25,13 @@ export const adminLogin = (email, password) => {
 				return user;
 			}
 			//if "Account Admin"
-			if (user?.userType?.name.toLowerCase() === "account admin") {
+			if (user.userType.name.toLowerCase() === "account admin") {
 				//set the user object to the local storage under the name "accountAdmin"
 				localStorage.setItem("accountAdmin", JSON.stringify(user));
 				return user;
 			}
 			//if "Bar Admin"
-			if (user?.userType?.name.toLowerCase() === "bar admin") {
+			if (user.userType.name.toLowerCase() === "bar admin") {
 				//set the user object to the local storage under the name "barAdmin"
 				localStorage.setItem("barAdmin", JSON.stringify(user));
 				return user;

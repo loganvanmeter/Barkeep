@@ -1,29 +1,48 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Router } from "react-router-dom";
 import { SiteAdminView } from "./views/SiteAdminView";
 import { Authorize } from "./authorization/Authorize";
 import { SiteAdminSidebar } from "./nav/SiteAdminSidebar";
-import { AllView } from "./views/AllView";
+import { AccountAdminSideBar } from "./nav/AccountAdminSideBar";
+import { AccountAdminView } from "./views/AccountAdminView";
 
 const App = () => {
 	const [isSiteAdminLoggedIn, setIsSiteAdminLoggedIn] = useState(true);
+	const [isAccountAdminLoggedIn, setIsAccountAdminLoggedIn] = useState(true);
+
 	useEffect(() => {
 		if (!localStorage.getItem("siteAdmin")) {
 			setIsSiteAdminLoggedIn(false);
 		}
 	}, [isSiteAdminLoggedIn]);
 
-	if (isSiteAdminLoggedIn) {
+	useEffect(() => {
+		if (!localStorage.getItem("accountAdmin")) {
+			setIsAccountAdminLoggedIn(false);
+		}
+	}, [isAccountAdminLoggedIn]);
+
+	if (isSiteAdminLoggedIn && !isAccountAdminLoggedIn) {
 		return (
 			<>
-				<SiteAdminSidebar />
+				<SiteAdminSidebar setIsLoggedIn={setIsSiteAdminLoggedIn} />
 				<SiteAdminView />
 			</>
 		);
-	} else {
-		return <Authorize setIsSiteAdminLoggedIn={setIsSiteAdminLoggedIn} />;
+	} else if (isAccountAdminLoggedIn && !isSiteAdminLoggedIn) {
+		return (
+			<>
+				<AccountAdminSideBar setIsLoggedIn={setIsAccountAdminLoggedIn} />
+				<AccountAdminView />
+			</>
+		);
+	} else if (!isAccountAdminLoggedIn && !isSiteAdminLoggedIn) {
+		return (
+			<Authorize
+				setIsSiteAdminLoggedIn={setIsSiteAdminLoggedIn}
+				setIsAccountAdminLoggedIn={setIsAccountAdminLoggedIn}
+			/>
+		);
 	}
 };
 
