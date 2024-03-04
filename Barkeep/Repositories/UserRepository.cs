@@ -111,7 +111,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO User (DisplayName, FirstName, LastName, Phone, Email, 
+                        INSERT INTO [User] (DisplayName, FirstName, LastName, Phone, Email, 
                         Pin, CreateDateTime, EndDateTime, UserTypeId, IsActive,
                         Password)
                         OUTPUT INSERTED.ID
