@@ -33,7 +33,9 @@ export const RegionContainer = () => {
 
 	const filterRegionByCountry = () => {
 		const matchedRegion = regions.filter(
-			(region) => region.countryId && region.countryId == countryId
+			(region) =>
+				(region.countryId && region.countryId == countryId) ||
+				(region.stateId && region?.state?.countryId == countryId)
 		);
 		setMatchedByCountry(matchedRegion);
 	};
@@ -182,6 +184,8 @@ export const RegionContainer = () => {
 							<CountryDropDown
 								countryId={countryId}
 								setCountryId={setCountryId}
+								setStateId={setStateId}
+								stateId={stateId}
 							/>
 						</Container>
 						<Container>

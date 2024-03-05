@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { getAllCountries } from "../../managers/LocationsManager";
 
-export const CountryDropDown = ({ countryId, setCountryId }) => {
+export const CountryDropDown = ({
+	countryId,
+	setCountryId,
+	setStateId,
+	stateId,
+}) => {
 	const [countries, setCountries] = useState([]);
 
 	const getCountries = () => {
@@ -12,6 +17,9 @@ export const CountryDropDown = ({ countryId, setCountryId }) => {
 	const handleChange = (e) => {
 		e.preventDefault();
 		setCountryId(parseInt(e.target.value));
+		if (stateId) {
+			setStateId(0);
+		}
 	};
 
 	useEffect(() => {
