@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Form, Stack } from "react-bootstrap";
-import { addRegion, addState } from "../../../managers/LocationsManager";
+import { addRegion } from "../../../managers/LocationsManager";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 import { StateDropDown } from "../../forms/StateDropDown";
 
@@ -121,9 +121,15 @@ export const AddRegion = () => {
 						>
 							Cancel
 						</Button>
-						<Button variant='primary' type='sumbit'>
-							Save
-						</Button>
+
+						{(region.name && region.stateId) ||
+						(region.name && region.countryId) ? (
+							<Button variant='primary' type='sumbit'>
+								Save
+							</Button>
+						) : (
+							""
+						)}
 					</Stack>
 				</Stack>
 			</Form>

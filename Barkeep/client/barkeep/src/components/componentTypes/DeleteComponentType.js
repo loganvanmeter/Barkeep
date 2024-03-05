@@ -56,11 +56,6 @@ export const DeleteComponentType = () => {
 					<Card.Header>Component Type #{componentType.id}</Card.Header>
 					<Card.Body>
 						<Card.Title>{componentType.name}</Card.Title>
-						<Card.Text>
-							{componentType.description
-								? componentType.description
-								: "No description for this componentType has been added."}
-						</Card.Text>
 					</Card.Body>
 					<Card.Footer>
 						<Stack

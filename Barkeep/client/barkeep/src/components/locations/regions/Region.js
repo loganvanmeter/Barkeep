@@ -1,27 +1,40 @@
 import { Button, Card, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-export const Region = ({ state }) => {
+export const Region = ({ region }) => {
 	const navigate = useNavigate();
 	return (
 		<Card>
 			<Card.Header>
-				<Stack direction='horizontal' className='justify-content-between'>
-					<div>{`Region #${state.id}`}</div>
-				</Stack>
+				{region.stateId ? (
+					<Stack direction='horizontal' className='justify-content-between'>
+						<Stack>{`State subregion #${region.id}`}</Stack>
+						<Stack gap={1} className='align-items-end'>
+							<div>{`State: ${region?.state?.name}`}</div>
+							<div>{`Country: ${region?.state?.country?.name}`}</div>
+						</Stack>
+					</Stack>
+				) : region.countryId ? (
+					<Stack direction='horizontal' className='justify-content-between'>
+						<div>{`Country subregion #${region.id}`}</div>
+						<div>{`Country: ${region?.country?.name}`}</div>
+					</Stack>
+				) : (
+					""
+				)}
 			</Card.Header>
 			<Card.Body>
-				<Card.Title>{state.name}</Card.Title>
+				<Card.Title>{region.name}</Card.Title>
 			</Card.Body>
 			<Card.Footer>
 				<Stack direction='horizontal' className='justify-content-between'>
-					<Card.Link href='/state'>Back to list</Card.Link>
+					<Card.Link href='/region'>Back to list</Card.Link>
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='primary'
 							onClick={(e) => {
 								e.preventDefault();
-								navigate(`/state/${state.id}/edit`);
+								navigate(`/region/${region.id}/edit`);
 							}}
 						>
 							Edit
@@ -30,7 +43,7 @@ export const Region = ({ state }) => {
 							variant='danger'
 							onClick={(e) => {
 								e.preventDefault();
-								navigate(`/state/${state.id}/delete`);
+								navigate(`/region/${region.id}/delete`);
 							}}
 						>
 							Delete

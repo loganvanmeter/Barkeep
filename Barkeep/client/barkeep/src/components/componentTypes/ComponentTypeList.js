@@ -28,7 +28,7 @@ export const ComponentTypeList = () => {
 							navigate("/componentType/add");
 						}}
 					>
-						Add new varietal type
+						Add new component type
 					</Button>
 				</Container>
 				<Table striped>
