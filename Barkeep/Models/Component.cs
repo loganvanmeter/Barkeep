@@ -14,7 +14,7 @@ namespace Barkeep.Models
         public int? CityId { get; set; }
         public int? RegionId { get; set; }
         public int? StateId { get; set; }
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
         public int? ProducerId { get; set; }
         public int? ImporterId { get; set; }
         public int? ProviderBarId { get; set; }
@@ -23,7 +23,7 @@ namespace Barkeep.Models
         public City? City { get; set; }
         public Region? Region { get; set; }
         public State? State { get; set; }
-        public Country Country { get; set; }
+        public Country? Country { get; set; }
         public Producer? Producer { get; set; }
         public Importer? Importer { get; set; }
     }
