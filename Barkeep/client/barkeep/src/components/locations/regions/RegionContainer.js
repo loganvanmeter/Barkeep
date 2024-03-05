@@ -97,11 +97,25 @@ export const RegionContainer = () => {
 
 	useEffect(() => {
 		searchRegions();
-	}, [searchTerms, countryId]);
+	}, [searchTerms, countryId, stateId]);
 
 	useEffect(() => {
 		filterSearchResults();
-	}, [matchedByName, matchedbyCountry]);
+	}, [matchedByName, matchedbyCountry, matchedByState]);
+
+	useEffect(() => {
+		if (showCountryRegion && !showStateRegion) {
+			setFilteredRegions(regions.filter((region) => region.countryId));
+		}
+		if (!showCountryRegion && showStateRegion) {
+			setFilteredRegions(regions.filter((region) => region.stateId));
+		}
+		if (!showCountryRegion && !showStateRegion) {
+			setFilteredRegions(
+				regions.filter((region) => region.stateId || region.countryId)
+			);
+		}
+	}, [showStateRegion, showCountryRegion]);
 
 	return (
 		<Container>
@@ -121,7 +135,7 @@ export const RegionContainer = () => {
 							/>
 							<Form.Check
 								inline
-								label='State Regions'
+								label='State Subregions'
 								id='stateRegions'
 								name='locations'
 								type='radio'
@@ -130,7 +144,7 @@ export const RegionContainer = () => {
 							/>
 							<Form.Check
 								inline
-								label='Country Regions'
+								label='Country Subregions'
 								id='countryRegions'
 								name='locations'
 								type='radio'
@@ -163,7 +177,7 @@ export const RegionContainer = () => {
 						<StateDropDown stateId={stateId} setStateId={setStateId} />
 					</Container>
 				) : (
-					<>
+					<Stack direction='horizontal' gap={3}>
 						<Container>
 							<CountryDropDown
 								countryId={countryId}
@@ -177,7 +191,7 @@ export const RegionContainer = () => {
 								countryId={countryId}
 							/>
 						</Container>
-					</>
+					</Stack>
 				)}
 
 				{filteredRegions.length ? (

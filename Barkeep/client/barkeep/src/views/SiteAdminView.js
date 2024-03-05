@@ -35,6 +35,8 @@ import { EditState } from "../components/locations/states/EditState";
 import { DeleteState } from "../components/locations/states/DeleteState";
 import { StateDetails } from "../components/locations/states/StateDetails";
 import { RegionContainer } from "../components/locations/regions/RegionContainer";
+import { AddRegion } from "../components/locations/regions/AddRegion";
+import { DeleteRegion } from "../components/locations/regions/DeleteRegion";
 
 export const SiteAdminView = () => {
 	return (
@@ -96,6 +98,8 @@ export const SiteAdminView = () => {
 			<Route path='/state/:stateId/delete' element={<DeleteState />} />
 			{/*region routes*/}
 			<Route path='/region' element={<RegionContainer />} />
+			<Route path='/region/add' element={<AddRegion />} />
+			<Route path='/region/:regionId/delete' element={<DeleteRegion />} />
 		</Routes>
 	);
 };

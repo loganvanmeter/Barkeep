@@ -29,6 +29,7 @@ export const CountryDropDown = ({ countryId, setCountryId }) => {
 				aria-label='Default select example'
 				value={countryId}
 				onChange={handleChange}
+				className='mh-50'
 			>
 				<option value={0}>
 					{window.location.pathname !== "/country" ? "All" : "Select country"}

@@ -8,7 +8,7 @@ export const State = ({ state }) => {
 			<Card.Header>
 				<Stack direction='horizontal' className='justify-content-between'>
 					<div>{`State #${state.id}`}</div>
-					<div>{`State Type: ${state?.country?.name}`}</div>
+					<div>{`Country: ${state?.country?.name}`}</div>
 				</Stack>
 			</Card.Header>
 			<Card.Body>

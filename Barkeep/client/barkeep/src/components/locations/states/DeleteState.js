@@ -26,9 +26,9 @@ export const DeleteState = () => {
 						WARNING: You are about to delete the following state
 					</Alert.Heading>
 					<p>
-						Deleting this state will remove it from all current components
-						marked with this state and delete all subregions under this state.
-						It is best practice to EDIT the state instead to preserve the
+						Deleting this state will remove it from all current components and
+						cities marked with this state and delete all subregions under this
+						state. It is best practice to EDIT the state instead to preserve the
 						integrity of the software and it's systems.
 					</p>
 					<hr />
@@ -48,7 +48,7 @@ export const DeleteState = () => {
 					<Card.Header>
 						<Stack direction='horizontal' className='justify-content-between'>
 							<div>{`State #${state.id}`}</div>
-							<div>{`State Type: ${state?.country?.name}`}</div>
+							<div>{`Country: ${state?.country?.name}`}</div>
 						</Stack>
 					</Card.Header>
 					<Card.Body>
