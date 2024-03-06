@@ -22,16 +22,12 @@ export const StateDropDown = ({ stateId, setStateId, countryId }) => {
 	}, []);
 
 	useEffect(() => {
-		setFilteredStates(states);
-	}, [states]);
-
-	useEffect(() => {
 		if (countryId) {
 			setFilteredStates(getAllCountryStates());
 		} else {
 			setFilteredStates(states);
 		}
-	}, [countryId]);
+	}, [countryId, states]);
 
 	return (
 		<Form.Group>

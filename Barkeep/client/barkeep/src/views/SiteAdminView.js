@@ -39,6 +39,11 @@ import { AddRegion } from "../components/locations/regions/AddRegion";
 import { DeleteRegion } from "../components/locations/regions/DeleteRegion";
 import { EditRegion } from "../components/locations/regions/EditRegion";
 import { RegionDetails } from "../components/locations/regions/RegionDetails";
+import { CityContainer } from "../components/locations/cities/CityContainer";
+import { AddCity } from "../components/locations/cities/AddCity";
+import { DeleteCity } from "../components/locations/cities/DeleteCity";
+import { EditCity } from "../components/locations/cities/EditCity";
+import { CityDetails } from "../components/locations/cities/CityDetails";
 
 export const SiteAdminView = () => {
 	return (
@@ -104,6 +109,12 @@ export const SiteAdminView = () => {
 			<Route path='/region/:regionId' element={<RegionDetails />} />
 			<Route path='/region/:regionId/delete' element={<DeleteRegion />} />
 			<Route path='/region/:regionId/edit' element={<EditRegion />} />
+			{/*city routes*/}
+			<Route path='/city' element={<CityContainer />} />
+			<Route path='/city/add' element={<AddCity />} />
+			<Route path='/city/:cityId' element={<CityDetails />} />
+			<Route path='/city/:cityId/delete' element={<DeleteCity />} />
+			<Route path='/city/:cityId/edit' element={<EditCity />} />
 		</Routes>
 	);
 };
