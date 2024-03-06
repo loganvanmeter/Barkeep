@@ -6,6 +6,7 @@ import { Search } from "../../forms/Search";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 import { StateDropDown } from "../../forms/StateDropDown";
 import { RegionDropDown } from "../../forms/RegionDropDown";
+import { CityList } from "./CityList";
 
 export const CityContainer = () => {
 	const [cities, setCities] = useState([]);
@@ -64,7 +65,7 @@ export const CityContainer = () => {
 	const filterSearchResults = () => {
 		if (!countryId && !stateId && !regionId && searchTerms) {
 			setFilteredCities(matchedByName);
-		} else if (countryId && !stateId && !regionid && searchTerms) {
+		} else if (countryId && !stateId && !regionId && searchTerms) {
 			const matchedByNameAndCountry = matchedByName.filter(
 				(match) => match.countryId == countryId
 			);
@@ -99,7 +100,7 @@ export const CityContainer = () => {
 
 	useEffect(() => {
 		searchCities();
-	}, [searchTerms, countryId, stateId, cityId]);
+	}, [searchTerms, countryId, stateId, regionId]);
 
 	useEffect(() => {
 		filterSearchResults();

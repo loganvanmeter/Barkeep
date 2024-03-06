@@ -45,9 +45,9 @@ export const RegionDropDown = ({
 
 	useEffect(() => {
 		if (countryId && !stateId) {
-			setFilteredStates(getAllCountryRegions());
+			setFilteredRegions(getAllCountryRegions());
 		} else if (stateId) {
-			setFilteredStates(getAllStateRegions());
+			setFilteredRegions(getAllStateRegions());
 		} else {
 			setFilteredRegions(regions);
 		}

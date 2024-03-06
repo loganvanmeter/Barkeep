@@ -15,7 +15,7 @@ namespace Barkeep.Repositories
 
                     r.Id, r.Name AS RName, r.StateId AS RStateId, r.CountryId AS RCountryId,
 
-                    rs.Id, rs.Name AS RSName, rs.CountryId as RSCountryId,
+                    rs.Id, rs.Name AS RSName, rs.CountryId AS RSCountryId,
 
                     rsc.Id, rsc.Name AS RSCName,
 
@@ -42,7 +42,7 @@ namespace Barkeep.Repositories
 
         private string OrderByName()
         {
-            return " ORDER BY s.Name";
+            return " ORDER BY c.Name";
         }
         private City CityObject(SqlDataReader reader)
         {
@@ -50,9 +50,9 @@ namespace Barkeep.Repositories
             {
                 Id = DbUtils.GetInt(reader, "Id"),
                 Name = DbUtils.GetString(reader, "Name"),
-                RegionId = DbUtils.GetInt(reader, "RegionId"),
-                StateId = DbUtils.GetInt(reader, "StateId"),
-                CountryId = DbUtils.GetInt(reader, "CountryId"),
+                RegionId = DbUtils.GetNullableInt(reader, "RegionId"),
+                StateId = DbUtils.GetNullableInt(reader, "StateId"),
+                CountryId = DbUtils.GetNullableInt(reader, "CountryId"),
             };
 
             if (DbUtils.IsNotDbNull(reader, "RegionId"))

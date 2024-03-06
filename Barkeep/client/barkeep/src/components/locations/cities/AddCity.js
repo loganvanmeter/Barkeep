@@ -26,17 +26,6 @@ export const AddCity = () => {
 		setCity(copy);
 	};
 
-	const handleRadioChange = (e) => {
-		if (e.target.id.startsWith("state")) {
-			setAddStateCity(e.target.checked);
-			setAddCountryCity(false);
-		}
-		if (e.target.id.startsWith("country")) {
-			setAddCountryCity(e.target.checked);
-			setAddStateCity(false);
-		}
-	};
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...city };
@@ -48,16 +37,11 @@ export const AddCity = () => {
 
 	useEffect(() => {
 		const copy = { ...city };
-		if (addCountryCity) {
-			copy.countryId = parseInt(countryId);
-			copy.stateId = null;
-		}
-		if (addStateCity) {
-			copy.stateId = parseInt(stateId);
-			copy.countryId = null;
-		}
+		copy.countryId = countryId;
+		copy.stateId = stateId;
+		copy.regionId = regionId;
 		setCity(copy);
-	}, [countryId, stateId]);
+	}, [countryId, stateId, regionId]);
 
 	return (
 		<Container>
@@ -101,7 +85,7 @@ export const AddCity = () => {
 							Cancel
 						</Button>
 
-						{(city.name && city.stateId) || (city.name && city.countryId) ? (
+						{city.name ? (
 							<Button variant='primary' type='sumbit'>
 								Save
 							</Button>

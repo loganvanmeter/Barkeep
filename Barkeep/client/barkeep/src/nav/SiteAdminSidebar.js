@@ -9,19 +9,21 @@ export const SiteAdminSidebar = ({ setIsLoggedIn }) => {
 				<Nav className='me-auto'>
 					<Nav.Link href='/category'>Categories</Nav.Link>
 				</Nav>
-				<Nav className='me-auto'>
-					<Nav.Link href='/componentType'>Component Types</Nav.Link>
-				</Nav>
-				<Nav className='me-auto'>
-					<Nav.Link href='/varietalType'>Varietal Types</Nav.Link>
-				</Nav>
-				<Nav className='me-auto'>
-					<Nav.Link href='/varietal'>Varietals</Nav.Link>
-				</Nav>
-				<NavDropdown title='Locations'>
+				<NavDropdown title='Components' className='me-auto'>
+					<NavDropdown.Item href='/componentType'>
+						Component Types
+					</NavDropdown.Item>
+					<NavDropdown.Item href='/varietal'>Varietals</NavDropdown.Item>
+					<NavDropdown.Item href='/varietalType'>
+						Varietal Types
+					</NavDropdown.Item>
+					<NavDropdown.Item href='/city'>Regions</NavDropdown.Item>
+				</NavDropdown>
+				<NavDropdown title='Locations' className='me-auto'>
 					<NavDropdown.Item href='/country'>Countries</NavDropdown.Item>
 					<NavDropdown.Item href='/state'>States</NavDropdown.Item>
 					<NavDropdown.Item href='/region'>Regions</NavDropdown.Item>
+					<NavDropdown.Item href='/city'>Cities</NavDropdown.Item>
 				</NavDropdown>
 				<Logout setIsLoggedIn={setIsLoggedIn} />
 			</Container>
