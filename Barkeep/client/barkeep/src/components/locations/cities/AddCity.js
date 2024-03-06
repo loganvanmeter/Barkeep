@@ -29,7 +29,9 @@ export const AddCity = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...city };
-
+		copy.countryId = countryId ? countryId : null;
+		copy.stateId = stateId ? stateId : null;
+		copy.regionId = regionId ? regionId : null;
 		return addCity(copy)
 			.then((res) => res.json())
 			.then((newcity) => navigate(`/city/${newcity.id}`));

@@ -1,7 +1,7 @@
 import { Container, Table } from "react-bootstrap";
 import { CityTableRow } from "./CityTableRow";
 
-export const CityList = ({ filteredRegions }) => {
+export const CityList = ({ filteredCities }) => {
 	return (
 		<Container>
 			<Table striped>
@@ -15,8 +15,8 @@ export const CityList = ({ filteredRegions }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{filteredRegions.map((region) => {
-						return <CityTableRow region={region} key={region.id} />;
+					{filteredCities.map((city) => {
+						return <CityTableRow city={city} key={city.id} />;
 					})}
 				</tbody>
 			</Table>

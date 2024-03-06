@@ -57,7 +57,7 @@ export const DeleteCity = () => {
 									{city.stateId ? `${city?.state?.name}` : ""}
 								</div>
 								<div>
-									{"`Country: "}
+									{"Country: "}
 									{city.countryId ? `${city?.country?.name}` : ""}
 								</div>
 							</Stack>

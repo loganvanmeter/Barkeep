@@ -11,29 +11,29 @@ namespace Barkeep.Repositories
         private string GetCityWithRegionStateCountry()
         {
             return @"SELECT 
-                    c.Id, c.Name, c.RegionId, c.StateId, c.CountryId,
+                    c.Id , c.Name AS CityName, c.RegionId AS CityRegionId, c.StateId AS CityStateId, c.CountryId AS CityCountryId,
 
-                    r.Id, r.Name AS RName, r.StateId AS RStateId, r.CountryId AS RCountryId,
+                    cr.Id , cr.Name AS CityRegionName, cr.StateId AS CityRegionStateId, cr.CountryId AS CityRegionCountryId,
 
-                    rs.Id, rs.Name AS RSName, rs.CountryId AS RSCountryId,
+                    crs.Id , crs.Name AS CityRegionStateName, crs.CountryId AS CityRegionStateCountryId,
 
-                    rsc.Id, rsc.Name AS RSCName,
+                    crsc.Id , crsc.Name AS CityRegionStateCountryName,
 
-                    rc.Id, rc.Name AS RCName,
+                    crc.Id , crc.Name AS CityRegionCountryName,
 
-                    s.Id, s.Name AS SName, s.CountryId AS SCountryId,
+                    cs.Id , cs.Name AS CityStateName, cs.CountryId AS CityStateCountryId,
 
-                    sc.Id, sc.Name AS SCName,
+                    csc.Id, csc.Name AS CityStateCountryName,
 
-                    cc.Id, cc.Name AS CCName
+                    cc.Id, cc.Name AS CityCountryName
                     
                     FROM [City] c
-                    LEFT JOIN [Region] r ON r.Id = c.RegionId
-                    LEFT JOIN [State] rs ON rs.Id = r.StateId
-                    LEFT JOIN [Country] rsc ON rsc.Id = rsc.CountryId
-                    LEFT JOIN [Country] rc ON rc.Id = r.CountryId
-                    LEFT JOIN [State] s ON s.Id = c.StateId
-                    LEFT JOIN [Country] sc ON sc.Id = s.CountryId
+                    LEFT JOIN [Region] cr ON cr.Id = c.RegionId
+                    LEFT JOIN [State] crs ON crs.Id = cr.StateId
+                    LEFT JOIN [Country] crsc ON crsc.Id = crs.CountryId
+                    LEFT JOIN [Country] crc ON crc.Id = cr.CountryId
+                    LEFT JOIN [State] cs ON cs.Id = c.StateId
+                    LEFT JOIN [Country] csc ON csc.Id = cs.CountryId
                     LEFT JOIN [Country] cc ON cc.Id = c.CountryId
                     
                     
@@ -49,70 +49,71 @@ namespace Barkeep.Repositories
             City city = new()
             {
                 Id = DbUtils.GetInt(reader, "Id"),
-                Name = DbUtils.GetString(reader, "Name"),
-                RegionId = DbUtils.GetNullableInt(reader, "RegionId"),
-                StateId = DbUtils.GetNullableInt(reader, "StateId"),
-                CountryId = DbUtils.GetNullableInt(reader, "CountryId"),
+                Name = DbUtils.GetString(reader, "CityName"),
+                RegionId = DbUtils.GetNullableInt(reader, "CityRegionId"),
+                StateId = DbUtils.GetNullableInt(reader, "CityStateId"),
+                CountryId = DbUtils.GetNullableInt(reader, "CityCountryId"),
             };
 
-            if (DbUtils.IsNotDbNull(reader, "RegionId"))
+            if (DbUtils.IsNotDbNull(reader, "CityRegionId"))
             {
                 city.Region = new Region()
                 {
-                    Id = DbUtils.GetInt(reader, "RegionId"),
-                    Name = DbUtils.GetString(reader, "RName"),
-                    StateId = DbUtils.GetNullableInt(reader, "RStateId"),
-                    CountryId = DbUtils.GetNullableInt(reader, "RCountryId")
+                    Id = DbUtils.GetInt(reader, "CityRegionId"),
+                    Name = DbUtils.GetString(reader, "CityRegionName"),
+                    StateId = DbUtils.GetNullableInt(reader, "CityRegionStateId"),
+                    CountryId = DbUtils.GetNullableInt(reader, "CityRegionCountryId")
                 };
+            };
 
-                if (DbUtils.IsNotDbNull(reader, "RStateId"))
+            if (DbUtils.IsNotDbNull(reader, "CityRegionStateId"))
+            {
+                city.Region.State = new State()
                 {
-                    city.Region.State = new State()
+                    Id = DbUtils.GetInt(reader, "CityRegionStateId"),
+                    Name = DbUtils.GetString(reader, "CityRegionStateName"),
+                    CountryId = DbUtils.GetInt(reader, "CityRegionStateCountryId"),
+                    Country = new Country()
                     {
-                        Id = DbUtils.GetInt(reader, "RStateId"),
-                        Name = DbUtils.GetString(reader, "RSName"),
-                        CountryId = DbUtils.GetInt(reader, "RSCountryId"),
-                        Country = new Country()
-                        {
-                            Id = DbUtils.GetInt(reader, "RSCountryId"),
-                            Name = DbUtils.GetString(reader, "RSCName"),
-                        }
-                    };
-                }
+                        Id = DbUtils.GetInt(reader, "CityRegionStateCountryId"),
+                        Name = DbUtils.GetString(reader, "CityRegionStateCountryName"),
+                    }
+                };
+            };
 
-                if (DbUtils.IsNotDbNull(reader, "RCountryId"))
+            if (DbUtils.IsNotDbNull(reader, "CityRegionCountryId"))
+            {
+                city.Region.Country = new Country()
                 {
-                    city.Region.Country = new Country()
-                    {
-                        Id = DbUtils.GetInt(reader, "RCountryId"),
-                        Name = DbUtils.GetString(reader, "RCName"),
-                    };
-                }
-            }
+                    Id = DbUtils.GetInt(reader, "CityRegionCountryId"),
+                    Name = DbUtils.GetString(reader, "CityRegionCountryName"),
+                };
+            };
 
-            if (DbUtils.IsNotDbNull(reader, "StateId"))
+
+            if (DbUtils.IsNotDbNull(reader, "CityStateId"))
             {
                 city.State = new State()
                 {
-                    Id = DbUtils.GetInt(reader, "StateId"),
-                    Name = DbUtils.GetString(reader, "SName"),
-                    CountryId = DbUtils.GetInt(reader, "SCountryId"),
+                    Id = DbUtils.GetInt(reader, "CityStateId"),
+                    Name = DbUtils.GetString(reader, "CityStateName"),
+                    CountryId = DbUtils.GetInt(reader, "CityStateCountryId"),
                     Country = new Country()
                     {
-                        Id = DbUtils.GetInt(reader, "SCountryId"),
-                        Name = DbUtils.GetString(reader, "SCName"),
+                        Id = DbUtils.GetInt(reader, "CityStateCountryId"),
+                        Name = DbUtils.GetString(reader, "CityStateCountryName"),
                     }
                 };
-            }
+            };
 
-            if (DbUtils.IsNotDbNull(reader, "CountryId"))
+            if (DbUtils.IsNotDbNull(reader, "CityCountryId"))
             {
                 city.Country = new Country()
                 {
-                    Id = DbUtils.GetInt(reader, "CountryId"),
-                    Name = DbUtils.GetString(reader, "CCName"),
+                    Id = DbUtils.GetInt(reader, "CityCountryId"),
+                    Name = DbUtils.GetString(reader, "CityCountryName"),
                 };
-            }
+            };
 
             return city;
         }

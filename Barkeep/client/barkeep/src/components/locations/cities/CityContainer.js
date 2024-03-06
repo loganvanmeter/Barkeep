@@ -14,82 +14,110 @@ export const CityContainer = () => {
 	const [countryId, setCountryId] = useState(0);
 	const [stateId, setStateId] = useState(0);
 	const [regionId, setRegionId] = useState(0);
-	const [matchedByName, setMatchedByName] = useState([]);
-	const [matchedbyCountry, setMatchedByCountry] = useState([]);
-	const [matchedByState, setMatchedByState] = useState([]);
-	const [matchedByRegion, setMatchedByRegion] = useState([]);
 	const [searchTerms, setSearchTerms] = useState("");
 	const navigate = useNavigate();
 	const getCities = () => {
 		return getAllCities().then((res) => setCities(res));
 	};
 
-	const filterCitiesByName = () => {
-		const searchRegex = new RegExp(`${searchTerms}`, "i");
-		const matchedCities = cities.filter(
-			(city) => city.name.search(searchRegex) >= 0
-		);
-		setMatchedByName(matchedCities);
-	};
-
-	const filterCitiesByCountry = () => {
-		const matchedCities = cities.filter(
-			(city) =>
-				(city.countryId && city.countryId == countryId) ||
-				(city.stateId && city?.state?.countryId == countryId)
-		);
-		setMatchedByCountry(matchedCities);
-	};
-
-	const filterCitiesByState = () => {
-		const matchedCities = cities.filter(
-			(city) => city.stateId && city.stateId == stateId
-		);
-		setMatchedByState(matchedCities);
-	};
-
-	const filterCitiesByRegion = () => {
-		const matchedCities = cities.filter(
-			(city) => city.regionId && city.regionId == regionId
-		);
-		setMatchedByRegion(matchedCities);
-	};
-
-	const searchCities = () => {
-		filterCitiesByName();
-		filterCitiesByCountry();
-		filterCitiesByState();
-		filterCitiesByRegion();
-	};
-
 	const filterSearchResults = () => {
-		if (!countryId && !stateId && !regionId && searchTerms) {
-			setFilteredCities(matchedByName);
-		} else if (countryId && !stateId && !regionId && searchTerms) {
-			const matchedByNameAndCountry = matchedByName.filter(
-				(match) => match.countryId == countryId
+		const searchRegex = new RegExp(`${searchTerms}`, "i");
+		if (searchTerms && !countryId && !stateId && !regionId) {
+			const matchedbyName = cities.filter(
+				(city) => city.name.search(searchRegex) >= 0
 			);
-			setFilteredCities(matchedByNameAndCountry);
-		} else if (!countryId && stateId && !regionId && searchTerms) {
-			const matchedByNameAndState = matchedByName.filter(
-				(match) => match.stateId == stateId
+			setFilteredCities(matchedbyName);
+		} else if (!searchTerms && !countryId && !stateId && regionId) {
+			const matchedbyRegion = cities.filter(
+				(city) => city.regionId == regionId
 			);
-			setFilteredCities(matchedByNameAndState);
-		} else if (!countryId && !stateId && regionId && searchTerms) {
-			const matchedByNameAndRegion = matchedByName.filter(
-				(match) => match.regionId == regionId
+			setFilteredCities(matchedbyRegion);
+		} else if (!searchTerms && !countryId && stateId && !regionId) {
+			const matchedbyState = cities.filter((city) => city.stateId == stateId);
+			setFilteredCities(matchedbyState);
+		} else if (!searchTerms && countryId && !stateId && !regionId) {
+			const matchedbyCountry = cities.filter(
+				(city) => city.countryId == countryId
 			);
-			setFilteredCities(matchedByNameAndRegion);
-		} else if (countryId && !stateId && !regionId && !searchTerms) {
 			setFilteredCities(matchedbyCountry);
-		} else if (!countryId && stateId && !regionId && !searchTerms) {
-			setFilteredCities(matchedByState);
-		} else if (!countryId && !stateId && regionId && !searchTerms) {
-			setFilteredCities(matchedByRegion);
-		} else if (!countryId && !stateId && !regionId && !searchTerms) {
+		} else if (searchTerms && countryId && !stateId && !regionId) {
+			const matchedbyNameAndCountry = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 && city.countryId == countryId
+			);
+			setFilteredCities(matchedbyNameAndCountry);
+		} else if (searchTerms && !countryId && stateId && !regionId) {
+			const matchedbyNameAndState = cities.filter(
+				(city) => city.name.search(searchRegex) >= 0 && city.stateId == stateId
+			);
+			setFilteredCities(matchedbyNameAndState);
+		} else if (searchTerms && !countryId && !stateId && regionId) {
+			const matchedbyNameAndRegion = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 && city.regionId == regionId
+			);
+			setFilteredCities(matchedbyNameAndRegion);
+		} else if (searchTerms && countryId && stateId && !regionId) {
+			const matchedbyNameAndCountryAndState = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 &&
+					city.countryId == countryId &&
+					city.stateId == stateId
+			);
+			setFilteredCities(matchedbyNameAndCountryAndState);
+		} else if (searchTerms && countryId && !stateId && regionId) {
+			const matchedbyNameAndCountryAndRegion = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 &&
+					city.countryId == countryId &&
+					city.regionId == regionId
+			);
+			setFilteredCities(matchedbyNameAndCountryAndRegion);
+		} else if (searchTerms && !countryId && stateId && regionId) {
+			const matchedbyNameAndStateAndRegion = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 &&
+					city.stateId == stateId &&
+					city.regionId == regionId
+			);
+			setFilteredCities(matchedbyNameAndStateAndRegion);
+		} else if (searchTerms && countryId && stateId && regionId) {
+			const matchedbyNameAndCountryAndStateAndRegion = cities.filter(
+				(city) =>
+					city.name.search(searchRegex) >= 0 &&
+					city.countryId == countryId &&
+					city.stateId == stateId &&
+					city.regionId == regionId
+			);
+			setFilteredCities(matchedbyNameAndCountryAndStateAndRegion);
+		} else if (!searchTerms && countryId && stateId && regionId) {
+			const matchedbyCountryAndStateAndRegion = cities.filter(
+				(city) =>
+					city.countryId == countryId &&
+					city.stateId == stateId &&
+					city.regionId == regionId
+			);
+			setFilteredCities(matchedbyCountryAndStateAndRegion);
+		} else if (!searchTerms && !countryId && stateId && regionId) {
+			const matchedbyStateAndRegion = cities.filter(
+				(city) => city.stateId == stateId && city.regionId == regionId
+			);
+			setFilteredCities(matchedbyStateAndRegion);
+		} else if (!searchTerms && countryId && !stateId && regionId) {
+			const matchedbyCountryAndRegion = cities.filter(
+				(city) => city.countryId == countryId && city.regionId == regionId
+			);
+			setFilteredCities(matchedbyCountryAndRegion);
+		} else if (!searchTerms && countryId && stateId && !regionId) {
+			const matchedbyCountryAndState = cities.filter(
+				(city) => city.countryId == countryId && city.stateId == stateId
+			);
+			setFilteredCities(matchedbyCountryAndState);
+		} else if (!searchTerms && !countryId && !stateId && !regionId) {
 			setFilteredCities(cities);
 		}
 	};
+
 	useEffect(() => {
 		getCities();
 	}, []);
@@ -99,12 +127,8 @@ export const CityContainer = () => {
 	}, [cities]);
 
 	useEffect(() => {
-		searchCities();
-	}, [searchTerms, countryId, stateId, regionId]);
-
-	useEffect(() => {
 		filterSearchResults();
-	}, [matchedByName, matchedbyCountry, matchedByState, matchedByRegion]);
+	}, [searchTerms, countryId, stateId, regionId]);
 
 	return (
 		<Container>
@@ -129,6 +153,8 @@ export const CityContainer = () => {
 							setCountryId={setCountryId}
 							setStateId={setStateId}
 							stateId={stateId}
+							regionId={regionId}
+							setRegionId={setRegionId}
 						/>
 					</Container>
 					<Container>
@@ -141,9 +167,7 @@ export const CityContainer = () => {
 					<Container>
 						<RegionDropDown
 							countryId={countryId}
-							setCountryId={setCountryId}
 							stateId={stateId}
-							setStateId={setStateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
 						/>

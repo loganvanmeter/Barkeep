@@ -4,30 +4,14 @@ import { getAllRegions, getRegionById } from "../../managers/LocationsManager";
 
 export const RegionDropDown = ({
 	countryId,
-	setCountryId,
 	stateId,
-	setStateId,
 	regionId,
 	setRegionId,
 }) => {
 	const [regions, setRegions] = useState([]);
-	const [region, setRegion] = useState({});
 	const [filteredRegions, setFilteredRegions] = useState([]);
 	const getRegions = () => {
 		return getAllRegions().then((res) => setRegions(res));
-	};
-	const getAllCountryRegions = () => {
-		return regions.filter(
-			(region) =>
-				(region.countryId && region.countryId == countryId) ||
-				(region.stateId && region?.state?.countryId)
-		);
-	};
-
-	const getAllStateRegions = () => {
-		return region.filter(
-			(region) => region.stateId && region.stateId == stateId
-		);
 	};
 
 	const handleChange = (e) => {
@@ -45,26 +29,25 @@ export const RegionDropDown = ({
 
 	useEffect(() => {
 		if (countryId && !stateId) {
-			setFilteredRegions(getAllCountryRegions());
-		} else if (stateId) {
-			setFilteredRegions(getAllStateRegions());
-		} else {
+			const matchedByCountry = regions.filter(
+				(region) => region.countryId == countryId
+			);
+			setFilteredRegions(matchedByCountry);
+		} else if (stateId && !countryId) {
+			const matchedByState = regions.filter(
+				(region) => region.stateId == stateId
+			);
+			setFilteredRegions(matchedByState);
+		} else if (stateId && countryId) {
+			const matchedByStateAndCountry = regions.filter(
+				(region) =>
+					region.stateId == stateId && region?.state?.countryId == countryId
+			);
+			setFilteredRegions(matchedByStateAndCountry);
+		} else if (!countryId && !stateId) {
 			setFilteredRegions(regions);
 		}
 	}, [countryId, stateId]);
-
-	useEffect(() => {
-		getRegionById(regionId).then((res) => setRegion(res));
-	}, [regionId]);
-
-	useEffect(() => {
-		if (region.stateId) {
-			setStateId(region.stateId);
-		}
-		if (region.setCountryId) {
-			setCountryId(region.setCountryId);
-		}
-	}, [region]);
 
 	return (
 		<Form.Group>

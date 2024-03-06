@@ -16,7 +16,12 @@ export const EditCity = () => {
 	const navigate = useNavigate();
 
 	const getCity = () => {
-		return getCityById(cityId).then((res) => setCity(res));
+		return getCityById(cityId).then((res) => {
+			setCity(res);
+			setCountryId(res.countryId ? res.countryId : 0);
+			setStateId(res.stateId ? res.stateId : 0);
+			setRegionId(res.regionId ? res.regionId : 0);
+		});
 	};
 
 	const handleChange = (e) => {
@@ -29,6 +34,9 @@ export const EditCity = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...city };
+		copy.countryId = countryId ? countryId : null;
+		copy.stateId = stateId ? stateId : null;
+		copy.regionId = regionId ? regionId : null;
 		return updateCity(copy).then(() => navigate(`/city/${city.id}`));
 	};
 
@@ -61,19 +69,24 @@ export const EditCity = () => {
 
 					<Stack direction='horizontal' gap={3}>
 						<CountryDropDown
-							countryId={countryId}
+							countryId={city.countryId ? city.countryId : 0}
 							setCountryId={setCountryId}
-						/>
-						<StateDropDown
 							stateId={stateId}
-							setStateId={setStateId}
-							countryId={countryId}
-						/>
-						<RegionDropDown
-							setCountryId={setCountryId}
 							setStateId={setStateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
+						/>
+						<StateDropDown
+							stateId={city.stateId ? city.stateId : 0}
+							setStateId={setStateId}
+							countryId={countryId}
+							regionId={regionId}
+						/>
+						<RegionDropDown
+							stateId={city.stateId ? city.stateId : 0}
+							regionId={city.regionId ? city.regionId : 0}
+							setRegionId={setRegionId}
+							countryId={city.countryId ? city.countryId : 0}
 						/>
 					</Stack>
 

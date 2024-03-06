@@ -18,7 +18,7 @@ export const City = ({ city }) => {
 							{city.stateId ? `${city?.state?.name}` : ""}
 						</div>
 						<div>
-							{"`Country: "}
+							{"Country: "}
 							{city.countryId ? `${city?.country?.name}` : ""}
 						</div>
 					</Stack>

@@ -7,6 +7,8 @@ export const CountryDropDown = ({
 	setCountryId,
 	setStateId,
 	stateId,
+	regionId,
+	setRegionId,
 }) => {
 	const [countries, setCountries] = useState([]);
 
@@ -19,6 +21,9 @@ export const CountryDropDown = ({
 		setCountryId(parseInt(e.target.value));
 		if (stateId) {
 			setStateId(0);
+		}
+		if (regionId) {
+			setRegionId(0);
 		}
 	};
 
