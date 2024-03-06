@@ -11,7 +11,7 @@ namespace Barkeep.Repositories
         private string GetProducers()
         {
             return @"SELECT 
-                    p.Id, p.Name, p.Description, p.Wesbite
+                    p.Id, p.Name, p.Description, p.Website
                     
                     FROM [Producer] p";
         }
@@ -95,7 +95,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Producer ([Name], [Description], [Wesbite])
+                        INSERT INTO Producer ([Name], [Description], [Website])
                         OUTPUT INSERTED.ID
                         VALUES (@Name, @Description, @Website)";
 

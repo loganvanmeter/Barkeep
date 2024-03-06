@@ -3,7 +3,12 @@ import { addProducer } from "../../managers/ProducerManager";
 import { Button, Container, Form, Stack } from "react-bootstrap";
 import { useState } from "react";
 
-export const AddProducer = () => {
+export const AddProducer = ({
+	setShow,
+	setProducers,
+	setProducerId,
+	getAllProducers,
+}) => {
 	const [producer, setProducer] = useState({
 		name: null,
 		website: null,
@@ -18,12 +23,30 @@ export const AddProducer = () => {
 		setProducer(copy);
 	};
 
+	const handleCancel = (e) => {
+		e.preventDefault();
+		if (window.location.pathname !== `/producer/add`) {
+			setShow(false);
+		} else {
+			navigate(`/producer`);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...producer };
 		return addProducer(copy)
 			.then((res) => res.json())
-			.then((newProducer) => navigate(`/producer/${newProducer.id}`));
+			.then((newProducer) => {
+				if (window.location.pathname !== `/producer/add`) {
+					return getAllProducers()
+						.then((producers) => setProducers(producers))
+						.then(() => setProducerId(parseInt(newProducer.id)))
+						.then(() => setShow(false));
+				} else {
+					navigate(`/producer/${newProducer.id}`);
+				}
+			});
 	};
 
 	return (
@@ -59,10 +82,7 @@ export const AddProducer = () => {
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='outline-secondary'
-							onClick={(e) => {
-								e.preventDefault();
-								navigate(`/producer`);
-							}}
+							onClick={(e) => handleCancel(e)}
 						>
 							Cancel
 						</Button>

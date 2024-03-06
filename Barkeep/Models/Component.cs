@@ -7,10 +7,10 @@ namespace Barkeep.Models
         public int Id { get; set; }
         public int ComponentTypeId { get; set; }
         public string Name { get; set; }
-        public double? Abv { get; set; }
-        public double? Ibu { get; set; }
+        public decimal? Abv { get; set; }
+        public decimal? Ibu { get; set; }
         public string? Description { get; set; }
-        public DateTime? Year { get; set; }
+        public int? Year { get; set; }
         public int? CityId { get; set; }
         public int? RegionId { get; set; }
         public int? StateId { get; set; }

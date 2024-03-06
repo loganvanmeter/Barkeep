@@ -11,7 +11,7 @@ namespace Barkeep.Repositories
         private string GetImporters()
         {
             return @"SELECT 
-                    i.Id, i.Name, i.Description, i.Wesbite
+                    i.Id, i.Name, i.Description, i.Website
                     
                     FROM [Importer] i";
         }
@@ -95,7 +95,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Importer ([Name], [Description], [Wesbite])
+                        INSERT INTO Importer ([Name], [Description], [Website])
                         OUTPUT INSERTED.ID
                         VALUES (@Name, @Description, @Website)";
 

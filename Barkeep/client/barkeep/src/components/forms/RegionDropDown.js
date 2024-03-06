@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import { getAllRegions, getRegionById } from "../../managers/LocationsManager";
+import { getAllRegions } from "../../managers/LocationsManager";
 
 export const RegionDropDown = ({
 	countryId,
