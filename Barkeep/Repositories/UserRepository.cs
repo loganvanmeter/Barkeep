@@ -103,6 +103,33 @@ namespace Barkeep.Repositories
             }
         }
 
+        public User GetById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetUsersWithUserType();
+                    sql += " WHERE u.Id = @id";
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@id", id);
+
+                    User user = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        user = UserObject(reader);
+                    }
+
+                    reader.Close();
+                    return user;
+                }
+            }
+        }
+
         public void Add(User user)
         {
             using (var conn = Connection)

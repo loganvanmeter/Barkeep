@@ -7,6 +7,10 @@ export const getUserByEmail = (email) => {
 	);
 };
 
+export const getUserById = (id) => {
+	return fetch(`${userApiUrl}${id}`).then((res) => res.json());
+}
+
 //admin login
 export const adminLogin = (email, password) => {
 	//get user by email

@@ -59,6 +59,20 @@ namespace Barkeep.Controllers
             return CreatedAtAction("Get", new { id = barUser.Id }, barUser);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _barUserRepository.Delete(id);
+            return NoContent();
+        }
+
+        [HttpDelete("DeleteBarBarUsers/{barId}")]
+        public IActionResult DeleteBarBarUsers(int barId)
+        {
+            _barUserRepository.DeleteAllBarBarUsers(barId);
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, BarUser barUser)
         {

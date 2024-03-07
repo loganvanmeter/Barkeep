@@ -50,7 +50,7 @@ namespace Barkeep.Repositories
                 UserId = DbUtils.GetInt(reader, "UserId"),
                 BarId = DbUtils.GetInt(reader, "BarId"),
                 UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
-                PayRate = DbUtils.GetDouble(reader, "PayRate"),
+                PayRate = DbUtils.GetDecimal(reader, "PayRate"),
                 PayRateTypeId = DbUtils.GetInt(reader, "PayRateTypeId"),
                 CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
                 EndDateTime = DbUtils.GetNullableDateTime(reader, "EndDateTime"),
@@ -81,14 +81,18 @@ namespace Barkeep.Repositories
                     Id = DbUtils.GetInt(reader, "PayRateTypeId"),
                     Name = DbUtils.GetString(reader, "PRTName"),
                 },
-                Role = new Role()
+
+            };
+            if (DbUtils.IsNotDbNull(reader, "RoleId"))
+            {
+                barUser.Role = new Role()
                 {
                     Id = DbUtils.GetInt(reader, "RoleId"),
                     Name = DbUtils.GetString(reader, "RName"),
                     BarId = DbUtils.GetInt(reader, "RBarId")
-                }
-            };
-            return barUser;
+                };
+            }
+                return barUser;
         }
 
         public List<BarUser> GetAll()
@@ -232,6 +236,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@PayRateTypeId", barUser.PayRateTypeId);
                     DbUtils.AddParameter(cmd, "@CreateDateTime", barUser.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@EndDateTime", DbUtils.ValueOrDBNull(barUser.EndDateTime));
+                    DbUtils.AddParameter(cmd, "@IsActive", barUser.IsActive);
                     DbUtils.AddParameter(cmd, "@RoleId", barUser.RoleId);
 
                     barUser.Id = (int)cmd.ExecuteScalar();
@@ -290,6 +295,25 @@ namespace Barkeep.Repositories
                     ";
 
                     DbUtils.AddParameter(cmd, "@Id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteAllBarBarUsers(int barId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM BarUser
+                        WHERE BarId = @barId;
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@barId", barId);
 
                     cmd.ExecuteNonQuery();
                 }

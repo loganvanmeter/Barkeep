@@ -18,6 +18,12 @@ export const deleteRole = (id) => {
 	});
 };
 
+export const deleteBarRoles = (id) => {
+	return fetch(`${roleApiUrl}DeleteAllBarRoles/${id}`, {
+		method: "DELETE",
+	});
+};
+
 export const updateRole = (role) => {
 	return fetch(`${roleApiUrl}${role.id}`, {
 		method: "PUT",
