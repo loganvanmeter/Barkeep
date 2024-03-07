@@ -10,5 +10,7 @@ namespace Barkeep.Repositories
         List<Role> GetAllByBarId(int barId);
         Role GetById(int id);
         void Update(Role role);
+
+        void DeleteAllBarRoles(int barId);
     }
 }

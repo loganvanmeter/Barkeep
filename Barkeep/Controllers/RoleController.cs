@@ -57,6 +57,13 @@ namespace Barkeep.Controllers
             return NoContent();
         }
 
+        [HttpDelete("DeleteBarRoles/{barId}")]
+        public IActionResult DeleteBarRoles(int barId)
+        {
+            _roleRepository.DeleteAllBarRoles(barId);
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, Role role)
         {

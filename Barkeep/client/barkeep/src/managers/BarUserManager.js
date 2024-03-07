@@ -26,6 +26,12 @@ export const deleteBarUser = (id) => {
 	});
 };
 
+export const deleteBarBarUsers = (id) => {
+	return fetch(`${barUserApiUrl}DeleteBarBarUsers/${id}`, {
+		method: "DELETE",
+	});
+};
+
 export const updateBarUser = (barUser) => {
 	return fetch(`${barUserApiUrl}${barUser.id}`, {
 		method: "PUT",

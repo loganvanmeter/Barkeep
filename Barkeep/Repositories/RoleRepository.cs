@@ -181,5 +181,24 @@ namespace Barkeep.Repositories
                 }
             }
         }
+
+        public void DeleteAllBarRoles(int barId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        DELETE FROM Role
+                        WHERE BarId = @barId;
+                    ";
+
+                    DbUtils.AddParameter(cmd, "@BarId", barId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

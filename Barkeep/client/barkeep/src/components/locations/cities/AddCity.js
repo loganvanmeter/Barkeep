@@ -115,9 +115,12 @@ export const AddCity = ({
 						/>
 						<RegionDropDown
 							countryId={countryId}
+							setComponentCountryId={setCountryId}
 							stateId={stateId}
+							setComponentStateId={setStateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
+							setComponentRegionId={setRegionId}
 							urlPath={urlPath}
 						/>
 					</Stack>

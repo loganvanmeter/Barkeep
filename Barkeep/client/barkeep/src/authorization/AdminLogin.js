@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { LoginAlert } from "./LoginAlert";
 import InputGroupText from "react-bootstrap/esm/InputGroupText";
+import { getAllBarsByUserId } from "../managers/BarManager";
 
 export const AdminLogin = ({
 	setIsSiteAdminLoggedIn,
@@ -29,7 +30,13 @@ export const AdminLogin = ({
 				navigate("/");
 			} else if (res.userType.name === "Account Admin") {
 				setIsAccountAdminLoggedIn(true);
-				navigate("/");
+				return getAllBarsByUserId(res.id).then((bars) => {
+					if (bars.length) {
+						navigate(`/account/${res.id}/dashboard`);
+					} else {
+						navigate("/bar/add");
+					}
+				});
 			} else {
 				setShow(true);
 			}

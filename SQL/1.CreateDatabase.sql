@@ -237,7 +237,7 @@ CREATE TABLE [Bar] (
 )
 
 CREATE TABLE [Role] (
-	[Id] integer PRIMARY KEY,
+	[Id] integer PRIMARY KEY IDENTITY,
 	[Name] nvarchar(50) NOT NULL,
 	[BarId] integer NOT NULL,
 

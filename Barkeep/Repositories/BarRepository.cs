@@ -54,7 +54,12 @@ namespace Barkeep.Repositories
                 RegionId = DbUtils.GetNullableInt(reader, "RegionId"),
                 StateId = DbUtils.GetNullableInt(reader, "StateId"),
                 CountryId = DbUtils.GetNullableInt(reader, "CountryId"),
-                User = new User()
+              
+            };
+
+                if (DbUtils.IsNotDbNull(reader, "UserId"))
+                {
+                bar.User = new User()
                 {
                     Id = DbUtils.GetInt(reader, "UserId"),
                     DisplayName = DbUtils.GetString(reader, "DisplayName"),
@@ -68,18 +73,22 @@ namespace Barkeep.Repositories
                     IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive")),
                     Password = DbUtils.GetString(reader, "Password"),
                     UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
-                },
-                City = new City()
+                };
+                }
+
+                if (DbUtils.IsNotDbNull(reader, "CityId"))
+            {
+                bar.City = new City()
                 {
                     Id = DbUtils.GetInt(reader, "CityId"),
                     Name = DbUtils.GetString(reader, "CName"),
-                    RegionId = DbUtils.GetInt(reader, "CRegionId"),
-                    StateId = DbUtils.GetInt(reader, "CStateId"),
-                    CountryId = DbUtils.GetInt(reader, "CCountryId"),
-                },
-            };
+                    RegionId = DbUtils.GetNullableInt(reader, "CRegionId"),
+                    StateId = DbUtils.GetNullableInt(reader, "CStateId"),
+                    CountryId = DbUtils.GetNullableInt(reader, "CCountryId"),
+                };
+            }
 
-            if (DbUtils.IsNotDbNull(reader, "RegionId"))
+                if (DbUtils.IsNotDbNull(reader, "RegionId"))
             {
                 bar.Region = new Region()
                 {
@@ -98,11 +107,6 @@ namespace Barkeep.Repositories
                     Id = DbUtils.GetInt(reader, "StateId"),
                     Name = DbUtils.GetString(reader, "SName"),
                     CountryId = DbUtils.GetInt(reader, "SCountryId"),
-                    Country = new Country()
-                    {
-                        Id = DbUtils.GetInt(reader, "SCountryId"),
-                        Name = DbUtils.GetString(reader, "SCName"),
-                    }
                 };
             }
 
@@ -213,7 +217,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Bar ([Name], [Phone], [Street], [Email], [Wesbite], [UserId], [CityId], [RegionId], [StateId], [CountryId])
+                        INSERT INTO Bar ([Name], [Phone], [Street], [Email], [Website], [UserId], [CityId], [RegionId], [StateId], [CountryId])
                         OUTPUT INSERTED.ID
                         VALUES (@Name, @Phone, @Street, @Email, @Website, @UserId, @CityId, @RegionId, @StateId, @CountryId)";
 

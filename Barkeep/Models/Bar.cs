@@ -13,8 +13,8 @@
         public int? RegionId { get; set; }
         public int? StateId { get; set; }
         public int? CountryId { get; set;}
-        public User User { get; set; }
-        public City City { get; set; }
+        public User? User { get; set; }
+        public City? City { get; set; }
         public Region? Region { get; set; }
         public State? State { get; set; }
         public Country? Country { get; set; }

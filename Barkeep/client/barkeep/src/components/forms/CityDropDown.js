@@ -8,6 +8,7 @@ export const CityDropDown = ({
 	setCountryId,
 	stateId,
 	setStateId,
+	regionId,
 	setRegionId,
 	cityId,
 	setCityId,
