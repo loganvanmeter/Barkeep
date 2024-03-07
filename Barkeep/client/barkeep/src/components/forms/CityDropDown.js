@@ -1,61 +1,58 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
-import { getAllRegions } from "../../managers/LocationsManager";
-import { AddRegion } from "../locations/regions/AddRegion";
+import { getAllCities } from "../../managers/LocationsManager";
+import { AddCity } from "../locations/cities/AddCity";
 
-export const RegionDropDown = ({
+export const CityDropDown = ({
 	countryId,
 	setCountryId,
-	setStateId,
 	stateId,
-	regionId,
+	setStateId,
 	setRegionId,
+	cityId,
+	setCityId,
 	urlPath,
 }) => {
-	const [regions, setRegions] = useState([]);
-	const [filteredRegions, setFilteredRegions] = useState([]);
+	const [cities, setCities] = useState([]);
+	const [filteredCities, setFilteredCities] = useState([]);
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-	const getRegions = () => {
-		return getAllRegions().then((res) => setRegions(res));
+
+	const getCities = () => {
+		return getAllCities().then((res) => setCities(res));
 	};
 
 	const handleChange = (e) => {
 		e.preventDefault();
-		setRegionId(parseInt(e.target.value));
+		setCityId(parseInt(e.target.value));
 	};
 
 	useEffect(() => {
-		getRegions();
+		getCities();
 	}, []);
 
 	useEffect(() => {
-		setFilteredRegions(regions);
-	}, [regions]);
+		setFilteredCities(cities);
+	}, [cities]);
 
 	useEffect(() => {
 		if (countryId && !stateId) {
-			const matchedByCountry = regions.filter(
-				(region) =>
-					(region.countryId && region.countryId == countryId) ||
-					(region.stateId && region?.state?.countryId == countryId)
+			const matchedByCountry = cities.filter(
+				(city) => city.countryId == countryId
 			);
-			setFilteredRegions(matchedByCountry);
+			setFilteredCities(matchedByCountry);
 		} else if (stateId && !countryId) {
-			const matchedByState = regions.filter(
-				(region) => region.stateId == stateId
-			);
-			setFilteredRegions(matchedByState);
+			const matchedByState = cities.filter((city) => city.stateId == stateId);
+			setFilteredCities(matchedByState);
 		} else if (stateId && countryId) {
-			const matchedByStateAndCountry = regions.filter(
-				(region) =>
-					region.stateId == stateId && region?.state?.countryId == countryId
+			const matchedByStateAndCountry = cities.filter(
+				(city) => city.stateId == stateId && city?.state?.countryId == countryId
 			);
-			setFilteredRegions(matchedByStateAndCountry);
+			setFilteredCities(matchedByStateAndCountry);
 		} else if (!countryId && !stateId) {
-			setFilteredRegions(regions);
+			setFilteredCities(cities);
 		}
 	}, [countryId, stateId]);
 
@@ -64,13 +61,14 @@ export const RegionDropDown = ({
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton></Modal.Header>
 				<Modal.Body>
-					<AddRegion
+					<AddCity
 						setShow={setShow}
-						setRegions={setRegions}
-						setComponentRegionId={setRegionId}
-						getAllRegions={getAllRegions}
 						setComponentCountryId={setCountryId}
 						setComponentStateId={setStateId}
+						setComponentRegionId={setRegionId}
+						setCities={setCities}
+						setComponentCityId={setCityId}
+						getAllCities={getAllCities}
 					/>
 				</Modal.Body>
 			</Modal>
@@ -79,23 +77,23 @@ export const RegionDropDown = ({
 					<Form.Group>
 						<Form.Label>
 							{window.location.pathname === `/${urlPath}`
-								? "Filter by region"
-								: "Regions"}
+								? "Filter by city"
+								: "City"}
 						</Form.Label>
 						<Form.Select
 							aria-label='Default select example'
-							value={regionId}
+							value={cityId}
 							onChange={handleChange}
 						>
 							<option value={0}>
 								{window.location.pathname === `/${urlPath}`
 									? "All"
-									: "Select region"}
+									: "Select city"}
 							</option>
-							{filteredRegions.map((region) => {
+							{filteredCities.map((city) => {
 								return (
-									<option key={region.id} value={region.id}>
-										{region.name}
+									<option key={city.id} value={city.id}>
+										{city.name}
 									</option>
 								);
 							})}
@@ -105,7 +103,7 @@ export const RegionDropDown = ({
 				<div className='pb-2'>{` OR `}</div>
 
 				<Button variant='outline-primary' onClick={handleShow}>
-					add new region
+					add new city
 				</Button>
 			</Stack>
 		</Stack>

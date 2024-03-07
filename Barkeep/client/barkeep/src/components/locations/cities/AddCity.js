@@ -6,7 +6,16 @@ import { CountryDropDown } from "../../forms/CountryDropDown";
 import { StateDropDown } from "../../forms/StateDropDown";
 import { RegionDropDown } from "../../forms/RegionDropDown";
 
-export const AddCity = () => {
+export const AddCity = ({
+	setShow,
+	setCities,
+	getAllCities,
+	setComponentCountryId,
+	setComponentStateId,
+	setComponentCityId,
+	setComponentRegionId,
+}) => {
+	const urlPath = "city";
 	const [countryId, setCountryId] = useState(0);
 	const [stateId, setStateId] = useState(0);
 	const [regionId, setRegionId] = useState(0);
@@ -26,6 +35,15 @@ export const AddCity = () => {
 		setCity(copy);
 	};
 
+	const handleCancel = (e) => {
+		e.preventDefault();
+		if (window.location.pathname !== `/city/add`) {
+			setShow(false);
+		} else {
+			navigate(`/city`);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...city };
@@ -34,7 +52,27 @@ export const AddCity = () => {
 		copy.regionId = regionId ? regionId : null;
 		return addCity(copy)
 			.then((res) => res.json())
-			.then((newcity) => navigate(`/city/${newcity.id}`));
+			.then((newCity) => {
+				if (window.location.pathname !== `/city/add`) {
+					return getAllCities()
+						.then((citys) => setCities(citys))
+						.then(() => setComponentCityId(parseInt(newCity.id)))
+						.then(() => {
+							if (newCity.regionId) {
+								setComponentRegionId(newCity.regionId);
+							}
+							if (newCity.stateId) {
+								setComponentStateId(newCity.stateId);
+							}
+							if (newCity.countryId) {
+								setComponentCountryId(newCity.countryId);
+							}
+							setShow(false);
+						});
+				} else {
+					navigate(`/city/${newCity.id}`);
+				}
+			});
 	};
 
 	useEffect(() => {
@@ -59,30 +97,34 @@ export const AddCity = () => {
 						/>
 					</Form.Group>
 
-					<Stack direction='horizontal' gap={3}>
+					<Stack direction='horizontal' gap={3} className='flex-wrap'>
 						<CountryDropDown
 							countryId={countryId}
 							setCountryId={setCountryId}
+							setStateId={setStateId}
+							setRegionId={setRegionId}
+							urlPath={urlPath}
 						/>
 						<StateDropDown
 							stateId={stateId}
 							setStateId={setStateId}
 							countryId={countryId}
-						/>
-						<RegionDropDown
-							setCountryId={setCountryId}
-							setStateId={setStateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
+							urlPath={urlPath}
+						/>
+						<RegionDropDown
+							countryId={countryId}
+							stateId={stateId}
+							regionId={regionId}
+							setRegionId={setRegionId}
+							urlPath={urlPath}
 						/>
 					</Stack>
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='outline-secondary'
-							onClick={(e) => {
-								e.preventDefault();
-								navigate(`/city/`);
-							}}
+							onClick={(e) => handleCancel(e)}
 						>
 							Cancel
 						</Button>

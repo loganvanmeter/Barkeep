@@ -4,7 +4,14 @@ import { Button, Container, Form, Stack } from "react-bootstrap";
 import { addState } from "../../../managers/LocationsManager";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 
-export const AddState = () => {
+export const AddState = ({
+	setShow,
+	setStates,
+	getAllStates,
+	setComponentCountryId,
+	setComponentStateId,
+}) => {
+	const urlPath = "state";
 	const [countryId, setCountryId] = useState(0);
 	const [state, setState] = useState({
 		name: null,
@@ -20,12 +27,32 @@ export const AddState = () => {
 		setState(copy);
 	};
 
+	const handleCancel = (e) => {
+		e.preventDefault();
+		if (window.location.pathname !== `/state/add`) {
+			setShow(false);
+		} else {
+			navigate(`/state`);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...state };
 		return addState(copy)
 			.then((res) => res.json())
-			.then((newstate) => navigate(`/state/${newstate.id}`));
+			.then((newState) => {
+				if (window.location.pathname !== `/state/add`) {
+					return getAllStates()
+						.then((states) => setStates(states))
+						.then(() => setComponentStateId(parseInt(newState.id)))
+						.then(() => {
+							setComponentCountryId(newState.countryId);
+						});
+				} else {
+					navigate(`/state/${newState.id}`);
+				}
+			});
 	};
 
 	useEffect(() => {
@@ -47,14 +74,15 @@ export const AddState = () => {
 							onChange={(e) => handleChange(e)}
 						/>
 					</Form.Group>
-					<CountryDropDown countryId={countryId} setCountryId={setCountryId} />
+					<CountryDropDown
+						countryId={countryId}
+						setCountryId={setCountryId}
+						urlPath={urlPath}
+					/>
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='outline-secondary'
-							onClick={(e) => {
-								e.preventDefault();
-								navigate(`/state/`);
-							}}
+							onClick={(e) => handleCancel(e)}
 						>
 							Cancel
 						</Button>

@@ -13,7 +13,7 @@ namespace Barkeep.Repositories
             return @"SELECT 
                     c.Id, c.ComponentTypeId, c.Name, c.Abv, c.Ibu, c.Description, c.Year,
                     c.CityId, c.RegionId, c.StateId, c.CountryId, c.ProducerId, c.ImporterId,
-                    c.ProviderBarId, c.IsAdminApproved
+                    c.ProviderBarId, c.IsAdminApproved,
 
                     ct.Id, ct.Name AS CTName,
 
@@ -53,14 +53,14 @@ namespace Barkeep.Repositories
                 Id = DbUtils.GetInt(reader, "Id"),
                 ComponentTypeId = DbUtils.GetInt(reader, "ComponentTypeId"),
                 Name = DbUtils.GetString(reader, "Name"),
-                Abv = DbUtils.GetNullableDouble(reader, "Abv"),
-                Ibu = DbUtils.GetNullableDouble(reader, "Ibu"),
+                Abv = DbUtils.GetNullableDecimal(reader, "Abv"),
+                Ibu = DbUtils.GetNullableDecimal(reader, "Ibu"),
                 Description = DbUtils.GetString(reader, "Description"),
-                Year = DbUtils.GetNullableDateTime(reader, "Year"),
+                Year = DbUtils.GetNullableInt(reader, "Year"),
                 CityId = DbUtils.GetNullableInt(reader, "CityId"),
                 StateId = DbUtils.GetNullableInt(reader, "StateId"),
                 RegionId = DbUtils.GetNullableInt(reader, "RegionId"),
-                CountryId = DbUtils.GetInt(reader, "CountryId"),
+                CountryId = DbUtils.GetNullableInt(reader, "CountryId"),
                 ProviderBarId = DbUtils.GetNullableInt(reader, "ProviderBarId"),
                 ImporterId = DbUtils.GetNullableInt(reader, "ImporterId"),
                 ProducerId = DbUtils.GetNullableInt(reader, "ProducerId"),
@@ -70,11 +70,6 @@ namespace Barkeep.Repositories
                     Id = DbUtils.GetInt(reader, "ComponentTypeId"),
                     Name = DbUtils.GetString(reader, "CTName")
                 },
-                Country = new Country()
-                {
-                    Id = DbUtils.GetInt(reader, "CountryId"),
-                    Name = DbUtils.GetString(reader, "COName")
-                }
             };
 
             if (DbUtils.IsNotDbNull(reader, "CityId"))
@@ -83,9 +78,9 @@ namespace Barkeep.Repositories
                 {
                     Id = DbUtils.GetInt(reader, "CityId"),
                     Name = DbUtils.GetString(reader, "CIName"),
-                    RegionId = DbUtils.GetInt(reader, "CIRegionId"),
-                    StateId = DbUtils.GetInt(reader, "CIStateId"),
-                    CountryId = DbUtils.GetInt(reader, "CICountryId"),
+                    RegionId = DbUtils.GetNullableInt(reader, "CIRegionId"),
+                    StateId = DbUtils.GetNullableInt(reader, "CIStateId"),
+                    CountryId = DbUtils.GetNullableInt(reader, "CICountryId"),
                 };
             }
 
@@ -95,8 +90,8 @@ namespace Barkeep.Repositories
                 {
                     Id = DbUtils.GetInt(reader, "RegionId"),
                     Name = DbUtils.GetString(reader, "RName"),
-                    StateId = DbUtils.GetInt(reader, "RStateId"),
-                    CountryId = DbUtils.GetInt(reader, "RCountryId"),
+                    StateId = DbUtils.GetNullableInt(reader, "RStateId"),
+                    CountryId = DbUtils.GetNullableInt(reader, "RCountryId"),
                 };
             }
 
@@ -107,6 +102,15 @@ namespace Barkeep.Repositories
                     Id = DbUtils.GetInt(reader, "StateId"),
                     Name = DbUtils.GetString(reader, "SName"),
                     CountryId = DbUtils.GetInt(reader, "SCountryId"),
+                };
+            }
+
+            if (DbUtils.IsNotDbNull(reader, "CountryId"))
+            {
+                component.Country = new()
+                {
+                    Id = DbUtils.GetInt(reader, "CountryId"),
+                    Name = DbUtils.GetString(reader, "COName")
                 };
             }
 
@@ -245,7 +249,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@CityId", DbUtils.ValueOrDBNull(component.CityId));
                     DbUtils.AddParameter(cmd, "@RegionId", DbUtils.ValueOrDBNull(component.RegionId));
                     DbUtils.AddParameter(cmd, "@StateId", DbUtils.ValueOrDBNull(component.StateId));
-                    DbUtils.AddParameter(cmd, "@CountryId", component.CountryId);
+                    DbUtils.AddParameter(cmd, "@CountryId", DbUtils.ValueOrDBNull(component.CountryId));
                     DbUtils.AddParameter(cmd, "@ProducerId", DbUtils.ValueOrDBNull(component.ProducerId));
                     DbUtils.AddParameter(cmd, "@ImporterId", DbUtils.ValueOrDBNull(component.ImporterId));
                     DbUtils.AddParameter(cmd, "@ProviderBarId", DbUtils.ValueOrDBNull(component.ProviderBarId));
@@ -269,7 +273,7 @@ namespace Barkeep.Repositories
                         [Name] = @Name, 
                         ComponentTypeId = @ComponentTypeId, 
                         Abv = @Abv, 
-        q               Ibu = @Ibu,
+                        Ibu = @Ibu,
                         Description = @Description, 
                         Year = @Year, 
                         CityId = @CityId, 
@@ -293,7 +297,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@CityId", DbUtils.ValueOrDBNull(component.CityId));
                     DbUtils.AddParameter(cmd, "@RegionId", DbUtils.ValueOrDBNull(component.RegionId));
                     DbUtils.AddParameter(cmd, "@StateId", DbUtils.ValueOrDBNull(component.StateId));
-                    DbUtils.AddParameter(cmd, "@CountryId", component.CountryId);
+                    DbUtils.AddParameter(cmd, "@CountryId", DbUtils.ValueOrDBNull(component.CountryId));
                     DbUtils.AddParameter(cmd, "@ProducerId", DbUtils.ValueOrDBNull(component.ProducerId));
                     DbUtils.AddParameter(cmd, "@ImporterId", DbUtils.ValueOrDBNull(component.ImporterId));
                     DbUtils.AddParameter(cmd, "@ProviderBarId", DbUtils.ValueOrDBNull(component.ProviderBarId));

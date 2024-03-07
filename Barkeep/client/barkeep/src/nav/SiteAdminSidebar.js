@@ -10,9 +10,12 @@ export const SiteAdminSidebar = ({ setIsLoggedIn }) => {
 					<Nav.Link href='/category'>Categories</Nav.Link>
 				</Nav>
 				<NavDropdown title='Components' className='me-auto'>
+					<NavDropdown.Item href='/component'>Components</NavDropdown.Item>
 					<NavDropdown.Item href='/componentType'>
 						Component Types
 					</NavDropdown.Item>
+					<NavDropdown.Item href='/importer'>Importers</NavDropdown.Item>
+					<NavDropdown.Item href='/producer'>Producers</NavDropdown.Item>
 					<NavDropdown.Item href='/varietal'>Varietals</NavDropdown.Item>
 					<NavDropdown.Item href='/varietalType'>
 						Varietal Types

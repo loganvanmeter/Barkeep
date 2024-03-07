@@ -34,5 +34,17 @@ namespace Barkeep.Controllers
             }
             return Ok(country);
         }
+
+        [HttpGet("GetByName/{name}")]
+        public IActionResult Get(string name)
+        {
+            var country = _countryRepository.GetByName(name);
+
+            if (country == null)
+            {
+                return NotFound();
+            }
+            return Ok(country);
+        }
     }
 }

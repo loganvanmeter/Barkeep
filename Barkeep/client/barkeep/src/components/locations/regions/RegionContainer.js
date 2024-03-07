@@ -8,6 +8,7 @@ import { StateDropDown } from "../../forms/StateDropDown";
 import { RegionList } from "./RegionList";
 
 export const RegionContainer = () => {
+	const urlPath = "region";
 	const [regions, setRegions] = useState([]);
 	const [filteredRegions, setFilteredRegions] = useState([]);
 	const [countryId, setCountryId] = useState(0);
@@ -171,12 +172,27 @@ export const RegionContainer = () => {
 					<Container>
 						<CountryDropDown
 							countryId={countryId}
+							stateId={stateId}
+							setStateId={setStateId}
 							setCountryId={setCountryId}
+							urlPath={urlPath}
 						/>
 					</Container>
 				) : !showCountryRegion && showStateRegion ? (
 					<Container>
-						<StateDropDown stateId={stateId} setStateId={setStateId} />
+						<CountryDropDown
+							countryId={countryId}
+							stateId={stateId}
+							setStateId={setStateId}
+							setCountryId={setCountryId}
+							urlPath={urlPath}
+						/>
+						<StateDropDown
+							stateId={stateId}
+							countryId={countryId}
+							setStateId={setStateId}
+							urlPath={urlPath}
+						/>
 					</Container>
 				) : (
 					<Stack direction='horizontal' gap={3}>
@@ -186,6 +202,7 @@ export const RegionContainer = () => {
 								setCountryId={setCountryId}
 								setStateId={setStateId}
 								stateId={stateId}
+								urlPath={urlPath}
 							/>
 						</Container>
 						<Container>
@@ -193,6 +210,7 @@ export const RegionContainer = () => {
 								stateId={stateId}
 								setStateId={setStateId}
 								countryId={countryId}
+								urlPath={urlPath}
 							/>
 						</Container>
 					</Stack>

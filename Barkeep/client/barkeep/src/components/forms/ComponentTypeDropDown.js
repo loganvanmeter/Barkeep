@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Stack } from "react-bootstrap";
 import { getAllComponentTypes } from "../../managers/ComponentTypeManager";
 
 export const ComponentTypeDropDown = ({
@@ -22,30 +22,32 @@ export const ComponentTypeDropDown = ({
 	}, []);
 
 	return (
-		<Form.Group>
-			<Form.Label>
-				{window.location.pathname === "/component"
-					? "Filter by component type"
-					: "Component Type"}
-			</Form.Label>
-			<Form.Select
-				aria-label='Default select example'
-				value={componentTypeId}
-				onChange={handleChange}
-			>
-				<option value={0}>
+		<Stack>
+			<Form.Group>
+				<Form.Label>
 					{window.location.pathname === "/component"
-						? "All"
-						: "Select component"}
-				</option>
-				{componentTypes.map((componentType) => {
-					return (
-						<option key={componentType.id} value={componentType.id}>
-							{componentType.name}
-						</option>
-					);
-				})}
-			</Form.Select>
-		</Form.Group>
+						? "Filter by component type"
+						: "Component Type"}
+				</Form.Label>
+				<Form.Select
+					aria-label='Default select example'
+					value={componentTypeId}
+					onChange={handleChange}
+				>
+					<option value={0}>
+						{window.location.pathname === "/component"
+							? "All"
+							: "Select component type"}
+					</option>
+					{componentTypes.map((componentType) => {
+						return (
+							<option key={componentType.id} value={componentType.id}>
+								{componentType.name}
+							</option>
+						);
+					})}
+				</Form.Select>
+			</Form.Group>
+		</Stack>
 	);
 };

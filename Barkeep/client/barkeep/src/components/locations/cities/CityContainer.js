@@ -9,6 +9,7 @@ import { RegionDropDown } from "../../forms/RegionDropDown";
 import { CityList } from "./CityList";
 
 export const CityContainer = () => {
+	const urlPath = "city";
 	const [cities, setCities] = useState([]);
 	const [filteredCities, setFilteredCities] = useState([]);
 	const [countryId, setCountryId] = useState(0);
@@ -155,13 +156,17 @@ export const CityContainer = () => {
 							stateId={stateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
+							urlPath={urlPath}
 						/>
 					</Container>
 					<Container>
 						<StateDropDown
 							stateId={stateId}
 							setStateId={setStateId}
+							regionId={regionId}
+							setRegionId={setRegionId}
 							countryId={countryId}
+							urlPath={urlPath}
 						/>
 					</Container>
 					<Container>
@@ -170,6 +175,7 @@ export const CityContainer = () => {
 							stateId={stateId}
 							regionId={regionId}
 							setRegionId={setRegionId}
+							urlPath={urlPath}
 						/>
 					</Container>
 				</Stack>

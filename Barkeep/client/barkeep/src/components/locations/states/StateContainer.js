@@ -7,6 +7,7 @@ import { Search } from "../../forms/Search";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 
 export const StateContainer = () => {
+	const urlPath = "state";
 	const [states, setStates] = useState([]);
 	const [filteredStates, setFilteredStates] = useState([]);
 	const [countryId, setCountryId] = useState(0);
@@ -83,7 +84,11 @@ export const StateContainer = () => {
 				</Container>
 				<Search setSearchTerms={setSearchTerms} />
 				<Container>
-					<CountryDropDown countryId={countryId} setCountryId={setCountryId} />
+					<CountryDropDown
+						countryId={countryId}
+						setCountryId={setCountryId}
+						urlPath={urlPath}
+					/>
 				</Container>
 				{filteredStates.length ? (
 					<StateList filteredStates={filteredStates} />
