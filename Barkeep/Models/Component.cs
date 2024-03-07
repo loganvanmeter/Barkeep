@@ -19,7 +19,7 @@ namespace Barkeep.Models
         public int? ImporterId { get; set; }
         public int? ProviderBarId { get; set; }
         public bool IsAdminApproved { get; set; }
-        public ComponentType ComponentType { get; set; }
+        public ComponentType? ComponentType { get; set; }
         public City? City { get; set; }
         public Region? Region { get; set; }
         public State? State { get; set; }

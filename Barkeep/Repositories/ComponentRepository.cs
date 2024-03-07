@@ -273,7 +273,7 @@ namespace Barkeep.Repositories
                         [Name] = @Name, 
                         ComponentTypeId = @ComponentTypeId, 
                         Abv = @Abv, 
-        q               Ibu = @Ibu,
+                        Ibu = @Ibu,
                         Description = @Description, 
                         Year = @Year, 
                         CityId = @CityId, 
@@ -297,7 +297,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@CityId", DbUtils.ValueOrDBNull(component.CityId));
                     DbUtils.AddParameter(cmd, "@RegionId", DbUtils.ValueOrDBNull(component.RegionId));
                     DbUtils.AddParameter(cmd, "@StateId", DbUtils.ValueOrDBNull(component.StateId));
-                    DbUtils.AddParameter(cmd, "@CountryId", component.CountryId);
+                    DbUtils.AddParameter(cmd, "@CountryId", DbUtils.ValueOrDBNull(component.CountryId));
                     DbUtils.AddParameter(cmd, "@ProducerId", DbUtils.ValueOrDBNull(component.ProducerId));
                     DbUtils.AddParameter(cmd, "@ImporterId", DbUtils.ValueOrDBNull(component.ImporterId));
                     DbUtils.AddParameter(cmd, "@ProviderBarId", DbUtils.ValueOrDBNull(component.ProviderBarId));

@@ -47,6 +47,8 @@ import { CityDetails } from "../components/locations/cities/CityDetails";
 import { ComponentContainer } from "../components/components/ComponentContainer";
 import { AddComponent } from "../components/components/AddComponent";
 import { ComponentDetails } from "../components/components/ComponentDetails";
+import { EditComponent } from "../components/components/EditComponent";
+import { DeleteComponent } from "../components/components/DeleteComponent";
 
 export const SiteAdminView = () => {
 	return (
@@ -122,6 +124,11 @@ export const SiteAdminView = () => {
 			<Route path='/component' element={<ComponentContainer />} />
 			<Route path='/component/add' element={<AddComponent />} />
 			<Route path='/component/:componentId' element={<ComponentDetails />} />
+			<Route
+				path='/component/:componentId/delete'
+				element={<DeleteComponent />}
+			/>
+			<Route path='/component/:componentId/edit' element={<EditComponent />} />
 		</Routes>
 	);
 };

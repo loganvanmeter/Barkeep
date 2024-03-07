@@ -11,10 +11,13 @@ namespace Barkeep.Repositories
         private string GetComponentCategories()
         {
             return @"SELECT 
-                    cc.Id, cc.ComponentId, cc.CategoryId, cat.Id, cat.[Name]
+                    cc.Id, cc.ComponentId, cc.CategoryId,
+
+                    cat.Id, cat.[Name]
+
                     
                     FROM [ComponentCategory] cc
-                    LEFT JOIN [Category] cat
+                    LEFT JOIN [Category] cat ON cat.Id = cc.CategoryId
 
                     ";
         }

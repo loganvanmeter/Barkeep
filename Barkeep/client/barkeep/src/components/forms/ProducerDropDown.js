@@ -24,7 +24,7 @@ export const ProducerDropDown = ({ producerId, setProducerId }) => {
 	}, []);
 
 	return (
-		<>
+		<Stack>
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton></Modal.Header>
 				<Modal.Body>
@@ -37,37 +37,39 @@ export const ProducerDropDown = ({ producerId, setProducerId }) => {
 				</Modal.Body>
 			</Modal>
 			<Stack direction='horizontal' gap={2} className='align-items-end'>
-				<Form.Group>
-					<Form.Label>
-						{window.location.pathname === "/producer"
-							? "Filter by producer"
-							: "Producer"}
-					</Form.Label>
-					<Form.Select
-						aria-label='Default select example'
-						value={producerId}
-						onChange={handleChange}
-					>
-						<option value={0}>
+				<Stack>
+					<Form.Group>
+						<Form.Label>
 							{window.location.pathname === "/producer"
-								? "All"
-								: "Select producer"}
-						</option>
-						{producers.map((producer) => {
-							return (
-								<option key={producer.id} value={producer.id}>
-									{producer.name}
-								</option>
-							);
-						})}
-					</Form.Select>
-				</Form.Group>
+								? "Filter by producer"
+								: "Producer"}
+						</Form.Label>
+						<Form.Select
+							aria-label='Default select example'
+							value={producerId}
+							onChange={handleChange}
+						>
+							<option value={0}>
+								{window.location.pathname === "/producer"
+									? "All"
+									: "Select producer"}
+							</option>
+							{producers.map((producer) => {
+								return (
+									<option key={producer.id} value={producer.id}>
+										{producer.name}
+									</option>
+								);
+							})}
+						</Form.Select>
+					</Form.Group>
+				</Stack>
 				<div className='pb-2'>{` OR `}</div>
 
 				<Button variant='outline-primary' onClick={handleShow}>
 					add new producer
 				</Button>
 			</Stack>
-		</>
+		</Stack>
 	);
 };

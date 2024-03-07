@@ -6,5 +6,7 @@ namespace Barkeep.Repositories
     {
         List<Country> GetAll();
         Country GetById(int id);
+
+        Country GetByName(string name);
     }
 }

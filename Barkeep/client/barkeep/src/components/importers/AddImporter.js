@@ -3,7 +3,12 @@ import { addImporter } from "../../managers/ImporterManager";
 import { Button, Container, Form, Stack } from "react-bootstrap";
 import { useState } from "react";
 
-export const AddImporter = () => {
+export const AddImporter = ({
+	setShow,
+	setImporters,
+	setImporterId,
+	getAllImporters,
+}) => {
 	const [importer, setImporter] = useState({
 		name: null,
 		website: null,
@@ -18,12 +23,30 @@ export const AddImporter = () => {
 		setImporter(copy);
 	};
 
+	const handleCancel = (e) => {
+		e.preventDefault();
+		if (window.location.pathname !== `/importer/add`) {
+			setShow(false);
+		} else {
+			navigate(`/importer`);
+		}
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		const copy = { ...importer };
 		return addImporter(copy)
 			.then((res) => res.json())
-			.then((newImporter) => navigate(`/importer/${newImporter.id}`));
+			.then((newImporter) => {
+				if (window.location.pathname !== `/importer/add`) {
+					return getAllImporters()
+						.then((importers) => setImporters(importers))
+						.then(() => setImporterId(parseInt(newImporter.id)))
+						.then(() => setShow(false));
+				} else {
+					navigate(`/importer/${newImporter.id}`);
+				}
+			});
 	};
 
 	return (
@@ -59,10 +82,7 @@ export const AddImporter = () => {
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='outline-secondary'
-							onClick={(e) => {
-								e.preventDefault();
-								navigate(`/importer`);
-							}}
+							onClick={(e) => handleCancel(e)}
 						>
 							Cancel
 						</Button>

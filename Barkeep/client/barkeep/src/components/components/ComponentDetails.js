@@ -18,7 +18,7 @@ export const ComponentDetails = () => {
 
 	return (
 		<Container>
-			<Component component={component} />
+			<Component component={component} componentId={componentId} />
 		</Container>
 	);
 };

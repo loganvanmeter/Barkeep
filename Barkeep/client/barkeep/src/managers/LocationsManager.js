@@ -123,3 +123,7 @@ export const getAllCountries = () => {
 export const getCountryById = (id) => {
 	return fetch(`${countryApiUrl}${id}`).then((res) => res.json());
 };
+
+export const getCountryByName = (name) => {
+	return fetch(`${countryApiUrl}/GetByName${name}`).then((res) => res.json());
+};

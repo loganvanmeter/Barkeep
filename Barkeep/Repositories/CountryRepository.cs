@@ -86,5 +86,32 @@ namespace Barkeep.Repositories
                 }
             }
         }
+
+        public Country GetByName(string name)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetCountries();
+                    sql += " WHERE c.[Name] = @name";
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@name", name);
+
+                    Country country = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        country = CountryObject(reader);
+                    }
+
+                    reader.Close();
+                    return country;
+                }
+            }
+        }
     }
 }

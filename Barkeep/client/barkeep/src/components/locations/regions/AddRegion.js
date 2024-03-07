@@ -5,7 +5,15 @@ import { addRegion } from "../../../managers/LocationsManager";
 import { CountryDropDown } from "../../forms/CountryDropDown";
 import { StateDropDown } from "../../forms/StateDropDown";
 
-export const AddRegion = () => {
+export const AddRegion = ({
+	setShow,
+	setRegions,
+	setComponentRegionId,
+	getAllRegions,
+	setComponentCountryId,
+	setComponentStateId,
+}) => {
+	const urlPath = "region";
 	const [countryId, setCountryId] = useState(0);
 	const [stateId, setStateId] = useState(0);
 	const [addStateRegion, setAddStateRegion] = useState(false);
@@ -25,6 +33,15 @@ export const AddRegion = () => {
 		setRegion(copy);
 	};
 
+	const handleCancel = (e) => {
+		e.preventDefault();
+		if (window.location.pathname !== `/region/add`) {
+			setShow(false);
+		} else {
+			navigate(`/region`);
+		}
+	};
+
 	const handleRadioChange = (e) => {
 		if (e.target.id.startsWith("state")) {
 			setAddStateRegion(e.target.checked);
@@ -42,7 +59,24 @@ export const AddRegion = () => {
 
 		return addRegion(copy)
 			.then((res) => res.json())
-			.then((newregion) => navigate(`/region/${newregion.id}`));
+			.then((newRegion) => {
+				if (window.location.pathname !== `/region/add`) {
+					return getAllRegions()
+						.then((regions) => setRegions(regions))
+						.then(() => setComponentRegionId(parseInt(newRegion.id)))
+						.then(() => {
+							if (newRegion.countryId) {
+								setComponentCountryId(newRegion.countryId);
+							}
+							if (newRegion.stateId) {
+								setComponentStateId(newRegion.stateId);
+							}
+							setShow(false);
+						});
+				} else {
+					navigate(`/region/${newRegion.id}`);
+				}
+			});
 	};
 
 	useEffect(() => {
@@ -100,12 +134,16 @@ export const AddRegion = () => {
 						<Stack direction='horizontal' gap={3}>
 							<CountryDropDown
 								countryId={countryId}
+								stateId={stateId}
 								setCountryId={setCountryId}
+								setStateId={setStateId}
+								urlPath={urlPath}
 							/>
 							<StateDropDown
 								stateId={stateId}
 								setStateId={setStateId}
 								countryId={countryId}
+								urlPath={urlPath}
 							/>
 						</Stack>
 					) : (
@@ -114,10 +152,7 @@ export const AddRegion = () => {
 					<Stack direction='horizontal' className='justify-content-end' gap={3}>
 						<Button
 							variant='outline-secondary'
-							onClick={(e) => {
-								e.preventDefault();
-								navigate(`/region/`);
-							}}
+							onClick={(e) => handleCancel(e)}
 						>
 							Cancel
 						</Button>

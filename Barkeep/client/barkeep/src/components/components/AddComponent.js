@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Form, Stack } from "react-bootstrap";
+import { Button, Col, Container, Form, Stack } from "react-bootstrap";
 import { CountryDropDown } from "../forms/CountryDropDown";
 import { StateDropDown } from "../forms/StateDropDown";
 import { RegionDropDown } from "../forms/RegionDropDown";
@@ -11,6 +11,7 @@ import { addComponent } from "../../managers/ComponentManager";
 import { ComponentTypeDropDown } from "../forms/ComponentTypeDropDown.js";
 
 export const AddComponent = () => {
+	const urlPath = "component";
 	const [countryId, setCountryId] = useState(0);
 	const [stateId, setStateId] = useState(0);
 	const [regionId, setRegionId] = useState(0);
@@ -91,38 +92,45 @@ export const AddComponent = () => {
 			<Form onSubmit={handleSubmit}>
 				<h3>Add a new component below</h3>
 				<Stack gap={3}>
-					<Stack direction='horizontal' gap={3}>
-						<Form.Group>
-							<Form.Label>Name</Form.Label>
-							<Form.Control
-								type='text'
-								id='name'
-								onChange={(e) => handleChange(e)}
-							/>
-						</Form.Group>
+					<Stack className='flex-wrap' direction='horizontal' gap={5}>
+						<Stack>
+							<Form.Group>
+								<Form.Label>Name</Form.Label>
+								<Form.Control
+									type='text'
+									id='name'
+									onChange={(e) => handleChange(e)}
+								/>
+							</Form.Group>
+						</Stack>
 						<ComponentTypeDropDown
 							componentTypeId={componentTypeId}
 							setComponentTypeId={setComponentTypeId}
 						/>
+						<Stack direction='horizontal' gap={5}>
+							<Stack>
+								<Form.Group>
+									<Form.Label>ABV</Form.Label>
+									<Form.Control
+										type='text'
+										id='abv'
+										onChange={(e) => handleChange(e)}
+									/>
+								</Form.Group>
+							</Stack>
+							<Stack>
+								<Form.Group>
+									<Form.Label>IBU</Form.Label>
+									<Form.Control
+										type='text'
+										id='ibu'
+										onChange={(e) => handleChange(e)}
+									/>
+								</Form.Group>
+							</Stack>
+						</Stack>
 					</Stack>
-					<Stack direction='horizontal' gap={3}>
-						<Form.Group>
-							<Form.Label>ABV</Form.Label>
-							<Form.Control
-								type='text'
-								id='abv'
-								onChange={(e) => handleChange(e)}
-							/>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>IBU</Form.Label>
-							<Form.Control
-								type='text'
-								id='ibu'
-								onChange={(e) => handleChange(e)}
-							/>
-						</Form.Group>
-					</Stack>
+					<Stack direction='horizontal' gap={3}></Stack>
 					<Form.Group>
 						<Form.Label>Description</Form.Label>
 						<Form.Control
@@ -132,7 +140,11 @@ export const AddComponent = () => {
 							onChange={(e) => handleChange(e)}
 						/>
 					</Form.Group>
-					<Stack direction='horizontal' gap={3}>
+					<Stack
+						direction='horizontal'
+						gap={5}
+						className='justify-content-between'
+					>
 						<ProducerDropDown
 							producerId={producerId}
 							setProducerId={setProducerId}
@@ -151,29 +163,45 @@ export const AddComponent = () => {
 						</Form.Group>
 					</Stack>
 					<Stack gap={3}>
-						<Stack direction='horizontal' gap={3}>
+						<Stack direction='horizontal' gap={5} className='flex-wrap'>
 							<CityDropDown
-								setCountryId={setCountryId}
+								stateId={stateId}
 								setStateId={setStateId}
+								countryId={countryId}
+								setCountryId={setCountryId}
+								setRegionId={setRegionId}
 								setCityId={setCityId}
 								cityId={cityId}
+								urlPath={urlPath}
 							/>
 							<RegionDropDown
+								countryId={countryId}
 								setCountryId={setCountryId}
+								stateId={stateId}
 								setStateId={setStateId}
 								regionId={regionId}
 								setRegionId={setRegionId}
+								urlPath={urlPath}
 							/>
-						</Stack>
-						<Stack direction='horizontal' gap={3}>
 							<StateDropDown
 								stateId={stateId}
 								setStateId={setStateId}
 								countryId={countryId}
+								cityId={cityId}
+								setCountryId={setCountryId}
+								setCityId={setCityId}
+								regionId={regionId}
+								setRegionId={setRegionId}
+								urlPath={urlPath}
 							/>
 							<CountryDropDown
 								countryId={countryId}
 								setCountryId={setCountryId}
+								setStateId={setStateId}
+								setRegionId={setRegionId}
+								cityId={cityId}
+								setCityId={setCityId}
+								urlPath={urlPath}
 							/>
 						</Stack>
 					</Stack>

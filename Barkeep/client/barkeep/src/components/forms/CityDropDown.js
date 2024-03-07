@@ -1,10 +1,25 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form, Modal, Stack } from "react-bootstrap";
 import { getAllCities } from "../../managers/LocationsManager";
+import { AddCity } from "../locations/cities/AddCity";
 
-export const CityDropDown = ({ countryId, stateId, cityId, setCityId }) => {
+export const CityDropDown = ({
+	countryId,
+	setCountryId,
+	stateId,
+	setStateId,
+	setRegionId,
+	cityId,
+	setCityId,
+	urlPath,
+}) => {
 	const [cities, setCities] = useState([]);
 	const [filteredCities, setFilteredCities] = useState([]);
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
 	const getCities = () => {
 		return getAllCities().then((res) => setCities(res));
 	};
@@ -42,26 +57,55 @@ export const CityDropDown = ({ countryId, stateId, cityId, setCityId }) => {
 	}, [countryId, stateId]);
 
 	return (
-		<Form.Group>
-			<Form.Label>
-				{window.location.pathname !== "/city" ? "Filter by city" : "Cities"}
-			</Form.Label>
-			<Form.Select
-				aria-label='Default select example'
-				value={cityId}
-				onChange={handleChange}
-			>
-				<option value={0}>
-					{window.location.pathname !== "/city/add" ? "All" : "Select city"}
-				</option>
-				{filteredCities.map((city) => {
-					return (
-						<option key={city.id} value={city.id}>
-							{city.name}
-						</option>
-					);
-				})}
-			</Form.Select>
-		</Form.Group>
+		<Stack>
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Header closeButton></Modal.Header>
+				<Modal.Body>
+					<AddCity
+						setShow={setShow}
+						setComponentCountryId={setCountryId}
+						setComponentStateId={setStateId}
+						setComponentRegionId={setRegionId}
+						setCities={setCities}
+						setComponentCityId={setCityId}
+						getAllCities={getAllCities}
+					/>
+				</Modal.Body>
+			</Modal>
+			<Stack direction='horizontal' gap={2} className='align-items-end'>
+				<Stack>
+					<Form.Group>
+						<Form.Label>
+							{window.location.pathname === `/${urlPath}`
+								? "Filter by city"
+								: "City"}
+						</Form.Label>
+						<Form.Select
+							aria-label='Default select example'
+							value={cityId}
+							onChange={handleChange}
+						>
+							<option value={0}>
+								{window.location.pathname === `/${urlPath}`
+									? "All"
+									: "Select city"}
+							</option>
+							{filteredCities.map((city) => {
+								return (
+									<option key={city.id} value={city.id}>
+										{city.name}
+									</option>
+								);
+							})}
+						</Form.Select>
+					</Form.Group>
+				</Stack>
+				<div className='pb-2'>{` OR `}</div>
+
+				<Button variant='outline-primary' onClick={handleShow}>
+					add new city
+				</Button>
+			</Stack>
+		</Stack>
 	);
 };

@@ -4,16 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { getComponentCategoriesByComponentId } from "../../managers/ComponentCategoryManager";
 import { ComponentCategoryBadge } from "../componentCategories/ComponentCategoryBadge";
 
-export const Component = ({ component }) => {
+export const Component = ({ component, componentId }) => {
 	const [componentCategories, setComponentCategories] = useState([]);
 	const navigate = useNavigate();
 	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
 
 	useEffect(() => {
-		getComponentCategoriesByComponentId(component.id).then((categories) =>
+		getComponentCategoriesByComponentId(componentId).then((categories) =>
 			setComponentCategories(categories)
 		);
-	}, [component]);
+	}, [componentId]);
+
 	return (
 		<Card>
 			<Card.Header>
@@ -35,7 +36,7 @@ export const Component = ({ component }) => {
 			<ListGroup className='list-group-flush'>
 				<ListGroup.Item>Type: {component?.componentType?.name}</ListGroup.Item>
 				{component.producerId ? (
-					<ListGroup.Item>Producer: {component?.produder?.name}</ListGroup.Item>
+					<ListGroup.Item>Producer: {component?.producer?.name}</ListGroup.Item>
 				) : (
 					""
 				)}
@@ -81,7 +82,7 @@ export const Component = ({ component }) => {
 										componentCategory={componentCategory}
 									/>
 							  ))
-							: "Not categories assigned"}
+							: "No categories assigned"}
 					</Stack>
 				</Card.Text>
 			</Card.Body>

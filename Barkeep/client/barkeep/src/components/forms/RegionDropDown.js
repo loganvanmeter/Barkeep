@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form, Modal, Stack } from "react-bootstrap";
 import { getAllRegions } from "../../managers/LocationsManager";
+import { AddRegion } from "../locations/regions/AddRegion";
 
 export const RegionDropDown = ({
 	countryId,
+	setCountryId,
+	setStateId,
 	stateId,
 	regionId,
 	setRegionId,
+	urlPath,
 }) => {
 	const [regions, setRegions] = useState([]);
 	const [filteredRegions, setFilteredRegions] = useState([]);
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 	const getRegions = () => {
 		return getAllRegions().then((res) => setRegions(res));
 	};
@@ -30,7 +38,9 @@ export const RegionDropDown = ({
 	useEffect(() => {
 		if (countryId && !stateId) {
 			const matchedByCountry = regions.filter(
-				(region) => region.countryId == countryId
+				(region) =>
+					(region.countryId && region.countryId == countryId) ||
+					(region.stateId && region?.state?.countryId == countryId)
 			);
 			setFilteredRegions(matchedByCountry);
 		} else if (stateId && !countryId) {
@@ -50,28 +60,54 @@ export const RegionDropDown = ({
 	}, [countryId, stateId]);
 
 	return (
-		<Form.Group>
-			<Form.Label>
-				{window.location.pathname !== "/region"
-					? "Filter by region"
-					: "Regions"}
-			</Form.Label>
-			<Form.Select
-				aria-label='Default select example'
-				value={regionId}
-				onChange={handleChange}
-			>
-				<option value={0}>
-					{window.location.pathname !== "/city/add" ? "All" : "Select region"}
-				</option>
-				{filteredRegions.map((region) => {
-					return (
-						<option key={region.id} value={region.id}>
-							{region.name}
-						</option>
-					);
-				})}
-			</Form.Select>
-		</Form.Group>
+		<Stack>
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Header closeButton></Modal.Header>
+				<Modal.Body>
+					<AddRegion
+						setShow={setShow}
+						setRegions={setRegions}
+						setComponentRegionId={setRegionId}
+						getAllRegions={getAllRegions}
+						setComponentCountryId={setCountryId}
+						setComponentStateId={setStateId}
+					/>
+				</Modal.Body>
+			</Modal>
+			<Stack direction='horizontal' gap={2} className='align-items-end'>
+				<Stack>
+					<Form.Group>
+						<Form.Label>
+							{window.location.pathname === `/${urlPath}`
+								? "Filter by region"
+								: "Regions"}
+						</Form.Label>
+						<Form.Select
+							aria-label='Default select example'
+							value={regionId}
+							onChange={handleChange}
+						>
+							<option value={0}>
+								{window.location.pathname === `/${urlPath}`
+									? "All"
+									: "Select region"}
+							</option>
+							{filteredRegions.map((region) => {
+								return (
+									<option key={region.id} value={region.id}>
+										{region.name}
+									</option>
+								);
+							})}
+						</Form.Select>
+					</Form.Group>
+				</Stack>
+				<div className='pb-2'>{` OR `}</div>
+
+				<Button variant='outline-primary' onClick={handleShow}>
+					add new region
+				</Button>
+			</Stack>
+		</Stack>
 	);
 };
