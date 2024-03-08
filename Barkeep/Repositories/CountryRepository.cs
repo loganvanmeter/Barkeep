@@ -43,7 +43,7 @@ namespace Barkeep.Repositories
                     sql += OrderByName();
                     cmd.CommandText = sql;
 
-                    var categories = new List<Country>();
+                    var countries = new List<Country>();
 
                     var reader = cmd.ExecuteReader();
 
@@ -51,11 +51,11 @@ namespace Barkeep.Repositories
                     {
                         Country country = CountryObject(reader);
 
-                        categories.Add(country);
+                        countries.Add(country);
                     }
 
                     reader.Close();
-                    return categories;
+                    return countries;
                 }
             }
         }
