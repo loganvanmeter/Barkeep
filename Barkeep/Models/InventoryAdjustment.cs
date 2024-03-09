@@ -15,6 +15,10 @@
         public DateTime CreateDateTime { get; set; }
         public DateTime? ExpirationDate { get; set; }
 
+        public int BarUserId { get; set; }
+
+        public BarUser? BarUser {  get; set; }
+
         public InventoryAdjustmentType? InventoryAdjustmentType { get; set; }
         public Unit? Unit { get; set; }
         public UnitType? UnitType { get; set; }

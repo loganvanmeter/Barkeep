@@ -13,18 +13,27 @@ namespace Barkeep.Repositories
         {
             return @"SELECT 
                     ia.Id, ia.InventoryId, ia.DistributorId, ia.InventoryAdjustmentTypeId, ia.Quantity, ia.ItemsPerUnit, ia.Cost,
-                    ia.UnitId, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate,
+                    ia.UnitId, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate, ia.BarUserId,
 
                     iat.Id, iat.Name as IATName, iat.DoesAdd,
 
                     u.Id, u.Size, u.Measurement, u.Name AS UName, u.ImperialConversion, u.MetricConversion,
 
                     ut.Id, ut.Name AS UTName, ut.IsCase, ut.IsEach, ut.IsByWeight
+
+                    bu.Id, bu.UserId, bu.BarId, bu.UserTypeId, bu.PayRate, bu.PayRateTypeId, bu.CreateDateTime, 
+                    bu.EndDateTime, bu.IsActive, bu.RoleId,
+
+                    user.Id, user.DisplayName, user.FirstName, user.LastName, user.Phone, user.Email, 
+                    user.Pin, user.CreateDateTime AS UserCreateDateTime, user.EndDateTime AS UserEndDateTime, user.UserTypeId AS UserUserTypeId, user.IsActive AS UserIsActive,
+                    user.Password,
                     
                     FROM [InventoryAdjustment] ia
                     LEFT JOIN [InventoryAdjustmentType] iat ON iat.Id = ia.InventoryAdjustmentTypeId
                     LEFT JOIN [Unit] u ON u.Id = ia.UnitId
                     LEFT JOIN [UnitType] ut ON ut.Id = ia.UnitTypeId
+                    LEFT JOIN [BarUser] bu ON bu.Id = ia.BarUserId
+                    LEFT JOIN [User] user ON user.Id = bu.UserId
                     ";
         }
 
@@ -85,6 +94,38 @@ namespace Barkeep.Repositories
                     IsByWeight = DbUtils.GetBoolean(reader, "IsByWeight")
                 };
             };
+
+            if (DbUtils.IsNotDbNull(reader, "BarUserId"))
+            {
+                inventoryAdjustment.BarUser = new()
+                {
+                    Id = DbUtils.GetInt(reader, "BarUserId"),
+                    UserId = DbUtils.GetInt(reader, "UserId"),
+                    BarId = DbUtils.GetInt(reader, "BarId"),
+                    UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
+                    PayRate = DbUtils.GetDecimal(reader, "PayRate"),
+                    PayRateTypeId = DbUtils.GetInt(reader, "PayRateTypeId"),
+                    CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
+                    EndDateTime = DbUtils.GetNullableDateTime(reader, "EndDateTime"),
+                    IsActive = DbUtils.GetBoolean(reader, "IsActive"),
+                    RoleId = DbUtils.GetInt(reader, "RoleId"),
+                    User = new User()
+                    {
+                        Id = DbUtils.GetInt(reader, "UserId"),
+                        DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                        FirstName = DbUtils.GetString(reader, "FirstName"),
+                        LastName = DbUtils.GetString(reader, "LastName"),
+                        Phone = DbUtils.GetString(reader, "Phone"),
+                        Email = DbUtils.GetString(reader, "Email"),
+                        Pin = DbUtils.GetString(reader, "Pin"),
+                        CreateDateTime = DbUtils.GetDateTime(reader, "UserCreateDateTime"),
+                        EndDateTime = DbUtils.GetNullableDateTime(reader, "UserEndDateTime"),
+                        IsActive = reader.GetBoolean(reader.GetOrdinal("UserIsActive")),
+                        Password = DbUtils.GetString(reader, "Password"),
+                        UserTypeId = DbUtils.GetInt(reader, "UserUserTypeId"),
+                    },
+                };
+            }
             return inventoryAdjustment;
         }
 

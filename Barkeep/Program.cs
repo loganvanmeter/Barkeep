@@ -37,6 +37,7 @@ namespace Barkeep
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
             builder.Services.AddTransient<IUnitRepository, UnitRepository>();
             builder.Services.AddTransient<IUnitTypeRepository, UnitTypeRepository>();
+            builder.Services.AddTransient<IInventoryLinkRepository, InventoryLinkRepository>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
