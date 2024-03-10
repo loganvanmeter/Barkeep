@@ -6,24 +6,9 @@ import { UnitTypeDropDown } from "../forms/UnitTypeDropDown";
 
 export const AddInventoryAdjustment = ({
 	setInventoryAdjustment,
-	inventory,
+	inventoryAdjustment,
 }) => {
 	const barUser = JSON.parse(localStorage.getItem("barUser"));
-	const [adjustment, setAdjustment] = useState({
-		inventoryId: null,
-		distributorId: null,
-		inventoryAdjustmentTypeId: null,
-		quantity: 0,
-		itemsPerUnit: null,
-		cost: 0,
-		unitId: null,
-		unitSize: null,
-		unitTypeId: null,
-		includeInInventoryCostPerOunce: false,
-		createDateTime: new Date(),
-		expirationDate: null,
-		barUserId: barUser.id,
-	});
 	const [inventoryAdjustmentTypeId, setInventoryAdjustmentTypeId] = useState();
 	const [adjustmentUnitId, setAdjustmentUnitId] = useState();
 	const [adjustmentUnitTypeId, setAdjustmentUnitTypeId] = useState();
@@ -36,36 +21,37 @@ export const AddInventoryAdjustment = ({
 
 	useEffect(() => {
 		if (window.location.pathname.endsWith("add")) {
-			const copy = { ...adjustment };
+			const copy = { ...inventoryAdjustment };
 			copy.includeInInventoryCostPerOunce = true;
-			setAdjustment(copy);
+			setInventoryAdjustment(copy);
 		}
 	}, []);
 
 	useEffect(() => {
+		const copy = { ...inventoryAdjustment };
 		if (adjustmentUnitId) {
-			const copy = { ...adjustment };
-			copy.adjustmentUnitId = adjustmentUnitId;
-			setAdjustment(copy);
+			copy.unitId = adjustmentUnitId;
 		}
 		if (adjustmentUnitTypeId) {
-			const copy = { ...adjustment };
-			copy.adjustmentUnitTypeId = adjustmentUnitTypeId;
-			setAdjustment(copy);
+			copy.unitTypeId = adjustmentUnitTypeId;
 		}
-	}, [adjustmentUnitId, adjustmentUnitTypeId]);
+		if (inventoryAdjustmentTypeId) {
+			copy.inventoryAdjustmentTypeId = inventoryAdjustmentTypeId;
+		}
+		setInventoryAdjustment(copy);
+	}, [adjustmentUnitId, adjustmentUnitTypeId, inventoryAdjustmentTypeId]);
 
 	const handleChange = (e) => {
 		e.preventDefault();
-		const copy = { ...adjustment };
+		const copy = { ...inventoryAdjustment };
 		copy[e.target.id] = e.target.value;
-		setAdjustment(copy);
+		setInventoryAdjustment(copy);
 	};
 
 	const handleCheckbox = (e) => {
-		const copy = { ...adjustment };
+		const copy = { ...inventoryAdjustment };
 		copy[e.target.id] = e.target.checked;
-		setAdjustment(copy);
+		setInventoryAdjustment(copy);
 	};
 
 	return (
@@ -82,7 +68,9 @@ export const AddInventoryAdjustment = ({
 						<Form.Control
 							type='number'
 							id='quantity'
-							value={adjustment.quantity ? adjustment.quantity : ""}
+							value={
+								inventoryAdjustment.quantity ? inventoryAdjustment.quantity : ""
+							}
 							onChange={handleChange}
 						/>
 					</Stack>
@@ -91,7 +79,9 @@ export const AddInventoryAdjustment = ({
 						<Form.Control
 							type='number'
 							id='unitSize'
-							value={adjustment.unitSize ? adjustment.unitSize : ""}
+							value={
+								inventoryAdjustment.unitSize ? inventoryAdjustment.unitSize : ""
+							}
 							onChange={handleChange}
 						/>
 					</Stack>
@@ -113,7 +103,11 @@ export const AddInventoryAdjustment = ({
 								<Form.Control
 									type='number'
 									id='itemsPerUnit'
-									value={adjustment.itemsPerUnit ? adjustment.itemsPerUnit : ""}
+									value={
+										inventoryAdjustment.itemsPerUnit
+											? inventoryAdjustment.itemsPerUnit
+											: ""
+									}
 									onChange={handleChange}
 								/>
 							</Stack>
@@ -126,8 +120,10 @@ export const AddInventoryAdjustment = ({
 							<Stack>
 								<Form.Control
 									type='text'
-									id='costPerUnit'
-									value={adjustment.costPerUnit ? adjustment.costPerUnit : ""}
+									id='cost'
+									value={
+										inventoryAdjustment.cost ? inventoryAdjustment.cost : ""
+									}
 									onChange={handleChange}
 								/>
 							</Stack>
@@ -142,7 +138,7 @@ export const AddInventoryAdjustment = ({
 								</Form.Check.Label>
 								<Form.Check.Input
 									type='checkbox'
-									checked={adjustment.includeInInventoryCostPerOunce}
+									checked={inventoryAdjustment.includeInInventoryCostPerOunce}
 									onChange={handleCheckbox}
 								/>
 							</Stack>
