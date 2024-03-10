@@ -1,7 +1,7 @@
 const inventoryAdjustmentTypeApiUrl =
 	"https://localhost:5001/api/InventoryAdjustmentType/";
 
-export const getAllInventoryAdjustmentType = () => {
+export const getAllInventoryAdjustmentTypes = () => {
 	return fetch(inventoryAdjustmentTypeApiUrl).then((res) => res.json());
 };
 

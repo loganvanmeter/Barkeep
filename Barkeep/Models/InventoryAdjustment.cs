@@ -10,6 +10,7 @@
         public int ItemsPerUnit { get; set; }
         public decimal Cost { get; set; }
         public int UnitId { get; set; }
+        public int UnitSize { get; set; }
         public int UnitTypeId { get; set; }
         public bool IncludeInInventoryCostPerOunce { get; set; }
         public DateTime CreateDateTime { get; set; }

@@ -4,22 +4,22 @@ import { useNavigate } from "react-router-dom";
 import { getComponentCategoriesByComponentId } from "../../managers/ComponentCategoryManager";
 import { ComponentCategoryBadge } from "../componentCategories/ComponentCategoryBadge";
 
-export const Component = ({ component, componentId }) => {
+export const Component = ({ component }) => {
 	const [componentCategories, setComponentCategories] = useState([]);
 	const navigate = useNavigate();
 	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
 
 	useEffect(() => {
-		getComponentCategoriesByComponentId(componentId).then((categories) =>
+		getComponentCategoriesByComponentId(component.id).then((categories) =>
 			setComponentCategories(categories)
 		);
-	}, [componentId]);
+	}, []);
 
 	return (
 		<Card>
 			<Card.Header>
 				<Stack direction='horizontal' className='justify-content-between'>
-					<Stack>{`Component #: ${component.id}`}</Stack>
+					<Stack>{`Component #${component.id}`}</Stack>
 					<Stack gap={1} className='align-items-end'>
 						<div>{component.isAdminApproved ? "Approved" : "Not Approved"}</div>
 					</Stack>
@@ -86,37 +86,41 @@ export const Component = ({ component, componentId }) => {
 					</Stack>
 				</Card.Text>
 			</Card.Body>
-			<Card.Footer>
-				<Stack direction='horizontal' className='justify-content-between'>
-					<Card.Link href='/component'>Back to list</Card.Link>
-					{siteAdmin ? (
-						<>
-							<Stack gap={3} direction='horizontal'>
-								<Button
-									variant='primary'
-									onClick={(e) => {
-										e.preventDefault();
-										navigate(`/component/${component.id}/edit`);
-									}}
-								>
-									Edit
-								</Button>
-								<Button
-									variant='danger'
-									onClick={(e) => {
-										e.preventDefault();
-										navigate(`/component/${component.id}/delete`);
-									}}
-								>
-									Delete
-								</Button>
-							</Stack>
-						</>
-					) : (
-						""
-					)}
-				</Stack>
-			</Card.Footer>
+			{window.location.pathname.startsWith("/component") ? (
+				<Card.Footer>
+					<Stack direction='horizontal' className='justify-content-between'>
+						<Card.Link href='/component'>Back to list</Card.Link>
+						{siteAdmin ? (
+							<>
+								<Stack gap={3} direction='horizontal'>
+									<Button
+										variant='primary'
+										onClick={(e) => {
+											e.preventDefault();
+											navigate(`/component/${component.id}/edit`);
+										}}
+									>
+										Edit
+									</Button>
+									<Button
+										variant='danger'
+										onClick={(e) => {
+											e.preventDefault();
+											navigate(`/component/${component.id}/delete`);
+										}}
+									>
+										Delete
+									</Button>
+								</Stack>
+							</>
+						) : (
+							""
+						)}
+					</Stack>
+				</Card.Footer>
+			) : (
+				""
+			)}
 		</Card>
 	);
 };

@@ -14,9 +14,9 @@ export const InventoryContainer = () => {
 	const [searchTerms, setSearchTerms] = useState("");
 	const navigate = useNavigate();
 	const { barId } = useParams();
-	const userBar = JSON.parse(localStorage.getItem("bar"));
+	const bar = JSON.parse(localStorage.getItem("bar"));
 	const getBarInventories = () => {
-		return getBarInventory(userBar.id).then((res) => setInventories(res));
+		return getBarInventory(barId).then((res) => setInventories(res));
 	};
 
 	const filterInventoriesByName = () => {
@@ -40,10 +40,10 @@ export const InventoryContainer = () => {
 	};
 
 	useEffect(() => {
-		if (userBar) {
+		if (bar) {
 			getBarInventories();
 		}
-	}, []);
+	}, [barId]);
 
 	useEffect(() => {
 		setFilteredInventories(inventories);
@@ -59,7 +59,7 @@ export const InventoryContainer = () => {
 
 	return (
 		<>
-			<BarAdminSideBar bar={userBar} />
+			<BarAdminSideBar bar={bar} />
 			<Container>
 				<Stack gap={3}>
 					<h2>Inventories</h2>
@@ -68,7 +68,7 @@ export const InventoryContainer = () => {
 							variant='primary'
 							onClick={(e) => {
 								e.preventDefault();
-								navigate("/inventory/add");
+								navigate(`/bar/${barId}/inventory/add`);
 							}}
 						>
 							Add new inventory

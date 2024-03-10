@@ -46,6 +46,7 @@ import { DeleteComponent } from "../components/components/DeleteComponent";
 import { AccountAdminSideBar } from "../nav/AccountAdminSideBar";
 import { Stack } from "react-bootstrap";
 import { InventoryContainer } from "../components/inventory/InventoryContainer";
+import { AddInventory } from "../components/inventory/AddInventory";
 
 export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 	return (
@@ -127,7 +128,8 @@ export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 					element={<EditComponent />}
 				/>
 				{/*inventory routes*/}
-				<Route path='bar/:barid/inventory' element={<InventoryContainer />} />
+				<Route path='bar/:barId/inventory' element={<InventoryContainer />} />
+				<Route path='bar/:barId/inventory/add' element={<AddInventory />} />
 			</Routes>
 		</>
 	);

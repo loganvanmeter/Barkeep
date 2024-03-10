@@ -50,7 +50,19 @@ namespace Barkeep.Controllers
             return Ok(barUser);
         }
 
-        
+        [HttpGet("GetByUserAndBarId/UserId={userId}/BarId={barId}")]
+        public IActionResult GetByBarAndUserId(int userId, int barId)
+        {
+            var barUser = _barUserRepository.GetByUserAndBarId(userId, barId);
+
+            if (barUser == null)
+            {
+                return NotFound();
+            }
+            return Ok(barUser);
+        }
+
+
 
         [HttpPost]
         public IActionResult Post(BarUser barUser)

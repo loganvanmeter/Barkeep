@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
 	getAllAvailableBarComponents,
 	getAllComponents,
@@ -26,7 +26,7 @@ export const ComponentDataList = () => {
 	return (
 		<datalist id='component'>
 			{components.map((component) => {
-				return <option value={component.name}></option>;
+				return <option value={component.name} key={component.id}></option>;
 			})}
 		</datalist>
 	);

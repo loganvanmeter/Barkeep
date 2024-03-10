@@ -85,7 +85,7 @@ namespace Barkeep.Repositories
                 barUser.PayRateType = new()
                 {
                     Id = DbUtils.GetInt(reader, "PayRateTypeId"),
-                    Name = DbUtils.GetString(reader, "UTName"),
+                    Name = DbUtils.GetString(reader, "PRTName"),
                 };
             }
 
@@ -205,6 +205,34 @@ namespace Barkeep.Repositories
                     cmd.CommandText = sql;
 
                     DbUtils.AddParameter(cmd, "@id", id);
+
+                    BarUser barUser = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        barUser = BarUserObject(reader);
+                    }
+
+                    reader.Close();
+                    return barUser;
+                }
+            }
+        }
+
+        public BarUser GetByUserAndBarId(int userId, int barId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetBarUserWithUserUserTypePayRateType();
+                    sql += " WHERE bu.UserId = @userId AND bu.BarId = @barId";
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@UserId", userId);
+                    DbUtils.AddParameter(cmd, "@BarId", barId);
 
                     BarUser barUser = null;
                     var reader = cmd.ExecuteReader();

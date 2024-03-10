@@ -13,7 +13,7 @@ namespace Barkeep.Repositories
         private string GetInventory()
         {
             return @"SELECT 
-                    i.Id, i.BarId, i.ComponentId, i.Quantity, i.UnitId, i.UnitTypeId, i.CostPerOunce, i.Markup,
+                    i.Id, i.BarId, i.ComponentId, i.Quantity, i.UnitId, i.UnitSize, i.UnitTypeId, i.CostPerOunce, i.Markup,
 
                     c.Id, c.ComponentTypeId, c.Name, c.Abv, c.Ibu, c.Description, c.Year,
                     c.CityId, c.RegionId, c.StateId, c.CountryId, c.ProducerId, c.ImporterId,
@@ -82,6 +82,7 @@ namespace Barkeep.Repositories
                 ComponentId = DbUtils.GetInt(reader, "ComponentId"),
                 Quantity = DbUtils.GetDecimal(reader, "Quantity"),
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
+                UnitSize = DbUtils.GetInt(reader, "UnitId"),
                 UnitTypeId = DbUtils.GetInt(reader, "UnitTypeId"),
                 CostPerOunce = DbUtils.GetDecimal(reader, "CostPerOunce"),
                 Markup = DbUtils.GetDecimal(reader, "Markup"),

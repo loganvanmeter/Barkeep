@@ -8,6 +8,7 @@
         public decimal Quantity { get; set; }
 
         public int UnitId { get; set; }
+        public int UnitSize { get; set; }
         public int UnitTypeId { get; set; }
         public decimal CostPerOunce { get; set; }
         public decimal Markup {  get; set; }

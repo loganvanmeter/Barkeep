@@ -13,7 +13,8 @@ namespace Barkeep.Repositories
         {
             return @"SELECT 
                     ia.Id, ia.InventoryId, ia.DistributorId, ia.InventoryAdjustmentTypeId, ia.Quantity, ia.ItemsPerUnit, ia.Cost,
-                    ia.UnitId, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate, ia.BarUserId,
+                    ia.UnitId, ia.UnitSize, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate, 
+                    ia.BarUserId,
 
                     iat.Id, iat.Name as IATName, iat.DoesAdd,
 
@@ -54,6 +55,7 @@ namespace Barkeep.Repositories
                 ItemsPerUnit = DbUtils.GetInt(reader, "ItemsPerUnit"),
                 Cost = DbUtils.GetDecimal(reader, "Cost"),
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
+                UnitSize = DbUtils.GetInt(reader, "UnitSize"),
                 UnitTypeId = DbUtils.GetInt(reader, "UnitTypeId"),
                 IncludeInInventoryCostPerOunce = DbUtils.GetBoolean(reader, "IncludeInInventoryCostPerOunce"),
                 CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),

@@ -13,6 +13,10 @@ export const getComponentById = (id) => {
 	return fetch(`${componentApiUrl}${id}`).then((res) => res.json());
 };
 
+export const getComponentByName = (name) => {
+	return fetch(`${componentApiUrl}GetByName/${name}`).then((res) => res.json());
+};
+
 export const deleteComponent = (id) => {
 	return fetch(`${componentApiUrl}${id}`, {
 		method: "DELETE",
