@@ -114,42 +114,91 @@ export const AddInventory = () => {
 	};
 
 	const getCostPerOunce = () => {
-		let adjustmentOunces;
-		const adjustmentCost =
-			inventoryAdjustment.cost * inventoryAdjustment.quantity;
-		if (
-			adjustmentUnit.measurement === "mL" ||
-			adjustmentUnit.measurement === "g"
-		) {
-			adjustmentOunces =
-				adjustmentUnit.size *
-				inventoryAdjustment.unitSize *
-				inventoryAdjustment.itemsPerUnit *
-				inventoryAdjustment.quantity *
-				adjustmentUnit.imperialConversion;
-		} else if (
-			adjustmentUnit.measurement !== "mL" ||
-			adjustmentUnit.measurement !== "g"
-		) {
-			adjustmentOunces =
-				adjustmentUnit.size *
-				inventoryAdjustment.unitSize *
-				inventoryAdjustment.itemsPerUnit *
-				inventoryAdjustment.quantity;
+		let totalOunces;
+		const totalCost = inventoryAdjustment.cost * inventoryAdjustment.quantity;
+		if (unit.measurement !== "unit") {
+			if (
+				adjustmentUnit.measurement === "fl oz" ||
+				adjustmentUnit.measurement === "oz"
+			) {
+				totalOunces =
+					adjustmentUnit.size *
+					inventoryAdjustment.unitSize *
+					inventoryAdjustment.itemsPerUnit *
+					inventoryAdjustment.quantity;
+			} else if (
+				adjustmentUnit.measurement === "mL" ||
+				adjustmentUnit.measurement === "g"
+			) {
+				totalOunces =
+					adjustmentUnit.size *
+					inventoryAdjustment.unitSize *
+					inventoryAdjustment.itemsPerUnit *
+					inventoryAdjustment.quantity *
+					adjustmentUnit.imperialConversion;
+			} else if (adjustmentUnit.measurement === "unit") {
+				if (unit.measurement === "fl oz" || unit.measurement === "oz") {
+					totalOunces =
+						unit.size *
+						inventoryAdjustment.unitSize *
+						inventoryAdjustment.itemsPerUnit *
+						inventoryAdjustment.quantity;
+				} else if (unit.measurement === "mL" || unit.measurement === "g") {
+					totalOunces =
+						unit.size *
+						inventoryAdjustment.unitSize *
+						inventoryAdjustment.itemsPerUnit *
+						inventoryAdjustment.quantity *
+						unit.imperialConversion;
+				}
+			}
 		}
-		const CPO = adjustmentCost / adjustmentOunces;
-		return parseFloat(CPO.toFixed(2));
+		const CPO = totalCost / totalOunces;
+		return CPO.toFixed(2);
 	};
 
 	const getQuantity = () => {
 		let totalQuantity;
-		if (
-			inventory.unitId === inventoryAdjustment.unitId &&
-			inventory.unitTypeId === inventoryAdjustment.unitTypeId
-		) {
-			totalQuantity =
-				initialInventoryQuantity + parseFloat(inventoryAdjustment.quantity);
+		let adjustmentQuantity;
+		if (adjustmentUnitType.name === "Case") {
+			adjustmentQuantity =
+				inventoryAdjustment.quantity * inventoryAdjustment.itemsPerUnit;
+		} else if (adjustmentUnitType.name !== "Case") {
+			if (inventory.unitId === inventoryAdjustment.unitId) {
+				adjustmentQuantity = parseFloat(inventoryAdjustment.quantity);
+			} else if (inventory.unitId !== inventoryAdjustment.unitId) {
+				if (unit.measurement === adjustmentUnit.measurement) {
+					adjustmentQuantity =
+						(adjustmentUnit.size *
+							inventoryAdjustment.unitSize *
+							inventoryAdjustment.itemsPerUnit *
+							inventoryAdjustment.quantity) /
+						unit.size;
+				} else if (unit.measurement !== adjustmentUnit.measurement) {
+					if (unit.measurement === "mL" || unit.measurement === "g") {
+						adjustmentQuantity =
+							(adjustmentUnit.size *
+								inventoryAdjustment.unitSize *
+								inventoryAdjustment.itemsPerUnit *
+								inventoryAdjustment.quantity *
+								adjustmentUnit.metricConversion) /
+							unit.size;
+					} else if (
+						unit.measurement === "fl oz" ||
+						unit.measurement === "oz"
+					) {
+						adjustmentQuantity =
+							(adjustmentUnit.size *
+								inventoryAdjustment.unitSize *
+								inventoryAdjustment.itemsPerUnit *
+								inventoryAdjustment.quantity *
+								adjustmentUnit.imperialConversion) /
+							unit.size;
+					}
+				}
+			}
 		}
+		totalQuantity = initialInventoryQuantity + adjustmentQuantity;
 		return totalQuantity.toFixed(2);
 	};
 
