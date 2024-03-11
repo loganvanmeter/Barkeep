@@ -70,6 +70,7 @@ export const AddInventory = () => {
 	const [unitId, setUnitId] = useState(0);
 	const [unitTypeId, setUnitTypeId] = useState(0);
 	const [showInventoryAdjustment, setShowInventoryAdjustment] = useState(false);
+	const [initialInventoryQuantity, setInitialInventoryQuantity] = useState();
 	const [adjustmentUnit, setAdjustmentUnit] = useState({});
 	const [adjustmentUnitType, setAdjustmentUnitType] = useState({});
 	const getBarComponents = () => {
@@ -116,17 +117,45 @@ export const AddInventory = () => {
 		let adjustmentOunces;
 		const adjustmentCost =
 			inventoryAdjustment.cost * inventoryAdjustment.quantity;
-		if (adjustmentUnit.measurement === "mL") {
+		if (
+			adjustmentUnit.measurement === "mL" ||
+			adjustmentUnit.measurement === "g"
+		) {
 			adjustmentOunces =
 				adjustmentUnit.size *
 				inventoryAdjustment.unitSize *
-				inventoryAdjustment.quantity *
 				inventoryAdjustment.itemsPerUnit *
+				inventoryAdjustment.quantity *
 				adjustmentUnit.imperialConversion;
+		} else if (
+			adjustmentUnit.measurement !== "mL" ||
+			adjustmentUnit.measurement !== "g"
+		) {
+			adjustmentOunces =
+				adjustmentUnit.size *
+				inventoryAdjustment.unitSize *
+				inventoryAdjustment.itemsPerUnit *
+				inventoryAdjustment.quantity;
 		}
 		const CPO = adjustmentCost / adjustmentOunces;
 		return parseFloat(CPO.toFixed(2));
 	};
+
+	const getQuantity = () => {
+		let totalQuantity;
+		if (
+			inventory.unitId === inventoryAdjustment.unitId &&
+			inventory.unitTypeId === inventoryAdjustment.unitTypeId
+		) {
+			totalQuantity =
+				initialInventoryQuantity + parseFloat(inventoryAdjustment.quantity);
+		}
+		return totalQuantity.toFixed(2);
+	};
+
+	useEffect(() => {
+		setInitialInventoryQuantity(inventory.quantity);
+	}, []);
 
 	useEffect(() => {
 		if (
@@ -139,13 +168,15 @@ export const AddInventory = () => {
 		) {
 			const copy = { ...inventory };
 			copy.costPerOunce = getCostPerOunce();
+			copy.quantity = getQuantity();
 			setInventory(copy);
 		} else {
 			const copy = { ...inventory };
 			copy.costPerOunce = 0;
+			copy.quantity = initialInventoryQuantity;
 			setInventory(copy);
 		}
-	}, [adjustmentUnit, inventoryAdjustment]);
+	}, [adjustmentUnit, inventoryAdjustment, initialInventoryQuantity]);
 
 	useEffect(() => {
 		getBarComponents();
@@ -259,15 +290,33 @@ export const AddInventory = () => {
 							<h3>Adding {component.name} to inventory</h3>
 							{(inventory && inventory.quantity) ||
 							(inventory && inventory.costPerOunce) ? (
-								<Stack direction='horizontal'>
-									{inventory.quantity ? <Stack></Stack> : ""}
+								<Stack direction='horizontal' gap={3}>
+									{inventory.quantity ? (
+										<Stack className='justify-content-end'>
+											<h4>Quantity: {inventory.quantity}</h4>
+										</Stack>
+									) : (
+										""
+									)}
 									{inventory.costPerOunce ? (
-										<Stack>
+										<Stack className='justify-content-end'>
 											<h4>Cost per ounce: ${inventory.costPerOunce}</h4>
 										</Stack>
 									) : (
 										""
 									)}
+									<Stack direction='horizontal' gap={2}>
+										<Form.Label>
+											<h4 className='m-0'>Markup</h4>
+										</Form.Label>
+										<Form.Control
+											type='number'
+											id='markup'
+											value={inventory.markup ? inventory.markup : 300}
+											onChange={handleChange}
+										/>
+										<div>%</div>
+									</Stack>
 								</Stack>
 							) : (
 								" "
