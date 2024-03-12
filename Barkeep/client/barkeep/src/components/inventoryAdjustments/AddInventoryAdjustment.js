@@ -89,10 +89,12 @@ export const AddInventoryAdjustment = ({
 					<UnitDropDown
 						unitId={adjustmentUnitId}
 						setUnitId={setAdjustmentUnitId}
+						adjustment={inventoryAdjustment}
 					/>
 					<UnitTypeDropDown
 						unitTypeId={adjustmentUnitTypeId}
 						setUnitTypeId={setAdjustmentUnitTypeId}
+						adjustment={inventoryAdjustment}
 					/>
 				</Stack>
 				<Stack direction='horizontal' gap={5} className='flex-wrap'>

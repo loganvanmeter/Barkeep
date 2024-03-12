@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllUnits, getUnitById } from "../../managers/UnitManager";
 import { Form, Stack } from "react-bootstrap";
 
-export const UnitDropDown = ({ unitId, setUnitId }) => {
+export const UnitDropDown = ({ unitId, setUnitId, adjustment }) => {
 	const [units, setUnits] = useState([]);
 	const getUnits = () => {
 		return getAllUnits().then((units) => setUnits(units));
@@ -29,7 +29,9 @@ export const UnitDropDown = ({ unitId, setUnitId }) => {
 					{units.map((unit) => {
 						return (
 							<option key={unit.id} value={unit.id}>
-								{unit.name}
+								{adjustment && unit.measurement === "unit"
+									? "Same as tracking " + unit.name
+									: unit.name}
 							</option>
 						);
 					})}

@@ -5,7 +5,7 @@ import {
 } from "../../managers/UnitTypeManager";
 import { Form, Stack } from "react-bootstrap";
 
-export const UnitTypeDropDown = ({ unitTypeId, setUnitTypeId }) => {
+export const UnitTypeDropDown = ({ unitTypeId, setUnitTypeId, adjustment }) => {
 	const [unitTypes, setUnitTypes] = useState([]);
 	const getUnitTypes = () => {
 		return getAllUnitTypes().then((unitTypes) => setUnitTypes(unitTypes));
@@ -33,7 +33,12 @@ export const UnitTypeDropDown = ({ unitTypeId, setUnitTypeId }) => {
 					{unitTypes.map((unitType) => {
 						return (
 							<option key={unitType.id} value={unitType.id}>
-								{unitType.name}
+								{adjustment &&
+								parseFloat(adjustment.quantity) > 1 &&
+								unitType.id !== 5 &&
+								unitType.id !== 3
+									? unitType.name + "s"
+									: unitType.name}
 							</option>
 						);
 					})}

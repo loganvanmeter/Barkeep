@@ -27,8 +27,10 @@ export const AddInventory = () => {
 		unitSize: null,
 		unitTypeId: null,
 		costPerOunce: 0,
+		costPerUnit: 0,
 		markup: null,
 	});
+	const [finalInventoryQuantity, setFinalInventoryQuantity] = useState();
 	const [componentName, setComponentName] = useState("");
 	const [isExistingComponent, setIsExistingComponent] = useState(false);
 	const [showComponentSearch, setShowComponentSearch] = useState(true);
@@ -69,10 +71,11 @@ export const AddInventory = () => {
 	});
 	const [unitId, setUnitId] = useState(0);
 	const [unitTypeId, setUnitTypeId] = useState(0);
-	const [showInventoryAdjustment, setShowInventoryAdjustment] = useState(false);
+	const [showCPU, setShowCPU] = useState(false);
 	const [initialInventoryQuantity, setInitialInventoryQuantity] = useState();
 	const [adjustmentUnit, setAdjustmentUnit] = useState({});
 	const [adjustmentUnitType, setAdjustmentUnitType] = useState({});
+	const [showAlert, setShowAlert] = useState(false);
 	const getBarComponents = () => {
 		return getAllAvailableBarComponents(barId).then((res) =>
 			setComponents(res)
@@ -113,119 +116,136 @@ export const AddInventory = () => {
 		});
 	};
 
-	const getCostPerOunce = () => {
-		let totalOunces;
-		const totalCost = inventoryAdjustment.cost * inventoryAdjustment.quantity;
-		if (unit.measurement !== "unit") {
-			if (
-				adjustmentUnit.measurement === "fl oz" ||
-				adjustmentUnit.measurement === "oz"
-			) {
-				totalOunces =
-					adjustmentUnit.size *
-					inventoryAdjustment.unitSize *
-					inventoryAdjustment.itemsPerUnit *
-					inventoryAdjustment.quantity;
-			} else if (
-				adjustmentUnit.measurement === "mL" ||
-				adjustmentUnit.measurement === "g"
-			) {
-				totalOunces =
-					adjustmentUnit.size *
-					inventoryAdjustment.unitSize *
-					inventoryAdjustment.itemsPerUnit *
-					inventoryAdjustment.quantity *
-					adjustmentUnit.imperialConversion;
-			} else if (adjustmentUnit.measurement === "unit") {
-				if (unit.measurement === "fl oz" || unit.measurement === "oz") {
-					totalOunces =
-						unit.size *
-						inventoryAdjustment.unitSize *
-						inventoryAdjustment.itemsPerUnit *
-						inventoryAdjustment.quantity;
-				} else if (unit.measurement === "mL" || unit.measurement === "g") {
-					totalOunces =
-						unit.size *
-						inventoryAdjustment.unitSize *
-						inventoryAdjustment.itemsPerUnit *
-						inventoryAdjustment.quantity *
-						unit.imperialConversion;
-				}
-			}
-		}
-		const CPO = totalCost / totalOunces;
-		return CPO.toFixed(2);
-	};
-
-	const getQuantity = () => {
-		let totalQuantity;
-		let adjustmentQuantity;
-		if (adjustmentUnitType.name === "Case") {
-			adjustmentQuantity =
-				inventoryAdjustment.quantity * inventoryAdjustment.itemsPerUnit;
-		} else if (adjustmentUnitType.name !== "Case") {
-			if (inventory.unitId === inventoryAdjustment.unitId) {
-				adjustmentQuantity = parseFloat(inventoryAdjustment.quantity);
-			} else if (inventory.unitId !== inventoryAdjustment.unitId) {
-				if (unit.measurement === adjustmentUnit.measurement) {
-					adjustmentQuantity =
-						(adjustmentUnit.size *
-							inventoryAdjustment.unitSize *
-							inventoryAdjustment.itemsPerUnit *
-							inventoryAdjustment.quantity) /
-						unit.size;
-				} else if (unit.measurement !== adjustmentUnit.measurement) {
-					if (unit.measurement === "mL" || unit.measurement === "g") {
-						adjustmentQuantity =
-							(adjustmentUnit.size *
-								inventoryAdjustment.unitSize *
-								inventoryAdjustment.itemsPerUnit *
-								inventoryAdjustment.quantity *
-								adjustmentUnit.metricConversion) /
-							unit.size;
-					} else if (
-						unit.measurement === "fl oz" ||
-						unit.measurement === "oz"
-					) {
-						adjustmentQuantity =
-							(adjustmentUnit.size *
-								inventoryAdjustment.unitSize *
-								inventoryAdjustment.itemsPerUnit *
-								inventoryAdjustment.quantity *
-								adjustmentUnit.imperialConversion) /
-							unit.size;
-					}
-				}
-			}
-		}
-		totalQuantity = initialInventoryQuantity + adjustmentQuantity;
-		return totalQuantity.toFixed(2);
-	};
-
 	useEffect(() => {
 		setInitialInventoryQuantity(inventory.quantity);
 	}, []);
 
-	useEffect(() => {
+	const getCostPerOunceOrCostPerUnit = () => {
+		if (unit && adjustmentUnit) {
+			const totalUnits =
+				parseFloat(inventoryAdjustment.itemsPerUnit) *
+				adjustmentUnit.size *
+				inventoryAdjustment.unitSize;
+			const CPU = parseFloat(inventoryAdjustment.cost);
+			if (unit.measurement === "unit") {
+				return (CPU / parseFloat(inventoryAdjustment.itemsPerUnit)).toFixed(2);
+			} else if (unit.measurement !== "unit") {
+				if (
+					adjustmentUnit.measurement === "fl oz" ||
+					adjustmentUnit.measurement === "oz"
+				) {
+					const totalOunces = totalUnits;
+					return (CPU / totalOunces).toFixed(2);
+				} else if (
+					adjustmentUnit.measurement === "mL" ||
+					adjustmentUnit.measurement === "g"
+				) {
+					const totalOunces = totalUnits * adjustmentUnit.imperialConversion;
+					return (CPU / totalOunces).toFixed(2);
+				} else if (adjustmentUnit.measurement === "unit") {
+					return (
+						CPU /
+						(parseFloat(inventoryAdjustment.itemsPerUnit) *
+							unit.size *
+							inventoryAdjustment.unitSize *
+							unit.imperialConversion)
+					).toFixed(2);
+				}
+			}
+		}
+	};
+
+	const getQuantity = () => {
+		let totalQuantity;
+		let subQuantity;
+		if (unit && adjustmentUnit) {
+			const adjustmentQuantity =
+				parseFloat(inventoryAdjustment.quantity) *
+				parseFloat(inventoryAdjustment.itemsPerUnit);
+			const adjustmentSize = inventoryAdjustment.unitSize * adjustmentUnit.size;
+			const inventorySize = unit.size * inventory.unitSize;
+			const totalUnits = (adjustmentQuantity * adjustmentSize) / inventorySize;
+			if (
+				unit.measurement === "unit" &&
+				adjustmentUnit.measurement === "unit"
+			) {
+				subQuantity = adjustmentQuantity;
+				totalQuantity = initialInventoryQuantity + subQuantity;
+				return totalQuantity.toFixed(2);
+			} else if (
+				unit.measurement !== "unit" &&
+				adjustmentUnit.measurement === "unit"
+			) {
+				subQuantity = adjustmentQuantity;
+				totalQuantity = initialInventoryQuantity + subQuantity;
+				return totalQuantity.toFixed(2);
+			} else if (
+				unit.measurement !== "unit" &&
+				adjustmentUnit.measurement !== "unit"
+			) {
+				if (unit.measurement === adjustmentUnit.measurement) {
+					subQuantity = totalUnits;
+					totalQuantity = initialInventoryQuantity + subQuantity;
+					return totalQuantity.toFixed(2);
+				} else if (unit.measurement !== adjustmentUnit.measurement) {
+					if (unit.measurement === "mL" || unit.measurement === "g") {
+						subQuantity = totalUnits * inventoryAdjustment.imperialConversion;
+						totalQuantity = initialInventoryQuantity + subQuantity;
+						return totalQuantity.toFixed(2);
+					}
+					if (unit.measurement === "fl oz" || unit.measurement === "oz") {
+						subQuantity = totalUnits * inventoryAdjustment.imperialConversion;
+						totalQuantity = initialInventoryQuantity + subQuantity;
+						return totalQuantity.toFixed(2);
+					}
+				}
+			}
+		}
 		if (
+			unit &&
 			adjustmentUnit &&
-			inventoryAdjustment.includeInInventoryCostPerOunce &&
-			inventoryAdjustment.cost &&
-			inventoryAdjustment.unitSize &&
-			inventoryAdjustment.quantity &&
-			inventoryAdjustment.itemsPerUnit
+			initialInventoryQuantity &&
+			!adjustmentUnit.quantity
 		) {
-			const copy = { ...inventory };
-			copy.costPerOunce = getCostPerOunce();
-			copy.quantity = getQuantity();
-			setInventory(copy);
-		} else {
-			const copy = { ...inventory };
-			copy.costPerOunce = 0;
-			copy.quantity = initialInventoryQuantity;
+			totalQuantity = initialInventoryQuantity.toFixed(2);
+			return parseFloat(totalQuantity);
+		}
+	};
+
+	useEffect(() => {
+		setFinalInventoryQuantity(getQuantity());
+	}, [
+		unit,
+		adjustmentUnit,
+		inventoryAdjustment,
+		initialInventoryQuantity,
+		inventory,
+	]);
+
+	useEffect(() => {
+		const copy = { ...inventory };
+		copy.quantity = finalInventoryQuantity;
+		setInventory(copy);
+	}, [finalInventoryQuantity]);
+
+	useEffect(() => {
+		const copy = { ...inventory };
+		if (unit && adjustmentUnit) {
+			if (
+				unit.measurement === "unit" &&
+				adjustmentUnit.measurement === "unit"
+			) {
+				setShowCPU(true);
+				copy.costPerUnit = getCostPerOunceOrCostPerUnit();
+				copy.costPerOunce = 0;
+			} else {
+				setShowCPU(false);
+				copy.costPerOunce = getCostPerOunceOrCostPerUnit();
+				copy.costPerUnit = 0;
+			}
 			setInventory(copy);
 		}
-	}, [adjustmentUnit, inventoryAdjustment, initialInventoryQuantity]);
+	}, [adjustmentUnit, unit]);
 
 	useEffect(() => {
 		getBarComponents();
@@ -337,39 +357,54 @@ export const AddInventory = () => {
 					) : component.id && !showComponentSearch ? (
 						<Stack gap={5}>
 							<h3>Adding {component.name} to inventory</h3>
-							{(inventory && inventory.quantity) ||
-							(inventory && inventory.costPerOunce) ? (
-								<Stack direction='horizontal' gap={3}>
-									{inventory.quantity ? (
-										<Stack className='justify-content-end'>
-											<h4>Quantity: {inventory.quantity}</h4>
-										</Stack>
+
+							<Stack direction='horizontal' gap={3}>
+								<Stack className='justify-content-end'>
+									{!isNaN(inventory.quantity) &&
+									isFinite(inventory.quantity) ? (
+										<h4>Quantity: {inventory.quantity}</h4>
 									) : (
-										""
+										<h4>Quantity: {initialInventoryQuantity.toFixed(2)}</h4>
 									)}
-									{inventory.costPerOunce ? (
-										<Stack className='justify-content-end'>
-											<h4>Cost per ounce: ${inventory.costPerOunce}</h4>
-										</Stack>
-									) : (
-										""
-									)}
-									<Stack direction='horizontal' gap={2}>
-										<Form.Label>
-											<h4 className='m-0'>Markup</h4>
-										</Form.Label>
-										<Form.Control
-											type='number'
-											id='markup'
-											value={inventory.markup ? inventory.markup : 300}
-											onChange={handleChange}
-										/>
-										<div>%</div>
-									</Stack>
 								</Stack>
-							) : (
-								" "
-							)}
+
+								<Stack className='justify-content-end'>
+									{inventory.costPerUnit &&
+									!inventory.costPerOunce &&
+									showCPU ? (
+										<h4>
+											Cost per unit: $
+											{!isNaN(inventory.costPerUnit)
+												? inventory.costPerUnit
+												: "0.00"}
+										</h4>
+									) : !inventory.costPerUnit &&
+									  inventory.costPerOunce &&
+									  !showCPU ? (
+										<h4>
+											Cost per ounce: $
+											{!isNaN(inventory.costPerOunce)
+												? inventory.costPerOunce
+												: "0.00"}
+										</h4>
+									) : (
+										""
+									)}
+								</Stack>
+
+								<Stack direction='horizontal' gap={2}>
+									<Form.Label>
+										<h4 className='m-0'>Markup</h4>
+									</Form.Label>
+									<Form.Control
+										type='number'
+										id='markup'
+										value={inventory.markup ? inventory.markup : 300}
+										onChange={handleChange}
+									/>
+									<div>%</div>
+								</Stack>
+							</Stack>
 							<Stack
 								direction='horizontal'
 								gap={3}

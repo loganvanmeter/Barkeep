@@ -14,6 +14,7 @@ namespace Barkeep.Repositories
         {
             return @"SELECT 
                     i.Id, i.BarId, i.ComponentId, i.Quantity, i.UnitId, i.UnitSize, i.UnitTypeId, i.CostPerOunce, i.Markup,
+                    i.CostPerUnit,
 
                     c.Id, c.ComponentTypeId, c.Name, c.Abv, c.Ibu, c.Description, c.Year,
                     c.CityId, c.RegionId, c.StateId, c.CountryId, c.ProducerId, c.ImporterId,
@@ -84,7 +85,8 @@ namespace Barkeep.Repositories
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
                 UnitSize = DbUtils.GetInt(reader, "UnitId"),
                 UnitTypeId = DbUtils.GetInt(reader, "UnitTypeId"),
-                CostPerOunce = DbUtils.GetDecimal(reader, "CostPerOunce"),
+                CostPerOunce = DbUtils.GetNullableDecimal(reader, "CostPerOunce"),
+                CostPerUnit = DbUtils.GetNullableDecimal(reader, "CostPerUnit"),
                 Markup = DbUtils.GetDecimal(reader, "Markup"),
                 InventoryAdjustments = new List<InventoryAdjustment>(),
             };
