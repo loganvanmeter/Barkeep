@@ -9,8 +9,8 @@
         public decimal Quantity { get; set; }
         public int ItemsPerUnit { get; set; }
         public decimal Cost { get; set; }
-        public int UnitId { get; set; }
-        public int UnitSize { get; set; }
+        public decimal UnitId { get; set; }
+        public decimal UnitSize { get; set; }
         public int UnitTypeId { get; set; }
         public bool IncludeInInventoryCostPerOunce { get; set; }
         public DateTime CreateDateTime { get; set; }

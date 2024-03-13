@@ -45,3 +45,85 @@ export const addInventory = (inventory) => {
 		body: JSON.stringify(inventory),
 	});
 };
+
+export const getQuantity = (inventory) => {
+	console.log(inventory);
+	let totalQuantity = inventory.quantity;
+	console.log(`Initial Quantity: ${totalQuantity}`);
+	if (inventory?.unit != null && inventory?.inventoryAdjustments.length) {
+		inventory?.inventoryAdjustments.forEach((adjustment) => {
+			let subQuantity = 0;
+
+			const DoesAdd = () => {
+				if (adjustment?.inventoryAdjustmentType?.doesAdd) {
+					return true;
+				} else {
+					return false;
+				}
+			};
+
+			if (adjustment?.unit != null) {
+				const adjustmentQuantity =
+					adjustment.quantity * adjustment.itemsPerUnit;
+				console.log(`Adjustment Quantity: ${adjustmentQuantity}`);
+				const adjustmentSize = adjustment.unitSize * adjustment.unit.size;
+				console.log(`Adjustment Size: ${adjustmentSize}`);
+				const inventorySize = inventory.unit.size * inventory.unitSize;
+				console.log(`Inventory Size: ${inventorySize}`);
+				const totalUnits =
+					(adjustmentQuantity * adjustmentSize) / inventorySize;
+				console.log(`Total Units: ${totalUnits}`);
+				if (
+					(inventory.unit.measurement === "unit") &
+					(adjustment.unit.measurement === "unit")
+				) {
+					subQuantity = totalUnits;
+					if (DoesAdd()) {
+						return (totalQuantity += subQuantity);
+					} else {
+						return (totalQuantity -= subQuantity);
+					}
+				}
+				if (
+					(inventory.unit.measurement !== "unit") &
+					(adjustment.unit.measurement !== "unit")
+				) {
+					if (inventory.unit.measurement === adjustment.unit.measurement) {
+						subQuantity = totalUnits;
+						if (DoesAdd()) {
+							return (totalQuantity += subQuantity);
+						} else {
+							return (totalQuantity -= subQuantity);
+						}
+					} else if (
+						inventory.unit.measurement !== adjustment.unit.measurement
+					) {
+						if (
+							(inventory.unit.measurement === "mL") |
+							(adjustment.unit.measurement === "g")
+						) {
+							subQuantity = totalUnits * adjustment.unit.MetricConversion;
+							if (DoesAdd()) {
+								return (totalQuantity += subQuantity);
+							} else {
+								return (totalQuantity -= subQuantity);
+							}
+						}
+						if (
+							(inventory.unit.measurement === "fl oz") |
+							(adjustment.unit.measurement === "oz")
+						) {
+							subQuantity = totalUnits * adjustment.unit.ImperialConversion;
+							if (DoesAdd()) {
+								return (totalQuantity += subQuantity);
+							} else {
+								return (totalQuantity -= subQuantity);
+							}
+						}
+					}
+				}
+			}
+		});
+		return totalQuantity;
+	}
+};

@@ -36,20 +36,11 @@ namespace Barkeep.Repositories
                     im.Id, im.Name AS IMName, im.Description AS IMDescription, im.Website AS IMWebsite,
 
                     u.Id, u.Size AS IUSize, u.Measurement AS IUMeasurement, u.Name AS IUName, 
-                    u.ImperialConversion AS IUImpertialConversion, u.MetricConversion AS IUMetricConversion,
+                    u.ImperialConversion AS IUImperialConversion, u.MetricConversion AS IUMetricConversion,
 
-                    ut.Id, ut.Name AS UTName, ut.IsCase AS UTIsCase, ut.IsEach AS UTIsEach, ut.IsByWeight AS UTIsByWeight,
+                    ut.Id, ut.Name AS UTName, ut.IsCase AS UTIsCase, ut.IsEach AS UTIsEach, ut.IsByWeight AS UTIsByWeight
 
-                    ia.Id AS IAId, ia.InventoryId, ia.DistributorId, ia.InventoryAdjustmentTypeId, ia.Quantity AS IAQuantity, 
-                    ia.ItemsPerUnit, ia.Cost, ia.UnitId AS IAUnitId, ia.UnitTypeId AS IAUnitTypeId, ia.IncludeInInventoryCostPerOunce,
-                    ia.CreateDateTime, ia.ExpirationDate,
-
-                    iat.Id, iat.Name AS IATName, iat.DoesAdd,
-
-                    iau.Id, iau.Size AS IAUSize, iau.Measurement AS IAUMeasurement, iau.Name AS IAUName, 
-                    iau.ImperialConversion AS IAUImpertialConversion, iau.MetricConversion AS IAUMetricConversion,
-
-                    iaut.Id, iaut.Name AS IAUTName, iaut.IsCase AS IAUTIsCase, iaut.IsEach AS IAUTIsEach, iaut.IsByWeight AS IAUTIsByWeight
+                   
                     
                     FROM [Inventory] i
                     LEFT JOIN [Component] c ON c.Id = i.ComponentId
@@ -62,10 +53,7 @@ namespace Barkeep.Repositories
                     LEFT JOIN [Importer] im ON im.id = c.ImporterId
                     LEFT JOIN [Unit] u ON u.id = i.UnitId
                     LEFT JOIN [UnitType] ut ON ut.id = i.UnitTypeId
-                    LEFT JOIN [InventoryAdjustment] ia ON ia.InventoryId = i.Id
-                    LEFT JOIN [InventoryAdjustmentType] iat ON iat.Id = ia.InventoryAdjustmentTypeid
-                    LEFT JOIN [Unit] iau on iau.Id = ia.UnitId
-                    LEFT JOIN [UnitType] iaut on iaut.Id = ia.UnitTypeId
+                   
                     ";
         }
 
@@ -76,14 +64,15 @@ namespace Barkeep.Repositories
 
         private Inventory InventoryObject(SqlDataReader reader)
         {
+            
             Inventory inventory = new()
             {
                 Id = DbUtils.GetInt(reader, "Id"),
                 BarId = DbUtils.GetInt(reader, "BarId"),
-                ComponentId = DbUtils.GetInt(reader, "ComponentId"),
+                ComponentId = DbUtils.GetNullableInt(reader, "ComponentId"),
                 Quantity = DbUtils.GetDecimal(reader, "Quantity"),
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
-                UnitSize = DbUtils.GetInt(reader, "UnitId"),
+                UnitSize = DbUtils.GetDecimal(reader, "UnitSize"),
                 UnitTypeId = DbUtils.GetInt(reader, "UnitTypeId"),
                 CostPerOunce = DbUtils.GetNullableDecimal(reader, "CostPerOunce"),
                 CostPerUnit = DbUtils.GetNullableDecimal(reader, "CostPerUnit"),
@@ -182,7 +171,7 @@ namespace Barkeep.Repositories
             }
             if (DbUtils.IsNotDbNull(reader, "UnitId"))
             {
-                inventory.Unit = new()
+                inventory.Unit = new Unit()
                 {
                     Id = DbUtils.GetInt(reader, "UnitId"),
                     Name = DbUtils.GetString(reader, "IUName"),
@@ -204,60 +193,7 @@ namespace Barkeep.Repositories
                     IsByWeight = DbUtils.GetBoolean(reader, "UTIsByWeight")
                 };
             }
-            if (DbUtils.IsNotDbNull(reader, "InventoryId"))
-            {
-                var inventoryAdjustment = new InventoryAdjustment()
-                {
-                    Id = DbUtils.GetInt(reader, "IAId"),
-                    InventoryId = DbUtils.GetInt(reader, "InventoryId"),
-                    DistributorId = DbUtils.GetNullableInt(reader, "DistributorId"),
-                    InventoryAdjustmentTypeId = DbUtils.GetInt(reader, "InventoryAdjustmentTypeId"),
-                    Quantity = DbUtils.GetDecimal(reader, "Quantity"),
-                    ItemsPerUnit = DbUtils.GetInt(reader, "ItemsPerUnit"),
-                    Cost = DbUtils.GetDecimal(reader, "Cost"),
-                    UnitId = DbUtils.GetInt(reader, "IAUnitId"),
-                    UnitTypeId = DbUtils.GetInt(reader, "IAUnitTypeId"),
-                    IncludeInInventoryCostPerOunce = DbUtils.GetBoolean(reader, "IncludeInInventoryCostPerOunce"),
-                    CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
-                    ExpirationDate = DbUtils.GetNullableDateTime(reader, "ExpirationDate")
-
-                };
-                if (DbUtils.IsNotDbNull(reader, "InventoryAdjustmentTypeId"))
-                {
-                    inventoryAdjustment.InventoryAdjustmentType = new()
-                    {
-                        Id = DbUtils.GetInt(reader, "InventoryAdjustmentTypeId"),
-                        Name = DbUtils.GetString(reader, "IATName"),
-                        DoesAdd = DbUtils.GetBoolean(reader, "DoesAdd")
-
-                    };
-                };
-                if (DbUtils.IsNotDbNull(reader, "IAUnitId"))
-                {
-                    inventoryAdjustment.Unit = new()
-                    {
-                        Id = DbUtils.GetInt(reader, "IAUnitId"),
-                        Name = DbUtils.GetString(reader, "IAUName"),
-                        Size = DbUtils.GetDecimal(reader, "IAUSize"),
-                        Measurement = DbUtils.GetString(reader, "IAUMeasurement"),
-                        ImperialConversion = DbUtils.GetDecimal(reader, "IAUImperialConversion"),
-                        MetricConversion = DbUtils.GetDecimal(reader, "IAUMetricConversion")
-
-                    };
-                };
-                if (DbUtils.IsNotDbNull(reader, "IAUnitTypeId"))
-                {
-                    inventoryAdjustment.UnitType = new()
-                    {
-                        Id = DbUtils.GetInt(reader, "IAUnitTypeId"),
-                        Name = DbUtils.GetString(reader, "IAUTName"),
-                        IsCase = DbUtils.GetBoolean(reader, "IAUTIsCase"),
-                        IsEach = DbUtils.GetBoolean(reader, "IAUTIsEach"),
-                        IsByWeight = DbUtils.GetBoolean(reader, "IAUTIsByWeight")
-                    };
-                }
-                inventory.InventoryAdjustments.Add(inventoryAdjustment);
-            }
+            
             return inventory;
         }
 
@@ -337,7 +273,7 @@ namespace Barkeep.Repositories
                     Inventory inventory = null;
                     var reader = cmd.ExecuteReader();
 
-                    if (reader.Read())
+                    while (reader.Read())
                     {
                         inventory = InventoryObject(reader);
                     }
@@ -356,18 +292,20 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Inventory ([BarId], [ComponentId], [Quantity], [UnitId], [UnitTypeId], 
-                        [CostPerOunce], [Markup])
+                        INSERT INTO Inventory ([ComponentId], [BarId], [Quantity], [UnitId], [UnitSize], [UnitTypeId], 
+                        [CostPerOunce], [CostPerUnit], [Markup])
                         OUTPUT INSERTED.ID
-                        VALUES (@ComponentId, @BarId, @Quantity, @UnitId, @UnitTypeId, @CostPerOunce, @Markup)";
+                        VALUES (@ComponentId, @BarId, @Quantity, @UnitId, @UnitSize, @UnitTypeId, @CostPerOunce, @CostPerUnit, @Markup)";
 
 
                     DbUtils.AddParameter(cmd, "@ComponentId", inventory.ComponentId);
                     DbUtils.AddParameter(cmd, "@BarId", inventory.BarId);
                     DbUtils.AddParameter(cmd, "@Quantity", inventory.Quantity);
-                    DbUtils.AddParameter(cmd, "@Unit", inventory.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitId", inventory.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitSize", inventory.UnitSize);
                     DbUtils.AddParameter(cmd, "@UnitTypeId", inventory.UnitTypeId);
-                    DbUtils.AddParameter(cmd, "@CostPerOunce", inventory.CostPerOunce);
+                    DbUtils.AddParameter(cmd, "@CostPerOunce", DbUtils.ValueOrDBNull(inventory.CostPerOunce));
+                    DbUtils.AddParameter(cmd, "@CostPerUnit", DbUtils.ValueOrDBNull(inventory.CostPerUnit));
                     DbUtils.AddParameter(cmd, "@Markup", inventory.Markup);
 
                     inventory.Id = (int)cmd.ExecuteScalar();
@@ -389,8 +327,10 @@ namespace Barkeep.Repositories
                         BarId = @BarId, 
                         Quantity = @Quantity, 
                         UnitId = @UnitId, 
+                        UnitSize = @UnitSize
                         UnitTypeId = @UnitTypeId, 
                         CostPerOunce = @CostPerOunce, 
+                        CostPerUnit = @CostPerUnit
                         Markup = @Markup
                         WHERE Id = @Id;
                     ";
@@ -400,8 +340,10 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@BarId", inventory.BarId);
                     DbUtils.AddParameter(cmd, "@Quantity", inventory.Quantity);
                     DbUtils.AddParameter(cmd, "@Unit", inventory.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitSize", inventory.UnitSize);
                     DbUtils.AddParameter(cmd, "@UnitTypeId", inventory.UnitTypeId);
-                    DbUtils.AddParameter(cmd, "@CostPerOunce", inventory.CostPerOunce);
+                    DbUtils.AddParameter(cmd, "@CostPerOunce", DbUtils.ValueOrDBNull(inventory.CostPerOunce));
+                    DbUtils.AddParameter(cmd, "@CostPerUnit", DbUtils.ValueOrDBNull(inventory.CostPerUnit));
                     DbUtils.AddParameter(cmd, "@Markup", inventory.Markup);
 
                     cmd.ExecuteNonQuery();

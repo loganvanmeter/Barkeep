@@ -11,16 +11,22 @@ namespace Barkeep.Controllers
     {
         //private readonly Interface declaration
         private readonly IInventoryRepository _inventoryRepository;
+        private readonly IInventoryAdjustmentRepository _adjustmentRepository;
 
-        public InventoryController(IInventoryRepository inventoryRepository)
+        public InventoryController(IInventoryRepository inventoryRepository, IInventoryAdjustmentRepository adjustmentRepository)
         {
             _inventoryRepository = inventoryRepository;
+            _adjustmentRepository = adjustmentRepository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
             var inventories = _inventoryRepository.GetAll();
+            foreach (var inventory in inventories)
+            {
+                inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(inventory.Id);
+            }
             return Ok(inventories);
         }
 
@@ -28,6 +34,10 @@ namespace Barkeep.Controllers
         public IActionResult GetByBarId(int barId)
         {
             var inventories = _inventoryRepository.GetBarInventory(barId);
+            foreach(var inventory in inventories)
+            {
+                inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(inventory.Id);
+            }
             return Ok(inventories);
         }
 
@@ -35,6 +45,7 @@ namespace Barkeep.Controllers
         public IActionResult Get(int id)
         {
             var inventory = _inventoryRepository.GetById(id);
+            inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(id);
 
             if (inventory == null)
             {

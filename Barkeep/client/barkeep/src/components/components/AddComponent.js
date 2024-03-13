@@ -10,7 +10,15 @@ import { ImporterDropDown } from "../forms/ImporterDropDown";
 import { addComponent } from "../../managers/ComponentManager";
 import { ComponentTypeDropDown } from "../forms/ComponentTypeDropDown.js";
 
-export const AddComponent = () => {
+export const AddComponent = ({
+	inventory,
+	setInventory,
+	setIsExistingComponent,
+	setInventoryComponent,
+	handleClose,
+	componentName,
+}) => {
+	const bar = JSON.parse(localStorage.getItem("bar"));
 	const urlPath = "component";
 	const [countryId, setCountryId] = useState(0);
 	const [stateId, setStateId] = useState(0);
@@ -19,9 +27,8 @@ export const AddComponent = () => {
 	const [producerId, setProducerId] = useState(0);
 	const [importerId, setImporterId] = useState(0);
 	const [componentTypeId, setComponentTypeId] = useState(0);
-	const [providerBarId, setProviderBarId] = useState(0);
 	const [component, setComponent] = useState({
-		name: null,
+		name: componentName ? componentName : null,
 		componentTypeId: null,
 		abv: null,
 		ibu: null,
@@ -29,7 +36,7 @@ export const AddComponent = () => {
 		year: null,
 		producerId: null,
 		importerId: null,
-		providerBarId: null,
+		providerBarId: bar ? bar.id : null,
 		countryId: null,
 		stateId: null,
 		regionId: null,
@@ -55,7 +62,7 @@ export const AddComponent = () => {
 		copy.cityId = cityId ? cityId : null;
 		copy.producerId = producerId ? producerId : null;
 		copy.importerId = importerId ? importerId : null;
-		copy.providerBarId = providerBarId ? providerBarId : null;
+		copy.providerBarId = bar ? bar.id : null;
 		copy.isAdminApproved = siteAdmin ? true : false;
 		copy.year = copy.year ? copy.year : null;
 		copy.abv = copy.abv ? parseFloat(copy.abv) : null;
@@ -63,7 +70,18 @@ export const AddComponent = () => {
 		if (copy.name && copy.componentTypeId) {
 			return addComponent(copy)
 				.then((res) => res.json())
-				.then((newcomponent) => navigate(`/component/${newcomponent.id}`));
+				.then((newComponent) => {
+					if (inventory) {
+						setInventoryComponent(newComponent);
+						const copy = { ...inventory };
+						copy.componentId = newComponent.id;
+						setInventory(copy);
+						setIsExistingComponent(true);
+						handleClose();
+					} else {
+						navigate(`/component/${newComponent.id}`);
+					}
+				});
 		}
 	};
 
@@ -99,6 +117,7 @@ export const AddComponent = () => {
 								<Form.Control
 									type='text'
 									id='name'
+									value={componentName ? componentName : ""}
 									onChange={(e) => handleChange(e)}
 								/>
 							</Form.Group>
@@ -143,7 +162,7 @@ export const AddComponent = () => {
 					<Stack
 						direction='horizontal'
 						gap={5}
-						className='justify-content-between'
+						className='justify-content-between flex-wrap'
 					>
 						<ProducerDropDown
 							producerId={producerId}

@@ -5,11 +5,9 @@ export const BarAdminSideBar = ({ bar }) => {
 		<Navbar className='sidebar'>
 			<Container>
 				<Navbar.Brand href='/bar/:barId/dashboard'>{bar.name}</Navbar.Brand>
-				<NavDropdown title='Inventory' className='me-auto'>
-					<NavDropdown.Item href={`/bar/${bar.id}/inventory`}>
-						Inventory
-					</NavDropdown.Item>
-				</NavDropdown>
+				<Nav className='me-auto'>
+					<Nav.Link href={`/bar/${bar.id}/inventory`}>Inventory</Nav.Link>
+				</Nav>
 			</Container>
 		</Navbar>
 	);

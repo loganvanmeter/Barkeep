@@ -30,6 +30,7 @@ export const InventoryAdjustmentTypeDropDown = ({
 					aria-label='Inventory Adjustment Type'
 					value={inventoryAdjustmentTypeId}
 					onChange={(e) => handleChange(e)}
+					disabled={window.location.pathname.endsWith("add")}
 				>
 					<option value={0}>Select Adjustment Type</option>
 					{inventoryAdjustmentTypes.map((inventoryAdjustmentType) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Form, Stack } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Button, Container, Form, Modal, Stack } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { ComponentDataList } from "../forms/ComponentDataList";
 import { getComponentTypeById } from "../../managers/ComponentTypeManager";
 import {
@@ -14,13 +14,18 @@ import { UnitTypeDropDown } from "../forms/UnitTypeDropDown";
 import { getUnitById } from "../../managers/UnitManager";
 import { getUnitTypeById } from "../../managers/UnitTypeManager";
 import { AddInventoryAdjustment } from "../inventoryAdjustments/AddInventoryAdjustment";
+import { addInventory } from "../../managers/InventoryManager";
+import { addInventoryAdjustment } from "../../managers/InventoryAdjustmentManager";
+import { AddComponent } from "../components/AddComponent";
 
 export const AddInventory = () => {
 	const { barId } = useParams();
+	const navigate = useNavigate();
 	const bar = JSON.parse(localStorage.getItem("bar"));
 	const barUser = JSON.parse(localStorage.getItem("barUser"));
+	const [show, setShow] = useState(false);
 	const [inventory, setInventory] = useState({
-		barId: parseInt(barId),
+		barId: bar.id,
 		componentId: null,
 		quantity: 0,
 		unitId: null,
@@ -28,12 +33,13 @@ export const AddInventory = () => {
 		unitTypeId: null,
 		costPerOunce: 0,
 		costPerUnit: 0,
-		markup: null,
+		markup: 300,
 	});
 	const [finalInventoryQuantity, setFinalInventoryQuantity] = useState();
 	const [componentName, setComponentName] = useState("");
 	const [isExistingComponent, setIsExistingComponent] = useState(false);
 	const [showComponentSearch, setShowComponentSearch] = useState(true);
+	const [showInventoryAdjustment, setShowInventoryAdjustment] = useState(true);
 	const [components, setComponents] = useState([]);
 	const [component, setComponent] = useState({
 		id: 0,
@@ -73,6 +79,7 @@ export const AddInventory = () => {
 	const [unitTypeId, setUnitTypeId] = useState(0);
 	const [showCPU, setShowCPU] = useState(false);
 	const [initialInventoryQuantity, setInitialInventoryQuantity] = useState();
+	const [adjustmentQuantity, setAdjustmentQuantity] = useState();
 	const [adjustmentUnit, setAdjustmentUnit] = useState({});
 	const [adjustmentUnitType, setAdjustmentUnitType] = useState({});
 	const [showAlert, setShowAlert] = useState(false);
@@ -109,12 +116,17 @@ export const AddInventory = () => {
 	const getComponent = () => {
 		return getComponentByName(componentName).then((res) => {
 			setComponent(res);
-			setIsExistingComponent(true);
+			if (res.id) {
+				setIsExistingComponent(true);
+			}
 			const copy = { ...inventory };
 			copy.componentId = res.id;
 			setInventory(copy);
 		});
 	};
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
 	useEffect(() => {
 		setInitialInventoryQuantity(inventory.quantity);
@@ -189,24 +201,19 @@ export const AddInventory = () => {
 					return totalQuantity.toFixed(2);
 				} else if (unit.measurement !== adjustmentUnit.measurement) {
 					if (unit.measurement === "mL" || unit.measurement === "g") {
-						subQuantity = totalUnits * inventoryAdjustment.imperialConversion;
+						subQuantity = totalUnits * adjustmentUnit.metricConversion;
 						totalQuantity = initialInventoryQuantity + subQuantity;
 						return totalQuantity.toFixed(2);
 					}
 					if (unit.measurement === "fl oz" || unit.measurement === "oz") {
-						subQuantity = totalUnits * inventoryAdjustment.imperialConversion;
+						subQuantity = totalUnits * adjustmentUnit.imperialConversion;
 						totalQuantity = initialInventoryQuantity + subQuantity;
 						return totalQuantity.toFixed(2);
 					}
 				}
 			}
 		}
-		if (
-			unit &&
-			adjustmentUnit &&
-			initialInventoryQuantity &&
-			!adjustmentUnit.quantity
-		) {
+		if (unit && adjustmentUnit && initialInventoryQuantity) {
 			totalQuantity = initialInventoryQuantity.toFixed(2);
 			return parseFloat(totalQuantity);
 		}
@@ -221,12 +228,6 @@ export const AddInventory = () => {
 		initialInventoryQuantity,
 		inventory,
 	]);
-
-	useEffect(() => {
-		const copy = { ...inventory };
-		copy.quantity = finalInventoryQuantity;
-		setInventory(copy);
-	}, [finalInventoryQuantity]);
 
 	useEffect(() => {
 		const copy = { ...inventory };
@@ -303,6 +304,11 @@ export const AddInventory = () => {
 		}
 	}, [componentName]);
 
+	useEffect(() => {
+		const copy = { ...inventoryAdjustment };
+		setAdjustmentQuantity(copy.quantity);
+	}, [inventoryAdjustment]);
+
 	const handleChange = (e) => {
 		e.preventDefault();
 		const copy = { ...inventory };
@@ -310,8 +316,56 @@ export const AddInventory = () => {
 		setInventory(copy);
 	};
 
+	const handleAddInventory = (e) => {
+		e.preventDefault();
+		if (isExistingComponent) {
+			const copy = { ...inventory };
+			copy.barId = bar.id;
+			copy.quantity = parseFloat(copy.quantity);
+			copy.unitSize = parseFloat(copy.unitSize);
+			copy.costPerOunce =
+				copy.costPerOunce === 0 ? null : parseFloat(copy.costPerOunce);
+			copy.costPerUnit =
+				copy.costPerUnit === 0 ? null : parseFloat(copy.costPerUnit);
+			copy.markup = parseFloat(copy.markup);
+			console.log(copy);
+			console.log(bar);
+			return addInventory(copy)
+				.then((res) => res.json())
+				.then((newInventory) => {
+					const adjustment = { ...inventoryAdjustment };
+					adjustment.inventoryId = newInventory.id;
+					adjustment.quantity = parseFloat(adjustment.quantity);
+					adjustment.itemsPerUnit = parseFloat(adjustment.itemsPerUnit);
+					adjustment.cost = parseFloat(adjustment.cost);
+					adjustment.unitSize = parseFloat(adjustment.unitSize);
+					adjustment.createDateTime = new Date();
+					return addInventoryAdjustment(adjustment)
+						.then((res) => res.json())
+						.then((newAdjustment) => {
+							if (newAdjustment.id) {
+								navigate(`/bar/${barId}/inventory`);
+							}
+						});
+				});
+		}
+	};
+
 	return (
 		<>
+			<Modal show={show} onHide={handleClose}>
+				<Modal.Header closeButton></Modal.Header>
+				<Modal.Body>
+					<AddComponent
+						inventory={inventory}
+						setInventory={setInventory}
+						setIsExistingComponent={setIsExistingComponent}
+						setInventoryComponent={setComponent}
+						handleClose={handleClose}
+						componentName={componentName}
+					/>
+				</Modal.Body>
+			</Modal>
 			<BarAdminSideBar bar={bar} />
 			<Container>
 				<Stack gap={3}>
@@ -338,14 +392,25 @@ export const AddInventory = () => {
 											<ComponentDataList />
 										</Form.Group>
 									</Stack>
-									<Button
-										onClick={(e) => {
-											e.preventDefault();
-											setShowComponentSearch(false);
-										}}
-									>
-										Stock this component
-									</Button>
+									{isExistingComponent ? (
+										<Button
+											onClick={(e) => {
+												e.preventDefault();
+												setShowComponentSearch(false);
+											}}
+										>
+											Stock this component
+										</Button>
+									) : (
+										<Button
+											onClick={(e) => {
+												e.preventDefault();
+												handleShow();
+											}}
+										>
+											Add this component
+										</Button>
+									)}
 								</Stack>
 							</Stack>
 						) : (
@@ -360,11 +425,16 @@ export const AddInventory = () => {
 
 							<Stack direction='horizontal' gap={3}>
 								<Stack className='justify-content-end'>
-									{!isNaN(inventory.quantity) &&
-									isFinite(inventory.quantity) ? (
-										<h4>Quantity: {inventory.quantity}</h4>
+									{!isNaN(finalInventoryQuantity) &&
+									isFinite(finalInventoryQuantity) ? (
+										<h4>
+											Quantity: {parseFloat(finalInventoryQuantity).toFixed(2)}
+										</h4>
 									) : (
-										<h4>Quantity: {initialInventoryQuantity.toFixed(2)}</h4>
+										<h4>
+											Quantity:{" "}
+											{parseFloat(initialInventoryQuantity).toFixed(2)}
+										</h4>
 									)}
 								</Stack>
 
@@ -405,39 +475,93 @@ export const AddInventory = () => {
 									<div>%</div>
 								</Stack>
 							</Stack>
-							<Stack
-								direction='horizontal'
-								gap={3}
-								className='align-items-end flex-wrap'
-							>
-								<Stack className='justify-content-end align-items-center'>
-									<h4>Track inventory unit as a:</h4>
+							{!showInventoryAdjustment ? (
+								<Stack direction='horizontal' gap={3}>
+									<Stack>
+										<h4>
+											Tracking inventory as: {inventory.unitSize}
+											{unit.name !== "unit" ? unit.name : ""}{" "}
+											{unitType.name.toLowerCase() !== "each"
+												? unitType.name.toLowerCase() + "s"
+												: unitType.name.toLowerCase()}{" "}
+										</h4>
+									</Stack>
+									<Stack>
+										<Button
+											variant='outline-secondary'
+											onClick={(e) => {
+												e.preventDefault();
+												setShowInventoryAdjustment(true);
+											}}
+										>
+											Edit
+										</Button>
+									</Stack>
+									<Stack>
+										<Button
+											variant='primary'
+											onClick={(e) => handleAddInventory(e)}
+										>
+											Add inventory
+										</Button>
+									</Stack>
 								</Stack>
-								<Stack>
-									<Form.Label>Unit Size</Form.Label>
-									<Form.Control
-										type='number'
-										id='unitSize'
-										value={inventory.unitSize ? inventory.unitSize : ""}
-										onChange={handleChange}
-									/>
-								</Stack>
+							) : (
+								""
+							)}
+							{showInventoryAdjustment ? (
+								<>
+									{" "}
+									<Stack
+										direction='horizontal'
+										gap={3}
+										className='align-items-end flex-wrap'
+									>
+										<Stack className='justify-content-end align-items-center'>
+											<h4>Track inventory unit as a:</h4>
+										</Stack>
+										<Stack>
+											<Form.Label>Unit Size</Form.Label>
+											<Form.Control
+												type='number'
+												id='unitSize'
+												value={inventory.unitSize ? inventory.unitSize : ""}
+												onChange={handleChange}
+											/>
+										</Stack>
 
-								<UnitDropDown setUnitId={setUnitId} unitId={unitId} />
+										<UnitDropDown setUnitId={setUnitId} unitId={unitId} />
 
-								<UnitTypeDropDown
-									setUnitTypeId={setUnitTypeId}
-									unitTypeId={unitTypeId}
-								/>
-							</Stack>
-							{unitId && unitTypeId ? (
-								<Stack>
-									<AddInventoryAdjustment
-										inventory={inventory}
-										inventoryAdjustment={inventoryAdjustment}
-										setInventoryAdjustment={setInventoryAdjustment}
-									/>
-								</Stack>
+										<UnitTypeDropDown
+											setUnitTypeId={setUnitTypeId}
+											unitTypeId={unitTypeId}
+										/>
+									</Stack>
+									{unitId && unitTypeId ? (
+										<>
+											<Stack>
+												<AddInventoryAdjustment
+													inventory={inventory}
+													inventoryAdjustment={inventoryAdjustment}
+													setInventoryAdjustment={setInventoryAdjustment}
+												/>
+											</Stack>
+											<Stack>
+												<Button
+													variant='primary'
+													onClick={(e) => {
+														e.preventDefault();
+														setShowInventoryAdjustment(false);
+													}}
+												>
+													Save
+												</Button>
+											</Stack>
+										</>
+									) : (
+										""
+									)}{" "}
+								</>
 							) : (
 								""
 							)}

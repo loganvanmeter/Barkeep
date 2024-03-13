@@ -47,6 +47,7 @@ import { AccountAdminSideBar } from "../nav/AccountAdminSideBar";
 import { Stack } from "react-bootstrap";
 import { InventoryContainer } from "../components/inventory/InventoryContainer";
 import { AddInventory } from "../components/inventory/AddInventory";
+import { InventoryAdjustmentContainer } from "../components/inventoryAdjustments/InventoryAdjustmentContainer";
 
 export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 	return (
@@ -130,6 +131,14 @@ export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 				{/*inventory routes*/}
 				<Route path='bar/:barId/inventory' element={<InventoryContainer />} />
 				<Route path='bar/:barId/inventory/add' element={<AddInventory />} />
+				<Route
+					path='bar/:barId/inventory/:inventoryId/adjust'
+					element={<InventoryAdjustmentContainer />}
+				/>
+				<Route
+					path='bar/:barId/inventory/:inventoryId/delete'
+					element={<AddInventory />}
+				/>
 			</Routes>
 		</>
 	);

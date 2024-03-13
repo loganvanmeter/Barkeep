@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { Container, Form, Stack } from "react-bootstrap";
+import { Button, Container, Form, Stack } from "react-bootstrap";
 import { InventoryAdjustmentTypeDropDown } from "../forms/InventoryAdjustmentTypeDropDown";
 import { UnitDropDown } from "../forms/UnitDropDown";
 import { UnitTypeDropDown } from "../forms/UnitTypeDropDown";
+import { addInventoryAdjustment } from "../../managers/InventoryAdjustmentManager";
+import { getInventoryById } from "../../managers/InventoryManager";
 
 export const AddInventoryAdjustment = ({
 	setInventoryAdjustment,
 	inventoryAdjustment,
+	handleClose,
+	setInventory,
+	setAdjustments,
 }) => {
 	const barUser = JSON.parse(localStorage.getItem("barUser"));
 	const [inventoryAdjustmentTypeId, setInventoryAdjustmentTypeId] = useState();
@@ -52,6 +57,25 @@ export const AddInventoryAdjustment = ({
 		const copy = { ...inventoryAdjustment };
 		copy[e.target.id] = e.target.checked;
 		setInventoryAdjustment(copy);
+	};
+
+	const handleAddAdjustment = (e) => {
+		e.preventDefault();
+		const copy = { ...inventoryAdjustment };
+		copy.quantity = parseFloat(copy.quantity);
+		copy.itemsPerUnit = parseFloat(copy.itemsPerUnit);
+		copy.cost = parseFloat(copy.cost);
+		copy.unitSize = parseFloat(copy.unitSize);
+		copy.createDateTime = new Date();
+		return addInventoryAdjustment(copy)
+			.then((res) => res.json())
+			.then((createdAdjustment) =>
+				getInventoryById(createdAdjustment.inventoryId).then((inventory) => {
+					setInventory(inventory);
+					setAdjustments(inventory.inventoryAdjustments);
+				})
+			)
+			.then(() => handleClose());
 	};
 
 	return (
@@ -141,10 +165,16 @@ export const AddInventoryAdjustment = ({
 								<Form.Check.Input
 									type='checkbox'
 									checked={inventoryAdjustment.includeInInventoryCostPerOunce}
+									disabled={window.location.pathname.endsWith("add")}
 									onChange={handleCheckbox}
 								/>
 							</Stack>
 						</Form.Check>
+					</Stack>
+					<Stack>
+						<Button variant='primary' onClick={handleAddAdjustment}>
+							Add Adjustment
+						</Button>
 					</Stack>
 				</Stack>
 			</Stack>

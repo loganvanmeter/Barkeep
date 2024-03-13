@@ -22,7 +22,7 @@ export const UnitDropDown = ({ unitId, setUnitId, adjustment }) => {
 				<Form.Label>Unit </Form.Label>
 				<Form.Select
 					aria-label='Unit'
-					value={unitId}
+					value={adjustment ? adjustment.unitId : unitId}
 					onChange={(e) => handleChange(e)}
 				>
 					<option value={0}>Select Unit </option>

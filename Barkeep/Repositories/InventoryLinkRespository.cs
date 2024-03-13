@@ -36,7 +36,9 @@ namespace Barkeep.Repositories
                 InAmount = DbUtils.GetDecimal(reader, "InAmount"),
                 OutInventoryId = DbUtils.GetInt(reader, "OutInventoryId"),
                 OutAmount = DbUtils.GetDecimal(reader, "OutAmount"),
-                OnlyAdjustsOnStock = DbUtils.GetBoolean(reader, "OnlyAdjustsOnStock")
+                OnlyAdjustsOnStock = DbUtils.GetBoolean(reader, "OnlyAdjustsOnStock"),
+                InInventory = new Inventory(),
+                OutInventory = new Inventory(),
             };
             return inventoryLink;
         }

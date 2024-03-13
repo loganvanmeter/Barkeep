@@ -11,31 +11,48 @@ namespace Barkeep.Controllers
     {
         //private readonly Interface declaration
         private readonly IInventoryLinkRepository _inventoryLinkRepository;
+        private readonly IInventoryRepository _inventoryRepository; 
 
-        public InventoryLinkController(IInventoryLinkRepository inventoryLinkRepository)
+        public InventoryLinkController(IInventoryLinkRepository inventoryLinkRepository, IInventoryRepository inventoryRepository)
         {
             _inventoryLinkRepository = inventoryLinkRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var inventories = _inventoryLinkRepository.GetAll();
-            return Ok(inventories);
+            var inventoryLinks = _inventoryLinkRepository.GetAll();
+            foreach(var link in inventoryLinks)
+            {
+                link.InInventory = _inventoryRepository.GetById(link.InInventoryId);
+                link.OutInventory = _inventoryRepository.GetById(link.OutInventoryId);
+            }
+            return Ok(inventoryLinks);
         }
 
         [HttpGet("GetInInventoryLinks/{inventoryId}")]
         public IActionResult GetInInventoryLinks(int inventoryId)
         {
-            var inventories = _inventoryLinkRepository.GetAllByInventoryIn(inventoryId);
-            return Ok(inventories);
+            var inventoryLinks = _inventoryLinkRepository.GetAllByInventoryIn(inventoryId);
+            foreach (var link in inventoryLinks)
+            {
+                link.InInventory = _inventoryRepository.GetById(link.InInventoryId);
+                link.OutInventory = _inventoryRepository.GetById(link.OutInventoryId);
+            }
+            return Ok(inventoryLinks);
         }
 
         [HttpGet("GetOutInventoryLinks/{inventoryId}")]
         public IActionResult GetOutInventoryLinks(int inventoryId)
         {
-            var inventories = _inventoryLinkRepository.GetAllByInventoryOut(inventoryId);
-            return Ok(inventories);
+            var inventoryLinks = _inventoryLinkRepository.GetAllByInventoryOut(inventoryId);
+            foreach (var link in inventoryLinks)
+            {
+                link.InInventory = _inventoryRepository.GetById(link.InInventoryId);
+                link.OutInventory = _inventoryRepository.GetById(link.OutInventoryId);
+            }
+            return Ok(inventoryLinks);
         }
 
         [HttpGet("{id}")]
