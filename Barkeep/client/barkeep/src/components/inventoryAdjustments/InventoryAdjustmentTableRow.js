@@ -32,7 +32,7 @@ export const InventoryAdjustmentTableRow = ({
 			<td>{adjustment.quantity}</td>
 			<td>{adjustment.itemsPerUnit}</td>
 			<td>{adjustment?.unit?.name}</td>
-			<td>{adjustment.cost}</td>
+			<td>${Number(adjustment.cost).toFixed(2)}</td>
 			<td>
 				<Stack gap={1}>
 					<Button
@@ -45,15 +45,6 @@ export const InventoryAdjustmentTableRow = ({
 						}}
 					>
 						Edit
-					</Button>
-					<Button
-						variant='danger'
-						onClick={(e) => {
-							e.preventDefault();
-							navigate(`/adjustment/${adjustment.id}/delete`);
-						}}
-					>
-						Delete
 					</Button>
 				</Stack>
 			</td>

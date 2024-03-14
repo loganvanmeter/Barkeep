@@ -2,16 +2,21 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Search } from "../forms/Search";
 import { InventoryList } from "./InventoryList";
-import { Button, Container, Stack } from "react-bootstrap";
+import { Button, Container, Modal, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { getBarInventory, getQuantity } from "../../managers/InventoryManager";
 import { BarAdminSideBar } from "../../nav/BarSideBar";
+import { DeleteInventory } from "./DeleteInventory";
 
 export const InventoryContainer = () => {
 	const [inventories, setInventories] = useState([]);
 	const [filteredInventories, setFilteredInventories] = useState([]);
+	const [inventoryToDelete, setInventoryToDelete] = useState({});
 	const [matchedByName, setMatchedByName] = useState();
 	const [searchTerms, setSearchTerms] = useState("");
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 	const navigate = useNavigate();
 	const { barId } = useParams();
 	const bar = JSON.parse(localStorage.getItem("bar"));
@@ -59,6 +64,21 @@ export const InventoryContainer = () => {
 
 	return (
 		<>
+			<Modal show={show} onHide={handleClose} size='lg'>
+				<Modal.Header closeButton>
+					<Modal.Title>
+						Confirm the deletion of {inventoryToDelete?.component?.name} from
+						inventory
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<DeleteInventory
+						inventory={inventoryToDelete}
+						handleClose={handleClose}
+						setInventories={setInventories}
+					/>
+				</Modal.Body>
+			</Modal>
 			<BarAdminSideBar bar={bar} />
 			<Container>
 				<Stack gap={3}>
@@ -90,7 +110,11 @@ export const InventoryContainer = () => {
 							No current bar inventory. Add new inventory to get started.
 						</span>
 					) : filteredInventories.length ? (
-						<InventoryList filteredInventories={filteredInventories} />
+						<InventoryList
+							filteredInventories={filteredInventories}
+							setInventoryToDelete={setInventoryToDelete}
+							handleShow={handleShow}
+						/>
 					) : (
 						<span
 							style={{

@@ -1,7 +1,11 @@
 import { Container, Table } from "react-bootstrap";
 import { InventoryTableRow } from "./InventoryTableRow";
 
-export const InventoryList = ({ filteredInventories }) => {
+export const InventoryList = ({
+	filteredInventories,
+	setInventoryToDelete,
+	handleShow,
+}) => {
 	return (
 		<Container>
 			<Table striped>
@@ -18,7 +22,12 @@ export const InventoryList = ({ filteredInventories }) => {
 				<tbody>
 					{filteredInventories.map((inventory) => {
 						return (
-							<InventoryTableRow inventory={inventory} key={inventory.id} />
+							<InventoryTableRow
+								inventory={inventory}
+								key={inventory.id}
+								setInventoryToDelete={setInventoryToDelete}
+								handleShow={handleShow}
+							/>
 						);
 					})}
 				</tbody>

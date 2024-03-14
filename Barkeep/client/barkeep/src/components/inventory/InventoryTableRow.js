@@ -3,7 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getInventoryById, getQuantity } from "../../managers/InventoryManager";
 import { useEffect, useState } from "react";
 
-export const InventoryTableRow = ({ inventory }) => {
+export const InventoryTableRow = ({
+	inventory,
+	setInventoryToDelete,
+	handleShow,
+}) => {
 	const { barId } = useParams();
 	const navigate = useNavigate();
 
@@ -71,7 +75,8 @@ export const InventoryTableRow = ({ inventory }) => {
 						variant='danger'
 						onClick={(e) => {
 							e.preventDefault();
-							navigate(`/bar/${barId}/inventory/${thisInventory.id}/delete`);
+							setInventoryToDelete({ ...inventory });
+							handleShow();
 						}}
 					>
 						Delete
