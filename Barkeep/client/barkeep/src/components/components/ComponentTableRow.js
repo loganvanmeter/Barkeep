@@ -2,6 +2,9 @@ import { Button, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export const ComponentTableRow = ({ component }) => {
+	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
+	const accountAdmin = JSON.parse(localStorage.getItem("accountAdmin"));
+	const barAdmin = JSON.parse(localStorage.getItem("barAdmin"));
 	const navigate = useNavigate();
 	return (
 		<tr>
@@ -25,6 +28,7 @@ export const ComponentTableRow = ({ component }) => {
 					>
 						View
 					</Button>
+
 					<Button
 						variant='primary'
 						onClick={(e) => {

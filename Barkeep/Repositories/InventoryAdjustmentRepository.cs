@@ -13,18 +13,28 @@ namespace Barkeep.Repositories
         {
             return @"SELECT 
                     ia.Id, ia.InventoryId, ia.DistributorId, ia.InventoryAdjustmentTypeId, ia.Quantity, ia.ItemsPerUnit, ia.Cost,
-                    ia.UnitId, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate,
+                    ia.UnitId, ia.UnitSize, ia.UnitTypeId, ia.IncludeInInventoryCostPerOunce, ia.CreateDateTime, ia.ExpirationDate, 
+                    ia.BarUserId,
 
                     iat.Id, iat.Name as IATName, iat.DoesAdd,
 
                     u.Id, u.Size, u.Measurement, u.Name AS UName, u.ImperialConversion, u.MetricConversion,
 
-                    ut.Id, ut.Name AS UTName, ut.IsCase, ut.IsEach, ut.IsByWeight
+                    ut.Id, ut.Name AS UTName, ut.IsCase, ut.IsEach, ut.IsByWeight,
+
+                    bu.Id, bu.UserId, bu.BarId, bu.UserTypeId, bu.PayRate, bu.PayRateTypeId, bu.CreateDateTime, 
+                    bu.EndDateTime, bu.IsActive, bu.RoleId,
+
+                    us.Id, us.DisplayName, us.FirstName, us.LastName, us.Phone, us.Email, 
+                    us.Pin, us.CreateDateTime AS UserCreateDateTime, us.EndDateTime AS UserEndDateTime, us.UserTypeId AS UserUserTypeId, us.IsActive AS UserIsActive,
+                    us.Password
                     
                     FROM [InventoryAdjustment] ia
                     LEFT JOIN [InventoryAdjustmentType] iat ON iat.Id = ia.InventoryAdjustmentTypeId
                     LEFT JOIN [Unit] u ON u.Id = ia.UnitId
                     LEFT JOIN [UnitType] ut ON ut.Id = ia.UnitTypeId
+                    LEFT JOIN [BarUser] bu ON bu.Id = ia.BarUserId
+                    LEFT JOIN [User] us ON us.Id = bu.UserId
                     ";
         }
 
@@ -45,10 +55,12 @@ namespace Barkeep.Repositories
                 ItemsPerUnit = DbUtils.GetInt(reader, "ItemsPerUnit"),
                 Cost = DbUtils.GetDecimal(reader, "Cost"),
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
+                UnitSize = DbUtils.GetDecimal(reader, "UnitSize"),
                 UnitTypeId = DbUtils.GetInt(reader, "UnitTypeId"),
                 IncludeInInventoryCostPerOunce = DbUtils.GetBoolean(reader, "IncludeInInventoryCostPerOunce"),
                 CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
-                ExpirationDate = DbUtils.GetNullableDateTime(reader, "ExpirationDate")
+                ExpirationDate = DbUtils.GetNullableDateTime(reader, "ExpirationDate"),
+                BarUserId = DbUtils.GetInt(reader, "BarUserId")
 
             };
             if (DbUtils.IsNotDbNull(reader, "InventoryAdjustmentTypeId"))
@@ -56,7 +68,7 @@ namespace Barkeep.Repositories
                 inventoryAdjustment.InventoryAdjustmentType = new()
                 {
                     Id = DbUtils.GetInt(reader, "InventoryAdjustmentTypeId"),
-                    Name = DbUtils.GetString(reader, "Name"),
+                    Name = DbUtils.GetString(reader, "IATName"),
                     DoesAdd = DbUtils.GetBoolean(reader, "DoesAdd")
 
                 };
@@ -85,6 +97,38 @@ namespace Barkeep.Repositories
                     IsByWeight = DbUtils.GetBoolean(reader, "IsByWeight")
                 };
             };
+
+            if (DbUtils.IsNotDbNull(reader, "BarUserId"))
+            {
+                inventoryAdjustment.BarUser = new()
+                {
+                    Id = DbUtils.GetInt(reader, "BarUserId"),
+                    UserId = DbUtils.GetInt(reader, "UserId"),
+                    BarId = DbUtils.GetInt(reader, "BarId"),
+                    UserTypeId = DbUtils.GetInt(reader, "UserTypeId"),
+                    PayRate = DbUtils.GetDecimal(reader, "PayRate"),
+                    PayRateTypeId = DbUtils.GetInt(reader, "PayRateTypeId"),
+                    CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
+                    EndDateTime = DbUtils.GetNullableDateTime(reader, "EndDateTime"),
+                    IsActive = DbUtils.GetBoolean(reader, "IsActive"),
+                    RoleId = DbUtils.GetInt(reader, "RoleId"),
+                    User = new User()
+                    {
+                        Id = DbUtils.GetInt(reader, "UserId"),
+                        DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                        FirstName = DbUtils.GetString(reader, "FirstName"),
+                        LastName = DbUtils.GetString(reader, "LastName"),
+                        Phone = DbUtils.GetString(reader, "Phone"),
+                        Email = DbUtils.GetString(reader, "Email"),
+                        Pin = DbUtils.GetString(reader, "Pin"),
+                        CreateDateTime = DbUtils.GetDateTime(reader, "UserCreateDateTime"),
+                        EndDateTime = DbUtils.GetNullableDateTime(reader, "UserEndDateTime"),
+                        IsActive = reader.GetBoolean(reader.GetOrdinal("UserIsActive")),
+                        Password = DbUtils.GetString(reader, "Password"),
+                        UserTypeId = DbUtils.GetInt(reader, "UserUserTypeId"),
+                    },
+                };
+            }
             return inventoryAdjustment;
         }
 
@@ -128,6 +172,7 @@ namespace Barkeep.Repositories
                 {
                     var sql = GetInventoryAdjustments();
                     sql += " WHERE ia.InventoryId = @InventoryId";
+                    sql += " ORDER BY ia.CreateDateTime DESC";
                     cmd.CommandText = sql;
 
                     DbUtils.AddParameter(cmd, "InventoryId", inventoryId);
@@ -185,10 +230,11 @@ namespace Barkeep.Repositories
                 {
                     cmd.CommandText = @"
                         INSERT INTO InventoryAdjustment ([InventoryId], [DistributorId], [InventoryAdjustmentTypeId], [Quantity], 
-                        [ItemsPerUnit], [Cost], [UnitId], [UnitTypeId], [IncludeInInventoryCostPerOunce], [CreateDateTime], [ExpirationDate])
+                        [ItemsPerUnit], [Cost], [UnitId], [UnitSize], [UnitTypeId], [IncludeInInventoryCostPerOunce], [CreateDateTime],
+                        [ExpirationDate], [BarUserId])
                         OUTPUT INSERTED.ID
-                        VALUES (@InventoryId, @DistributorId, @InventoryAdjustmentTypeId, @Quantity, @ItemsPerUnit, @Cost, @UnitId, @UnitTypeId,
-                        @IncludeInInventoryCostPerOunce, @CreateDateTime, @ExpirationDate)";
+                        VALUES (@InventoryId, @DistributorId, @InventoryAdjustmentTypeId, @Quantity, @ItemsPerUnit, @Cost, @UnitId, @UnitSize, @UnitTypeId,
+                        @IncludeInInventoryCostPerOunce, @CreateDateTime, @ExpirationDate, @BarUserId)";
 
 
                     DbUtils.AddParameter(cmd, "@InventoryId", inventoryAdjustment.InventoryId);
@@ -198,10 +244,12 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@ItemsPerUnit", inventoryAdjustment.ItemsPerUnit);
                     DbUtils.AddParameter(cmd, "@Cost", inventoryAdjustment.Cost);
                     DbUtils.AddParameter(cmd, "@UnitId", inventoryAdjustment.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitSize", inventoryAdjustment.UnitSize);
                     DbUtils.AddParameter(cmd, "@UnitTypeId", inventoryAdjustment.UnitTypeId);
                     DbUtils.AddParameter(cmd, "@IncludeInInventoryCostPerOunce", inventoryAdjustment.IncludeInInventoryCostPerOunce);
                     DbUtils.AddParameter(cmd, "@CreateDateTime", inventoryAdjustment.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@ExpirationDate", DbUtils.ValueOrDBNull(inventoryAdjustment.ExpirationDate));
+                    DbUtils.AddParameter(cmd, "BarUserId", inventoryAdjustment.BarUserId);
 
                     inventoryAdjustment.Id = (int)cmd.ExecuteScalar();
                 }
@@ -225,10 +273,12 @@ namespace Barkeep.Repositories
                         ItemsPerUnit = @ItemsPerUnit, 
                         Cost = @Cost, 
                         UnitId = @UnitId, 
+                        UnitSize = @UnitSize,
                         UnitTypeId = @UnitTypeId,
                         IncludeInInventoryCostPerOunce = @IncludeInInventoryCostPerOunce, 
                         CreateDateTime = @CreateDateTime, 
-                        ExpirationDate = @ExpirationDate
+                        ExpirationDate = @ExpirationDate,
+                        BarUserId = @BarUserId
                         WHERE Id = @Id;
                     ";
 
@@ -240,10 +290,12 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@ItemsPerUnit", inventoryAdjustment.ItemsPerUnit);
                     DbUtils.AddParameter(cmd, "@Cost", inventoryAdjustment.Cost);
                     DbUtils.AddParameter(cmd, "@UnitId", inventoryAdjustment.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitSize", inventoryAdjustment.UnitSize);
                     DbUtils.AddParameter(cmd, "@UnitTypeId", inventoryAdjustment.UnitTypeId);
                     DbUtils.AddParameter(cmd, "@IncludeInInventoryCostPerOunce", inventoryAdjustment.IncludeInInventoryCostPerOunce);
                     DbUtils.AddParameter(cmd, "@CreateDateTime", inventoryAdjustment.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@ExpirationDate", DbUtils.ValueOrDBNull(inventoryAdjustment.ExpirationDate));
+                    DbUtils.AddParameter(cmd, "BarUserId", inventoryAdjustment.BarUserId);
 
                     cmd.ExecuteNonQuery();
                 }

@@ -15,7 +15,7 @@ namespace Barkeep.Repositories
                     bu.EndDateTime, bu.IsActive, bu.RoleId,
 
                     u.Id, u.DisplayName, u.FirstName, u.LastName, u.Phone, u.Email, 
-                    u.Pin, u.CreateDateTime, u.EndDateTime, u.UserTypeId AS UUserTypeId, u.IsActive,
+                    u.Pin, u.CreateDateTime AS UCreateDateTime, u.EndDateTime AS UEndDateTime, u.UserTypeId AS UUserTypeId, u.IsActive as UIsActive,
                     u.Password,
 
                     ut.Id, ut.Name AS UTName,
@@ -65,24 +65,30 @@ namespace Barkeep.Repositories
                     Phone = DbUtils.GetString(reader, "Phone"),
                     Email = DbUtils.GetString(reader, "Email"),
                     Pin = DbUtils.GetString(reader, "Pin"),
-                    CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
-                    EndDateTime = DbUtils.GetNullableDateTime(reader, "EndDateTime"),
-                    IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive")),
+                    CreateDateTime = DbUtils.GetDateTime(reader, "UCreateDateTime"),
+                    EndDateTime = DbUtils.GetNullableDateTime(reader, "UEndDateTime"),
+                    IsActive = reader.GetBoolean(reader.GetOrdinal("UIsActive")),
                     Password = DbUtils.GetString(reader, "Password"),
                     UserTypeId = DbUtils.GetInt(reader, "UUserTypeId"),
                 },
-                UserType = new UserType()
+            };
+            if (DbUtils.IsNotDbNull(reader, "UUserTypeId"))
+            {
+                barUser.UserType = new()
                 {
                     Id = DbUtils.GetInt(reader, "UserTypeId"),
                     Name = DbUtils.GetString(reader, "UTName"),
-                },
-                PayRateType = new PayRateType()
+                };
+            };
+            if (DbUtils.IsNotDbNull(reader, "PayRateTypeId"))
+            {
+                barUser.PayRateType = new()
                 {
                     Id = DbUtils.GetInt(reader, "PayRateTypeId"),
                     Name = DbUtils.GetString(reader, "PRTName"),
-                },
+                };
+            }
 
-            };
             if (DbUtils.IsNotDbNull(reader, "RoleId"))
             {
                 barUser.Role = new Role()
@@ -199,6 +205,34 @@ namespace Barkeep.Repositories
                     cmd.CommandText = sql;
 
                     DbUtils.AddParameter(cmd, "@id", id);
+
+                    BarUser barUser = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        barUser = BarUserObject(reader);
+                    }
+
+                    reader.Close();
+                    return barUser;
+                }
+            }
+        }
+
+        public BarUser GetByUserAndBarId(int userId, int barId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetBarUserWithUserUserTypePayRateType();
+                    sql += " WHERE bu.UserId = @userId AND bu.BarId = @barId";
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@UserId", userId);
+                    DbUtils.AddParameter(cmd, "@BarId", barId);
 
                     BarUser barUser = null;
                     var reader = cmd.ExecuteReader();

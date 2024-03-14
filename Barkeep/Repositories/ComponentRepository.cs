@@ -222,6 +222,32 @@ namespace Barkeep.Repositories
                 }
             }
         }
+        public Component GetByName(string componentName)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    var sql = GetComponents();
+                    sql += " WHERE c.[Name] = @ComponentName";
+                    cmd.CommandText = sql;
+
+                    DbUtils.AddParameter(cmd, "@ComponentName", componentName);
+
+                    Component component = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        component = ComponentObject(reader);
+                    }
+
+                    reader.Close();
+                    return component;
+                }
+            }
+        }
 
         public void Add(Component component)
         {

@@ -4,26 +4,39 @@
     {
         public int Id { get; set; }
         public int BarId { get; set; }
-        public int ComponentId { get; set; }
         public decimal Quantity { get; set; }
-
+        public int? ComponentId { get; set; }
         public int UnitId { get; set; }
+        public decimal UnitSize { get; set; }
         public int UnitTypeId { get; set; }
-        public decimal CostPerOunce { get; set; }
+        public decimal? CostPerOunce { get; set; }
+        public decimal? CostPerUnit { get; set; }
         public decimal Markup {  get; set; }
 
         public Component? Component { get; set; }
         public Unit? Unit { get; set; }
         public UnitType? UnitType { get; set; }
         
-        public List<InventoryAdjustment> InventoryAdjustments { get; set; }
+        public List<InventoryAdjustment>? InventoryAdjustments { get; set; }
 
-        public decimal SuggestedPrice {
+        public decimal? SuggestedPrice {
              get
             {
-                return CostPerOunce * (Markup/100);
+                if(CostPerOunce != null)
+                {
+                    return (CostPerOunce * Markup) / 100;
+                } else
+                {
+                    return (CostPerUnit * Markup) / 100;
+                }
             }
         }
+        public decimal TotalQuantity { 
+             get
+            {
+                return InventoryAdjustments.GetQuantity(Unit, UnitSize, Quantity);
+            }
 
+             }
     }
 }

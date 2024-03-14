@@ -7,6 +7,9 @@ export const getAllBarUsers = () => {
 export const getBarUserById = (id) => {
 	return fetch(`${barUserApiUrl}${id}`).then((res) => res.json());
 };
+export const getBarUserByUserIdAndBarId = (userId, barId) => {
+	return fetch(`${barUserApiUrl}GetByUserAndBarId/UserId=${userId}/BarId=${barId}`).then((res) => res.json());
+};
 
 export const getAllBarUsersByBarId = (barId, isActive) => {
 	return fetch(`${barUserApiUrl}GetByBarId/${barId}/IsActive=${isActive}`).then(

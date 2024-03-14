@@ -20,7 +20,6 @@ export const SiteAdminSidebar = ({ setIsLoggedIn }) => {
 					<NavDropdown.Item href='/varietalType'>
 						Varietal Types
 					</NavDropdown.Item>
-					<NavDropdown.Item href='/city'>Regions</NavDropdown.Item>
 				</NavDropdown>
 				<NavDropdown title='Locations' className='me-auto'>
 					<NavDropdown.Item href='/country'>Countries</NavDropdown.Item>

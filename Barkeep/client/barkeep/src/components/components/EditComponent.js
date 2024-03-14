@@ -44,6 +44,7 @@ export const EditComponent = () => {
 		copy.producerId = producerId ? producerId : null;
 		copy.importerId = importerId ? importerId : null;
 		copy.providerBarId = providerBarId ? providerBarId : null;
+		copy.componentTypeId = componentTypeId ? componentTypeId : null;
 		copy.year = copy.year ? copy.year : null;
 		copy.abv = copy.abv ? parseFloat(copy.abv) : null;
 		copy.ibu = copy.ibu ? parseFloat(copy.ibu) : null;
@@ -55,24 +56,39 @@ export const EditComponent = () => {
 	};
 
 	useEffect(() => {
-		getComponentById(componentId).then((component) => setComponent(component));
+		getComponentById(componentId).then((component) => {
+			setComponent(component);
+			setCityId(component.cityId ? component.cityId : 0);
+			setCountryId(component.countryId ? component.countryId : 0);
+			setStateId(component.stateId ? component.stateId : 0);
+			setRegionId(component.regionId ? component.regionId : 0);
+			setComponentTypeId(
+				component.componentTypeId ? component.componentTypeId : 0
+			);
+			setProducerId(component.producerId ? component.producerId : 0);
+			setImporterId(component.importerId ? component.importerId : 0);
+		});
 	}, [componentId]);
 
 	useEffect(() => {
-		component.countryId ? setCountryId(component.countryId) : setCountryId(0);
-		component.regionId ? setRegionId(component.regionId) : setRegionId(0);
-		component.stateId ? setStateId(component.stateId) : setStateId(0);
-		component.cityId ? setCityId(component.cityId) : setCityId(0);
-		component.componentTypeId
-			? setComponentTypeId(component.componentTypeId)
-			: setComponentTypeId(0);
-		component.producerId
-			? setProducerId(component.producerId)
-			: setProducerId(0);
-		component.importerId
-			? setImporterId(component.importerId)
-			: setImporterId(0);
-	}, [component]);
+		const copy = { ...component };
+		component.countryId = countryId;
+		component.stateId = stateId;
+		component.regionId = regionId;
+		component.cityId = cityId;
+		component.producerId = producerId;
+		component.importerId = importerId;
+		component.componentTypeId = componentTypeId;
+		setComponent(copy);
+	}, [
+		countryId,
+		regionId,
+		stateId,
+		cityId,
+		producerId,
+		importerId,
+		componentTypeId,
+	]);
 
 	return (
 		<Container>

@@ -10,6 +10,7 @@ namespace Barkeep.Repositories
         List<BarUser> GetAllByBarId(int barId, bool isActive);
         List<BarUser> GetAllByUserId(int userId, bool isActive);
         BarUser GetById(int id);
+        BarUser GetByUserAndBarId(int userId, int barId);
         void Update(BarUser barUser);
 
         void DeleteAllBarBarUsers(int barId);

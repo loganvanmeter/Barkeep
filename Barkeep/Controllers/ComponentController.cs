@@ -42,6 +42,17 @@ namespace Barkeep.Controllers
             }
             return Ok(component);
         }
+        [HttpGet("GetByName/{name}")]
+        public IActionResult GetByName(string name)
+        {
+            var component = _componentRepository.GetByName(name);
+
+            if (component == null)
+            {
+                return NotFound();
+            }
+            return Ok(component);
+        }
 
         [HttpPost]
         public IActionResult Post(Component component)

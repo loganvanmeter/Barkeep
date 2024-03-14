@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { getAllComponents } from "../../managers/ComponentManager";
+import {
+	getAllAvailableBarComponents,
+	getAllComponents,
+} from "../../managers/ComponentManager";
 import { Search } from "../forms/Search";
 import { ComponentList } from "./ComponentList";
 import { Button, Container, Stack } from "react-bootstrap";
@@ -15,8 +18,16 @@ export const ComponentContainer = () => {
 	const [componentTypeId, setComponentTypeId] = useState(0);
 	const [searchTerms, setSearchTerms] = useState("");
 	const navigate = useNavigate();
+	const siteAdmin = JSON.parse(localStorage.getItem("siteAdmin"));
+	const accountAdmin = JSON.parse(localStorage.getItem("accountAdmin"));
+	const bar = JSON.parse(localStorage.getItem("bar"));
 	const getComponents = () => {
 		return getAllComponents().then((res) => setComponents(res));
+	};
+	const getBarComponents = () => {
+		return getAllAvailableBarComponents(bar.id).then((res) =>
+			setComponents(res)
+		);
 	};
 
 	const filterComponentsByName = () => {
@@ -56,7 +67,12 @@ export const ComponentContainer = () => {
 	};
 
 	useEffect(() => {
-		getComponents();
+		if (siteAdmin) {
+			getComponents();
+		}
+		if (bar) {
+			getBarComponents();
+		}
 	}, []);
 
 	useEffect(() => {
@@ -94,7 +110,20 @@ export const ComponentContainer = () => {
 						setComponentTypeId={setComponentTypeId}
 					/>
 				</Container>
-				{filteredComponents.length ? (
+				{!components.length ? (
+					<span
+						style={{
+							position: "fixed",
+							left: 0,
+							right: 0,
+							top: "50%",
+							marginTop: "-0.5rem",
+							textAlign: "center",
+						}}
+					>
+						Loading
+					</span>
+				) : filteredComponents.length ? (
 					<ComponentList filteredComponents={filteredComponents} />
 				) : (
 					<span

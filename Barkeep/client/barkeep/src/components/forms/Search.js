@@ -12,7 +12,11 @@ export const Search = ({ setSearchTerms }) => {
 							setSearchTerms(e.target.value);
 						}}
 					/>
-					<Form.Text>The search will match any name or description</Form.Text>
+					<Form.Text>
+						{window.location.pathname.endsWith("inventory")
+							? "The search will match any inventory name"
+							: "The search will match any name or description"}
+					</Form.Text>
 				</Form.Group>
 			</Form>
 		</Container>
