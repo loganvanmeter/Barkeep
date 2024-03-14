@@ -171,11 +171,16 @@ export const AddInventoryAdjustment = ({
 							</Stack>
 						</Form.Check>
 					</Stack>
-					<Stack>
-						<Button variant='primary' onClick={handleAddAdjustment}>
-							Add Adjustment
-						</Button>
-					</Stack>
+
+					{!window.location.pathname.endsWith("add") ? (
+						<Stack>
+							<Button variant='primary' onClick={handleAddAdjustment}>
+								Add Adjustment
+							</Button>
+						</Stack>
+					) : (
+						""
+					)}
 				</Stack>
 			</Stack>
 		</Form>

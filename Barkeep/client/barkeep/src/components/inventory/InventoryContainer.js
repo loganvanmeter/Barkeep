@@ -4,7 +4,7 @@ import { Search } from "../forms/Search";
 import { InventoryList } from "./InventoryList";
 import { Button, Container, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBarInventory } from "../../managers/InventoryManager";
+import { getBarInventory, getQuantity } from "../../managers/InventoryManager";
 import { BarAdminSideBar } from "../../nav/BarSideBar";
 
 export const InventoryContainer = () => {
@@ -16,7 +16,9 @@ export const InventoryContainer = () => {
 	const { barId } = useParams();
 	const bar = JSON.parse(localStorage.getItem("bar"));
 	const getBarInventories = () => {
-		return getBarInventory(barId).then((res) => setInventories(res));
+		return getBarInventory(barId).then((res) => {
+			setInventories(res);
+		});
 	};
 
 	const filterInventoriesByName = () => {
@@ -40,9 +42,7 @@ export const InventoryContainer = () => {
 	};
 
 	useEffect(() => {
-		if (bar) {
-			getBarInventories();
-		}
+		getBarInventories();
 	}, [barId]);
 
 	useEffect(() => {

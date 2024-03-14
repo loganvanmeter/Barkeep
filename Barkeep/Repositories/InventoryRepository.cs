@@ -327,10 +327,10 @@ namespace Barkeep.Repositories
                         BarId = @BarId, 
                         Quantity = @Quantity, 
                         UnitId = @UnitId, 
-                        UnitSize = @UnitSize
+                        UnitSize = @UnitSize,
                         UnitTypeId = @UnitTypeId, 
                         CostPerOunce = @CostPerOunce, 
-                        CostPerUnit = @CostPerUnit
+                        CostPerUnit = @CostPerUnit,
                         Markup = @Markup
                         WHERE Id = @Id;
                     ";
@@ -339,7 +339,7 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@ComponentId", inventory.ComponentId);
                     DbUtils.AddParameter(cmd, "@BarId", inventory.BarId);
                     DbUtils.AddParameter(cmd, "@Quantity", inventory.Quantity);
-                    DbUtils.AddParameter(cmd, "@Unit", inventory.UnitId);
+                    DbUtils.AddParameter(cmd, "@UnitId", inventory.UnitId);
                     DbUtils.AddParameter(cmd, "@UnitSize", inventory.UnitSize);
                     DbUtils.AddParameter(cmd, "@UnitTypeId", inventory.UnitTypeId);
                     DbUtils.AddParameter(cmd, "@CostPerOunce", DbUtils.ValueOrDBNull(inventory.CostPerOunce));

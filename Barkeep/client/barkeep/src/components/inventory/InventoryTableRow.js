@@ -1,26 +1,60 @@
 import { Button, Stack } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { getQuantity } from "../../managers/InventoryManager";
+import { getInventoryById, getQuantity } from "../../managers/InventoryManager";
+import { useEffect, useState } from "react";
 
 export const InventoryTableRow = ({ inventory }) => {
 	const { barId } = useParams();
 	const navigate = useNavigate();
-	inventory.totalQuantity = getQuantity(inventory);
+
+	const [thisInventory, setThisInventory] = useState({});
+
+	useEffect(() => {
+		getInventoryById(inventory.id).then((res) => setThisInventory(res));
+	}, [inventory]);
 	return (
 		<tr>
-			<td>{inventory.id}</td>
-			<td>{inventory?.component?.name}</td>
-			<td>{inventory?.component?.componentType?.name}</td>
+			<td>{thisInventory.id}</td>
+			<td>{thisInventory?.component?.name}</td>
+			<td>{thisInventory?.component?.componentType?.name}</td>
 			<td>
-				{inventory.totalQuantity > 1 && inventory?.unit?.name === "unit"
-					? inventory.totalQuantity + " " + inventory?.unit?.name + "s"
-					: inventory.totalQuantity + " " + inventory?.unit?.name}
+				{thisInventory &&
+				thisInventory.totalQuantity !== 1 &&
+				thisInventory.unit?.name === "unit"
+					? Number(thisInventory.totalQuantity).toFixed(2) +
+					  " " +
+					  thisInventory?.unit?.name +
+					  "s"
+					: thisInventory &&
+					  thisInventory.totalQuantity === 1 &&
+					  thisInventory.unit?.name === "unit"
+					? Number(thisInventory.totalQuantity).toFixed(2) +
+					  " " +
+					  thisInventory?.unit?.name
+					: thisInventory &&
+					  thisInventory.totalQuantity !== 1 &&
+					  thisInventory.unit?.name !== "unit"
+					? Number(thisInventory.totalQuantity).toFixed(2) +
+					  " " +
+					  thisInventory.unitSize +
+					  " " +
+					  thisInventory?.unit?.name +
+					  " " +
+					  thisInventory?.unitType?.name +
+					  "s"
+					: Number(thisInventory.totalQuantity).toFixed(2) +
+					  " " +
+					  thisInventory.unitSize +
+					  " " +
+					  thisInventory?.unit?.name +
+					  " " +
+					  thisInventory?.unitType?.name}
 			</td>
 			<td>
 				$
-				{inventory.costPerOunce
-					? inventory.costPerOunce
-					: inventory.costPerUnit}
+				{thisInventory.costPerOunce
+					? thisInventory.costPerOunce
+					: thisInventory.costPerUnit}
 			</td>
 			<td>
 				<Stack gap={1} className='justify-content-end'>
@@ -28,7 +62,7 @@ export const InventoryTableRow = ({ inventory }) => {
 						variant='outline-secondary'
 						onClick={(e) => {
 							e.preventDefault();
-							navigate(`/bar/${barId}/inventory/${inventory.id}/adjust`);
+							navigate(`/bar/${barId}/inventory/${thisInventory.id}/adjust`);
 						}}
 					>
 						Adjust
@@ -37,7 +71,7 @@ export const InventoryTableRow = ({ inventory }) => {
 						variant='danger'
 						onClick={(e) => {
 							e.preventDefault();
-							navigate(`/bar/${barId}/inventory/${inventory.id}/delete`);
+							navigate(`/bar/${barId}/inventory/${thisInventory.id}/delete`);
 						}}
 					>
 						Delete

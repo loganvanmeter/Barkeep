@@ -43,7 +43,7 @@ namespace Barkeep.Models
                                 totalQuantity -= subQuantity;
                             }
                         }
-                        else if (unit.Measurement != "unit" & adjustment.Unit.Measurement != "unit")
+                        else if (unit.Measurement != "unit" | adjustment.Unit.Measurement != "unit")
                         {
                             if (unit.Measurement == adjustment.Unit.Measurement)
                             {
@@ -57,7 +57,7 @@ namespace Barkeep.Models
                                 }
                             } else if (unit.Measurement != adjustment.Unit.Measurement)
                             {
-                                if (unit.Measurement == "mL" | adjustment.Unit.Measurement == "g")
+                                if (unit.Measurement == "mL" | unit.Measurement == "g")
                                 {
                                     subQuantity = totalUnits * adjustment.Unit.MetricConversion;
                                     if (DoesAdd())
@@ -67,13 +67,24 @@ namespace Barkeep.Models
                                     {
                                         totalQuantity -= subQuantity;
                                     }
-                                } else if (unit.Measurement == "fl oz" | adjustment.Unit.Measurement == "oz")
+                                } else if (unit.Measurement == "fl oz" | unit.Measurement == "oz")
                                 {
                                     subQuantity = totalUnits * adjustment.Unit.ImperialConversion;
                                     if (DoesAdd())
                                     {
                                         totalQuantity += subQuantity;
                                     } else
+                                    {
+                                        totalQuantity -= subQuantity;
+                                    }
+                                } else if (unit.Measurement != "unit" & adjustment.Unit.Measurement == "unit")
+                                {
+                                    subQuantity = adjustmentQuantity * adjustmentSize;
+                                    if (DoesAdd())
+                                    {
+                                        totalQuantity += subQuantity;
+                                    }
+                                    else
                                     {
                                         totalQuantity -= subQuantity;
                                     }

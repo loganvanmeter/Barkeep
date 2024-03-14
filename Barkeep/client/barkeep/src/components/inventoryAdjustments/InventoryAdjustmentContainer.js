@@ -8,6 +8,7 @@ import { InventoryAdjustmentList } from "./InventoryAdjustmentList";
 import { InventoryAdjustmentTypeDropDown } from "../forms/InventoryAdjustmentTypeDropDown";
 import { AddInventoryAdjustment } from "./AddInventoryAdjustment";
 import { EditInventoryAdjustment } from "./EditInventoryAdjustment";
+import { EditInventory } from "../inventory/EditInventory";
 
 export const InventoryAdjustmentContainer = () => {
 	const { barId } = useParams();
@@ -66,6 +67,9 @@ export const InventoryAdjustmentContainer = () => {
 	const [showEdit, setShowEdit] = useState(false);
 	const handleCloseEdit = () => setShowEdit(false);
 	const handleShowEdit = () => setShowEdit(true);
+	const [showEditInventory, setShowEditInventory] = useState(false);
+	const handleCloseEditInventory = () => setShowEditInventory(false);
+	const handleShowEditInventory = () => setShowEditInventory(true);
 	const getInventory = (id) => {
 		return getInventoryById(id).then((inventory) => {
 			setInventory(inventory);
@@ -132,6 +136,17 @@ export const InventoryAdjustmentContainer = () => {
 					/>
 				</Modal.Body>
 			</Modal>
+			<Modal show={showEditInventory} onHide={handleCloseEditInventory}>
+				<Modal.Header closeButton>
+					<Modal.Title>Edit Inventory</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<EditInventory
+						handleClose={handleCloseEditInventory}
+						setInventory={setInventory}
+					/>
+				</Modal.Body>
+			</Modal>
 			<BarAdminSideBar bar={bar} />
 			<Container>
 				<Stack gap={3}>
@@ -140,6 +155,7 @@ export const InventoryAdjustmentContainer = () => {
 							inventory={inventory}
 							bar={bar}
 							handleShow={handleShow}
+							handleShowEditInventory={handleShowEditInventory}
 						/>
 					) : (
 						""
