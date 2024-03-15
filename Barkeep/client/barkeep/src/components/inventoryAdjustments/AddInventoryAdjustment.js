@@ -4,7 +4,11 @@ import { InventoryAdjustmentTypeDropDown } from "../forms/InventoryAdjustmentTyp
 import { UnitDropDown } from "../forms/UnitDropDown";
 import { UnitTypeDropDown } from "../forms/UnitTypeDropDown";
 import { addInventoryAdjustment } from "../../managers/InventoryAdjustmentManager";
-import { getInventoryById } from "../../managers/InventoryManager";
+import {
+	getInventoryById,
+	updateInventory,
+} from "../../managers/InventoryManager";
+import { useParams } from "react-router-dom";
 
 export const AddInventoryAdjustment = ({
 	setInventoryAdjustment,
@@ -14,6 +18,7 @@ export const AddInventoryAdjustment = ({
 	setAdjustments,
 }) => {
 	const barUser = JSON.parse(localStorage.getItem("barUser"));
+
 	const [inventoryAdjustmentTypeId, setInventoryAdjustmentTypeId] = useState();
 	const [adjustmentUnitId, setAdjustmentUnitId] = useState();
 	const [adjustmentUnitTypeId, setAdjustmentUnitTypeId] = useState();
@@ -73,9 +78,37 @@ export const AddInventoryAdjustment = ({
 				getInventoryById(createdAdjustment.inventoryId).then((inventory) => {
 					setInventory(inventory);
 					setAdjustments(inventory.inventoryAdjustments);
+					if (
+						inventory.outInventoryLinks.length &&
+						createdAdjustment.inventoryAdjustmentTypeId == 3
+					) {
+						inventory.outInventoryLinks.forEach((link) => {
+							if (link.onlyAdjustsOnStock && link.id) {
+								const linkAdjustment = {
+									inventoryId: link.inInventoryId,
+									inventoryAdjustmentTypeId: 6,
+									distributorId: null,
+									quantity: createdAdjustment.quantity * link.yield,
+									itemsPerUnit: 1,
+									unitId: link.inUnitId,
+									unitSize: 1,
+									unitTypeId: inventory.unitTypeId,
+									cost: 0,
+									includeInInventoryCostPerOunce: false,
+									createDateTime: new Date(),
+									barUserId: barUser.id,
+								};
+
+								return addInventoryAdjustment(linkAdjustment).then((res) =>
+									handleClose()
+								);
+							}
+						});
+					} else {
+						return handleClose();
+					}
 				})
-			)
-			.then(() => handleClose());
+			);
 	};
 
 	return (

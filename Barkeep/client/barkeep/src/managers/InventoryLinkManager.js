@@ -4,7 +4,7 @@ export const getAllInventoryLinks = () => {
 	return fetch(inventoryLinkApiUrl).then((res) => res.json());
 };
 
-export const getThisInInventorysLinks = (InInventoryId) => {
+export const getThisInInventorysLinks = (inInventoryId) => {
 	return fetch(
 		`${inventoryLinkApiUrl}GetInInventoryLinks/${inInventoryId}`
 	).then((res) => res.json());

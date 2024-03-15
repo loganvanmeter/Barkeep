@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getInventoryById } from "../../managers/InventoryManager";
 import { BarAdminSideBar } from "../../nav/BarSideBar";
-import { Container, Modal, Stack } from "react-bootstrap";
+import { Button, Container, Modal, Stack } from "react-bootstrap";
 import { Inventory } from "../inventory/Inventory";
 import { InventoryAdjustmentList } from "./InventoryAdjustmentList";
 import { InventoryAdjustmentTypeDropDown } from "../forms/InventoryAdjustmentTypeDropDown";
 import { AddInventoryAdjustment } from "./AddInventoryAdjustment";
 import { EditInventoryAdjustment } from "./EditInventoryAdjustment";
 import { EditInventory } from "../inventory/EditInventory";
+import { AddInventoryLink } from "../InventoryLinks/AddInventoryLink";
+import { LinkList } from "../InventoryLinks/LinkList";
+import { getUnitById } from "../../managers/UnitManager";
 
 export const InventoryAdjustmentContainer = () => {
 	const { barId } = useParams();
@@ -17,6 +20,8 @@ export const InventoryAdjustmentContainer = () => {
 	const { inventoryId } = useParams();
 	const [inventory, setInventory] = useState({});
 	const [adjustments, setAdjustments] = useState([]);
+	const [inLinks, setInLinks] = useState([]);
+	const [outLinks, setOutLinks] = useState([]);
 	const [newAdjustment, setNewAdjustment] = useState({
 		inventoryId: parseInt(inventoryId),
 		distributorId: null,
@@ -32,6 +37,9 @@ export const InventoryAdjustmentContainer = () => {
 		expirationDate: null,
 		barUserId: barUser.id,
 	});
+	const [adjustCost, setAdjustCost] = useState(false);
+	const [averageAdjusmentCostPer, setAverageAdjustmentCostPer] = useState(0);
+
 	const [thisAdjustment, setThisAdjustment] = useState({});
 	const [adjustmentUnitId, setAdjustmentUnitId] = useState();
 	const [adjustmentUnitTypeId, setAdjustmentUnitTypeId] = useState();
@@ -64,6 +72,10 @@ export const InventoryAdjustmentContainer = () => {
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [showInventoryLink, setShowInventoryLink] = useState(false);
+
+	const handleCloseInventoryLink = () => setShowInventoryLink(false);
+	const handleShowInventoryLink = () => setShowInventoryLink(true);
 	const [showEdit, setShowEdit] = useState(false);
 	const handleCloseEdit = () => setShowEdit(false);
 	const handleShowEdit = () => setShowEdit(true);
@@ -74,6 +86,8 @@ export const InventoryAdjustmentContainer = () => {
 		return getInventoryById(id).then((inventory) => {
 			setInventory(inventory);
 			setAdjustments(inventory.inventoryAdjustments);
+			setInLinks(inventory.inInventoryLinks);
+			setOutLinks(inventory.outInventoryLinks);
 		});
 	};
 
@@ -100,6 +114,52 @@ export const InventoryAdjustmentContainer = () => {
 		setFilteredAjustments(filterInventoryAdjustments());
 	}, [inventoryAdjustmentTypeId]);
 
+	useEffect(() => {
+		let subTotal = 0;
+		let count = 0;
+		if (adjustments) {
+			adjustments.forEach((adjustment) => {
+				if (adjustment.includeInInventoryCostPerOunce) {
+					const adjustmentCostPer =
+						adjustment.cost /
+						(adjustment.itemsPerUnit *
+							adjustment?.unit?.size *
+							adjustment?.unit?.imperialConversion);
+					subTotal += adjustmentCostPer;
+					count++;
+				}
+			});
+			setAverageAdjustmentCostPer(Number(subTotal / count).toFixed(2));
+		}
+	}, [adjustments]);
+
+	useEffect(() => {
+		if (
+			inventory.costPerOunce &&
+			averageAdjusmentCostPer != inventory.costPerOunce
+		) {
+			setAdjustCost(true);
+		}
+		if (
+			inventory.costPerUnit &&
+			averageAdjusmentCostPer != inventory.costPerUnit
+		) {
+			setAdjustCost(true);
+		}
+		if (
+			inventory.costPerOunce &&
+			averageAdjusmentCostPer == inventory.costPerOunce
+		) {
+			setAdjustCost(false);
+		}
+		if (
+			inventory.costPerUnit &&
+			averageAdjusmentCostPer == inventory.costPerUnit
+		) {
+			setAdjustCost(false);
+		}
+	}, [averageAdjusmentCostPer, inventory]);
+
 	return (
 		<Stack gap={3}>
 			<Modal show={show} onHide={handleClose}>
@@ -110,9 +170,25 @@ export const InventoryAdjustmentContainer = () => {
 					<AddInventoryAdjustment
 						inventoryAdjustment={newAdjustment}
 						setInventoryAdjustment={setNewAdjustment}
+						inventory={inventory}
 						setInventory={setInventory}
 						setAdjustments={setAdjustments}
 						handleClose={handleClose}
+					/>
+				</Modal.Body>
+			</Modal>
+			<Modal
+				show={showInventoryLink}
+				onHide={handleCloseInventoryLink}
+				size='lg'
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>Add Inventory Link</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<AddInventoryLink
+						handleCloseInventoryLink={handleCloseInventoryLink}
+						getInventory={getInventory}
 					/>
 				</Modal.Body>
 			</Modal>
@@ -149,31 +225,102 @@ export const InventoryAdjustmentContainer = () => {
 			</Modal>
 			<BarAdminSideBar bar={bar} />
 			<Container>
-				<Stack gap={3}>
-					{inventory ? (
-						<Inventory
-							inventory={inventory}
-							bar={bar}
-							handleShow={handleShow}
-							handleShowEditInventory={handleShowEditInventory}
-						/>
-					) : (
-						""
-					)}
-
-					<InventoryAdjustmentTypeDropDown
-						inventoryAdjustmentTypeId={inventoryAdjustmentTypeId}
-						setInventoryAdjustmentTypeId={setInventoryAdjustmentTypeId}
-					/>
-					{filteredAdjustments.length ? (
-						<InventoryAdjustmentList
-							filteredAdjustments={filteredAdjustments}
-							setThisAdjustment={setThisAdjustment}
-							handleShowEdit={handleShowEdit}
-						/>
-					) : (
-						"Loading"
-					)}
+				<Stack gap={5}>
+					<Stack direction='horizontal' gap={5} className='flex-wrap'>
+						<Stack>
+							{inventory ? (
+								<Inventory
+									inventory={inventory}
+									bar={bar}
+									handleShow={handleShow}
+									handleShowEditInventory={handleShowEditInventory}
+									adjustCost={adjustCost}
+									averageAdjusmentCostPer={averageAdjusmentCostPer}
+									getInventory={getInventory}
+								/>
+							) : (
+								""
+							)}
+						</Stack>
+						<Stack gap={3}>
+							<Stack
+								direction='horizontal'
+								className='justify-content-between flex-wrap'
+							>
+								<h4 className='text-center'>Inventory Links</h4>
+								<Button
+									onClick={(e) => {
+										e.preventDefault();
+										handleShowInventoryLink();
+									}}
+								>
+									Add inventory link
+								</Button>
+							</Stack>
+							{!inLinks.length && !outLinks.length ? (
+								<Stack className='justify-content-center align-items-center'>
+									<div>
+										No current links exist for this inventory. Add an inventory
+										link better track inventory.
+									</div>
+								</Stack>
+							) : inLinks.length && !outLinks.length ? (
+								<Stack gap={2}>
+									<h6>MAKES</h6>
+									<Stack>
+										<LinkList links={inLinks} />
+									</Stack>
+								</Stack>
+							) : !inLinks.length && outLinks.length ? (
+								<Stack gap={2}>
+									<h6>TAKES</h6>
+									<Stack>
+										<LinkList links={outLinks} />
+									</Stack>
+								</Stack>
+							) : inLinks.length && outLinks.length ? (
+								<>
+									<Stack gap={2}>
+										<h6>MAKES</h6>
+										<Stack>
+											<LinkList links={inLinks} />
+										</Stack>
+									</Stack>
+									<Stack gap={2}>
+										<h6>TAKES</h6>
+										<Stack>
+											<LinkList links={outLinks} />
+										</Stack>
+									</Stack>
+								</>
+							) : (
+								""
+							)}
+						</Stack>
+					</Stack>
+					<Stack gap={3}>
+						<h4 className='text-center'>Inventory Adjustments</h4>
+						{filteredAdjustments.length ? (
+							<>
+								<InventoryAdjustmentTypeDropDown
+									inventoryAdjustmentTypeId={inventoryAdjustmentTypeId}
+									setInventoryAdjustmentTypeId={setInventoryAdjustmentTypeId}
+								/>
+								<InventoryAdjustmentList
+									filteredAdjustments={filteredAdjustments}
+									setThisAdjustment={setThisAdjustment}
+									handleShowEdit={handleShowEdit}
+								/>
+							</>
+						) : (
+							<Stack className='justify-content-center align-items-center'>
+								<div>
+									No adjustments exist for this inventory. Add an ajustment to
+									update generate your Cost Per Ounce/Cost per Unit
+								</div>
+							</Stack>
+						)}
+					</Stack>
 				</Stack>
 			</Container>
 		</Stack>

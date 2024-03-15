@@ -12,11 +12,13 @@ namespace Barkeep.Controllers
         //private readonly Interface declaration
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IInventoryAdjustmentRepository _adjustmentRepository;
+        private readonly IInventoryLinkRepository _linkRepository;
 
-        public InventoryController(IInventoryRepository inventoryRepository, IInventoryAdjustmentRepository adjustmentRepository)
+        public InventoryController(IInventoryRepository inventoryRepository, IInventoryAdjustmentRepository adjustmentRepository, IInventoryLinkRepository linkRepository)
         {
             _inventoryRepository = inventoryRepository;
             _adjustmentRepository = adjustmentRepository;
+            _linkRepository = linkRepository;
         }
 
         [HttpGet]
@@ -26,6 +28,8 @@ namespace Barkeep.Controllers
             foreach (var inventory in inventories)
             {
                 inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(inventory.Id);
+                inventory.InInventoryLinks = _linkRepository.GetAllByInventoryIn(inventory.Id);
+                inventory.OutInventoryLinks = _linkRepository.GetAllByInventoryOut(inventory.Id);
             }
             return Ok(inventories);
         }
@@ -37,6 +41,8 @@ namespace Barkeep.Controllers
             foreach(var inventory in inventories)
             {
                 inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(inventory.Id);
+                inventory.InInventoryLinks = _linkRepository.GetAllByInventoryIn(inventory.Id);
+                inventory.OutInventoryLinks = _linkRepository.GetAllByInventoryOut(inventory.Id);
             }
             return Ok(inventories);
         }
@@ -46,6 +52,8 @@ namespace Barkeep.Controllers
         {
             var inventory = _inventoryRepository.GetById(id);
             inventory.InventoryAdjustments = _adjustmentRepository.GetAllByInventory(id);
+            inventory.InInventoryLinks = _linkRepository.GetAllByInventoryIn(inventory.Id);
+            inventory.OutInventoryLinks = _linkRepository.GetAllByInventoryOut(inventory.Id);
 
             if (inventory == null)
             {

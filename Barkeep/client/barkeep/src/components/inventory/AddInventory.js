@@ -334,19 +334,28 @@ export const AddInventory = () => {
 				.then((res) => res.json())
 				.then((newInventory) => {
 					const adjustment = { ...inventoryAdjustment };
-					adjustment.inventoryId = newInventory.id;
-					adjustment.quantity = parseFloat(adjustment.quantity);
-					adjustment.itemsPerUnit = parseFloat(adjustment.itemsPerUnit);
-					adjustment.cost = parseFloat(adjustment.cost);
-					adjustment.unitSize = parseFloat(adjustment.unitSize);
-					adjustment.createDateTime = new Date();
-					return addInventoryAdjustment(adjustment)
-						.then((res) => res.json())
-						.then((newAdjustment) => {
-							if (newAdjustment.id) {
-								navigate(`/bar/${barId}/inventory`);
-							}
-						});
+					if (
+						adjustment.quantity &&
+						adjustment.itemsPerUnit &&
+						adjustment.cost &&
+						adjustment.unitSize
+					) {
+						adjustment.inventoryId = newInventory.id;
+						adjustment.quantity = parseFloat(adjustment.quantity);
+						adjustment.itemsPerUnit = parseFloat(adjustment.itemsPerUnit);
+						adjustment.cost = parseFloat(adjustment.cost);
+						adjustment.unitSize = parseFloat(adjustment.unitSize);
+						adjustment.createDateTime = new Date();
+						return addInventoryAdjustment(adjustment)
+							.then((res) => res.json())
+							.then((newAdjustment) => {
+								if (newAdjustment.id) {
+									navigate(`/bar/${barId}/inventory`);
+								}
+							});
+					} else {
+						navigate(`/bar/${barId}/inventory`);
+					}
 				});
 		}
 	};

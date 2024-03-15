@@ -8,7 +8,7 @@ namespace Barkeep.Models
         public static decimal GetQuantity(this List<InventoryAdjustment> inventoryAdjustments, Unit unit, decimal unitSize, decimal quantity)
         {
             decimal totalQuantity = quantity;
-            if (unit != null)
+            if (unit != null && inventoryAdjustments.Count > 0)
             {
                 foreach (var adjustment in inventoryAdjustments)
                 {

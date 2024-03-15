@@ -78,6 +78,8 @@ namespace Barkeep.Repositories
                 CostPerUnit = DbUtils.GetNullableDecimal(reader, "CostPerUnit"),
                 Markup = DbUtils.GetDecimal(reader, "Markup"),
                 InventoryAdjustments = new List<InventoryAdjustment>(),
+                InInventoryLinks = new List<InventoryLink>(),
+                OutInventoryLinks = new List<InventoryLink>(),
             };
 
             if (DbUtils.IsNotDbNull(reader, "ComponentId"))

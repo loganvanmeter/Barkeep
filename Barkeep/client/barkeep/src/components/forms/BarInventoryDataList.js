@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getBarInventory } from "../../managers/InventoryManager";
+import { Form } from "react-bootstrap";
 
 export const BarInventoryDataList = ({ inventoryName, setInventoryName }) => {
 	const [inventories, setInventories] = useState([]);
@@ -22,7 +23,6 @@ export const BarInventoryDataList = ({ inventoryName, setInventoryName }) => {
 		<>
 			<Form.Control
 				type='text'
-				id='inventoryName'
 				autoComplete='off'
 				value={inventoryName}
 				list='inventory'

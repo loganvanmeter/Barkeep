@@ -18,6 +18,8 @@
         public UnitType? UnitType { get; set; }
         
         public List<InventoryAdjustment>? InventoryAdjustments { get; set; }
+        public List<InventoryLink>? InInventoryLinks { get; set; }
+        public List<InventoryLink>? OutInventoryLinks { get; set; }
 
         public decimal? SuggestedPrice {
              get
@@ -34,7 +36,13 @@
         public decimal TotalQuantity { 
              get
             {
-                return InventoryAdjustments.GetQuantity(Unit, UnitSize, Quantity);
+                if (InventoryAdjustments != null && InventoryAdjustments.Count > 0)
+                {
+                    return InventoryAdjustments.GetQuantity(Unit, UnitSize, Quantity);
+                } else
+                {
+                    return Quantity;
+                }
             }
 
              }
