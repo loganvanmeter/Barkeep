@@ -9,6 +9,7 @@ import {
 	updateInventory,
 } from "../../managers/InventoryManager";
 import { useParams } from "react-router-dom";
+import { getUnitById } from "../../managers/UnitManager";
 
 export const AddInventoryAdjustment = ({
 	setInventoryAdjustment,

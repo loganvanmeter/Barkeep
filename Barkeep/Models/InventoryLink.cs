@@ -19,7 +19,15 @@
         {
             get
             {
-                return InAmount / OutAmount;
+                if (InUnit != null & OutUnit != null)
+                {
+                    return (InAmount * InUnit.Size) / (OutAmount * OutUnit.Size);
+                }
+                else
+                {
+                    return 0M;
+                }
+         
             }
         }
     }
