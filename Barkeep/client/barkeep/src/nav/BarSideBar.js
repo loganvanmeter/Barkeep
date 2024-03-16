@@ -8,6 +8,9 @@ export const BarAdminSideBar = ({ bar }) => {
 				<Nav className='me-auto'>
 					<Nav.Link href={`/bar/${bar.id}/inventory`}>Inventory</Nav.Link>
 				</Nav>
+				<Nav className='me-auto'>
+					<Nav.Link href={`/bar/${bar.id}/menu`}>Menus</Nav.Link>
+				</Nav>
 			</Container>
 		</Navbar>
 	);

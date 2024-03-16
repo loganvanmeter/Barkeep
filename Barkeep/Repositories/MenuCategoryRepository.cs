@@ -33,7 +33,8 @@ namespace Barkeep.Repositories
                 DisplayName = DbUtils.GetString(reader, "DisplayName"),
                 CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
                 Enabled = DbUtils.GetBoolean(reader, "Enabled"),
-                DisplayColor = DbUtils.GetString(reader,"DisplayColor"),
+                DisplayColor = DbUtils.GetString(reader, "DisplayColor"),
+                ParentCategory = new MenuCategory(),
                 SubMenuCategories = new List<MenuCategory>(),
                 MenuItems = new List<MenuItem>()
                 
@@ -109,7 +110,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     var sql = GetMenuCategories();
-                    sql += " WHERE mc.MenueCategoryId IS NOT NULL AND mc.MenuCategoryId = @MenuCategoryId";
+                    sql += " WHERE mc.MenuCategoryId IS NOT NULL AND mc.MenuCategoryId = @MenuCategoryId";
                     sql += OrderByName();
                     cmd.CommandText = sql;
 

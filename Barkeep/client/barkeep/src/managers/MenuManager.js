@@ -1,39 +1,39 @@
 const menuApiUrl = "https://localhost:5001/api/Menu/";
 
 export const getAllMenus = () => {
-	return fetch(`${categoryApiUrl}`).then((res) => res.json());
+	return fetch(`${menuApiUrl}`).then((res) => res.json());
 };
 
 export const getBarMenus = (id) => {
-	return fetch(`${categoryApiUrl}BarMenus/${id}`).then((res) => res.json());
+	return fetch(`${menuApiUrl}BarMenus/${id}`).then((res) => res.json());
 };
 
 export const getMenuById = (id) => {
-	return fetch(`${categoryApiUrl}${id}`).then((res) => res.json());
+	return fetch(`${menuApiUrl}${id}`).then((res) => res.json());
 };
 
 export const deleteMenu = (id) => {
-	return fetch(`${categoryApiUrl}${id}`, {
+	return fetch(`${menuApiUrl}${id}`, {
 		method: "DELETE",
 	});
 };
 
-export const updateMenu = (category) => {
-	return fetch(`${categoryApiUrl}${category.id}`, {
+export const updateMenu = (menu) => {
+	return fetch(`${menuApiUrl}${menu.id}`, {
 		method: "PUT",
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(category),
+		body: JSON.stringify(menu),
 	});
 };
 
-export const addMenu = (category) => {
-	return fetch(categoryApiUrl, {
+export const addMenu = (menu) => {
+	return fetch(menuApiUrl, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(category),
+		body: JSON.stringify(menu),
 	});
 };

@@ -48,6 +48,8 @@ import { Stack } from "react-bootstrap";
 import { InventoryContainer } from "../components/inventory/InventoryContainer";
 import { AddInventory } from "../components/inventory/AddInventory";
 import { InventoryAdjustmentContainer } from "../components/inventoryAdjustments/InventoryAdjustmentContainer";
+import { MenuContainer } from "../components/menus/MenuContainer";
+import { MenuDashboard } from "../components/dashboards/MenuDashboard";
 
 export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 	return (
@@ -139,6 +141,9 @@ export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 					path='bar/:barId/inventory/:inventoryId/delete'
 					element={<AddInventory />}
 				/>
+				{/*menu routes*/}
+				<Route path='bar/:barId/menu' element={<MenuContainer />} />
+				<Route path='bar/:barId/menu/:menuId' element={<MenuDashboard />} />
 			</Routes>
 		</>
 	);

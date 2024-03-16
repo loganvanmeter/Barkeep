@@ -11,10 +11,25 @@ namespace Barkeep.Controllers
     {
         //private readonly Interface declaration
         private readonly IMenuCategoryRepository _menuCategoryRepository;
+        private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IBuildRepository _buildRepository;
+        private readonly IBuildPartRepository _buildPartRepository;
+        private readonly IUnitRepository _unitRepository;
+        private readonly IInventoryRepository _inventoryRepository;
 
-        public MenuCategoryController(IMenuCategoryRepository menuCategoryRepository)
+
+        public MenuCategoryController(IMenuCategoryRepository menuCategoryRepository, IMenuItemRepository menuItemRepository,
+            IBuildRepository buildRepository,
+            IBuildPartRepository buildPartRepository,
+            IUnitRepository unitRepository,
+            IInventoryRepository inventoryRepository)
         {
             _menuCategoryRepository = menuCategoryRepository;
+            _menuItemRepository = menuItemRepository;
+            _buildRepository = buildRepository;
+            _buildPartRepository = buildPartRepository;
+            _unitRepository = unitRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
         [HttpGet]
@@ -47,6 +62,26 @@ namespace Barkeep.Controllers
             if (menuCategory == null)
             {
                 return NotFound();
+            }
+            menuCategory.SubMenuCategories = _menuCategoryRepository.GetAllThisCategorySubCategories(id);
+            foreach (var subCategory in menuCategory.SubMenuCategories)
+            {
+                subCategory.MenuItems = _menuItemRepository.GetAllThisMenuCategoryItems(subCategory.Id);
+            }
+            menuCategory.MenuItems = _menuItemRepository.GetAllThisMenuCategoryItems(id);
+            foreach (var item in menuCategory.MenuItems)
+            {
+                item.Build = _buildRepository.GetByMenuItemId(item.Id);
+                item.Build.Parts = _buildPartRepository.GetByBuildId(item.Build.Id);
+                foreach (var part in item.Build.Parts)
+                {
+                    part.Unit = _unitRepository.GetById(part.UnitId);
+                    part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                }
+            }
+            if (menuCategory.MenuCategoryId != null)
+            {
+                menuCategory.ParentCategory = _menuCategoryRepository.GetById((int)menuCategory.MenuCategoryId);
             }
             return Ok(menuCategory);
         }

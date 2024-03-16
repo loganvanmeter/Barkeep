@@ -59,6 +59,10 @@ namespace Barkeep.Controllers
                             part.Inventory = _inventoryRepository.GetById(part.InventoryId);
                         }
                     }
+                    if (category.MenuCategoryId != null)
+                    {
+                        category.ParentCategory = _menuCategoryRepository.GetById((int)category.MenuCategoryId);
+                    }
                 }
                 menu.MenuItems = _menuItemRepository.GetAllThisMenuItems(menu.Id);
                 foreach (var item in menu.MenuItems)
@@ -99,6 +103,10 @@ namespace Barkeep.Controllers
                             part.Unit = _unitRepository.GetById(part.UnitId);
                             part.Inventory = _inventoryRepository.GetById(part.InventoryId);
                         }
+                    }
+                    if (category.MenuCategoryId != null)
+                    {
+                        category.ParentCategory = _menuCategoryRepository.GetById((int)category.MenuCategoryId);
                     }
                 }
                 menu.MenuItems = _menuItemRepository.GetAllThisMenuItems(menu.Id);
@@ -144,6 +152,10 @@ namespace Barkeep.Controllers
                         part.Unit = _unitRepository.GetById(part.UnitId);
                         part.Inventory = _inventoryRepository.GetById(part.InventoryId);
                     }
+                }
+                if (category.MenuCategoryId != null)
+                {
+                    category.ParentCategory = _menuCategoryRepository.GetById((int)category.MenuCategoryId);
                 }
             }
             menu.MenuItems = _menuItemRepository.GetAllThisMenuItems(menu.Id);
