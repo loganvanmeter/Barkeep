@@ -119,19 +119,46 @@ export const InventoryAdjustmentContainer = () => {
 		let count = 0;
 		if (adjustments) {
 			adjustments.forEach((adjustment) => {
-				if (adjustment.includeInInventoryCostPerOunce) {
+				if (
+					adjustment.includeInInventoryCostPerOunce &&
+					adjustment.unit.name !== "unit"
+				) {
 					const adjustmentCostPer =
 						adjustment.cost /
 						(adjustment.itemsPerUnit *
 							adjustment?.unit?.size *
+							adjustment.unitSize *
 							adjustment?.unit?.imperialConversion);
 					subTotal += adjustmentCostPer;
 					count++;
 				}
+				if (
+					adjustment.includeInInventoryCostPerOunce &&
+					adjustment.unit.name === "unit"
+				) {
+					const adjustmentCostPer =
+						adjustment.cost /
+						(adjustment.itemsPerUnit *
+							inventory?.unit?.size *
+							inventory?.unit?.imperialConversion *
+							inventory.unitSize);
+					subTotal += adjustmentCostPer;
+					count++;
+				}
 			});
-			setAverageAdjustmentCostPer(Number(subTotal / count).toFixed(2));
+			if (count) {
+				setAverageAdjustmentCostPer(
+					Math.round(Number(subTotal / count) * 100) / 100
+				);
+			} else {
+				setAverageAdjustmentCostPer(
+					inventory.costPerOunce
+						? inventory.costPerOunce
+						: inventory.costPerUnit
+				);
+			}
 		}
-	}, [adjustments]);
+	}, [adjustments, inventory]);
 
 	useEffect(() => {
 		if (
@@ -157,6 +184,13 @@ export const InventoryAdjustmentContainer = () => {
 			averageAdjusmentCostPer == inventory.costPerUnit
 		) {
 			setAdjustCost(false);
+		}
+		if (
+			!inventory.costPerOunce &&
+			!inventory.costPerUnit &&
+			averageAdjusmentCostPer
+		) {
+			setAdjustCost(true);
 		}
 	}, [averageAdjusmentCostPer, inventory]);
 
@@ -235,6 +269,7 @@ export const InventoryAdjustmentContainer = () => {
 									handleShow={handleShow}
 									handleShowEditInventory={handleShowEditInventory}
 									adjustCost={adjustCost}
+									setAdjustCost={setAdjustCost}
 									averageAdjusmentCostPer={averageAdjusmentCostPer}
 									getInventory={getInventory}
 								/>
@@ -268,14 +303,14 @@ export const InventoryAdjustmentContainer = () => {
 								<Stack gap={2}>
 									<h6>MAKES</h6>
 									<Stack>
-										<LinkList links={inLinks} />
+										<LinkList links={inLinks} getInventory={getInventory} />
 									</Stack>
 								</Stack>
 							) : !inLinks.length && outLinks.length ? (
 								<Stack gap={2}>
 									<h6>TAKES</h6>
 									<Stack>
-										<LinkList links={outLinks} />
+										<LinkList links={outLinks} getInventory={getInventory} />
 									</Stack>
 								</Stack>
 							) : inLinks.length && outLinks.length ? (

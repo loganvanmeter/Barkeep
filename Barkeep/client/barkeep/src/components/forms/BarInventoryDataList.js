@@ -24,7 +24,7 @@ export const BarInventoryDataList = ({ inventoryName, setInventoryName }) => {
 			<Form.Control
 				type='text'
 				autoComplete='off'
-				value={inventoryName}
+				value={inventoryName ? inventoryName : ""}
 				list='inventory'
 				onChange={(e) => {
 					e.preventDefault();

@@ -10,6 +10,7 @@
         public decimal Price { get; set; }
         public bool Enabled { get; set; }
         public string? Notes { get; set; }
+        public MenuCategory? MenuCategory { get; set; }
 
         public Build? Build { get; set; }
     }

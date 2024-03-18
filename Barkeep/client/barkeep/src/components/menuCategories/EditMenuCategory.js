@@ -1,20 +1,17 @@
-import { useState } from "react";
-import { Button, Form, FormGroup, Stack } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Button, Form, Stack } from "react-bootstrap";
+import {
+	getMenuCategoryById,
+	updateMenuCategory,
+} from "../../managers/MenuCategoryManager";
 import { MenuCategoryDropDown } from "../forms/MenuCategoryDropDown";
-import { addMenuCategory } from "../../managers/MenuCategoryManager";
 
-export const AddMenuCategory = ({ getMenu, handleCloseAddCategory, menu }) => {
-	const [category, setCategory] = useState({
-		name: "",
-		displayName: "",
-		displayColor: "#e6e6e6",
-		menuId: menu.id,
-		enabled: true,
-		menuCategoryId: 0,
-		createDateTime: null,
-	});
-
+export const EditMenuCategory = ({
+	getMenu,
+	handleCloseEditCategory,
+	category,
+	setCategory,
+	menu,
+}) => {
 	const handleChange = (e) => {
 		e.preventDefault();
 		const copy = { ...category };
@@ -28,18 +25,20 @@ export const AddMenuCategory = ({ getMenu, handleCloseAddCategory, menu }) => {
 		setCategory(copy);
 	};
 
-	const handleSubmit = (e) => {
+	const handleUpdate = (e) => {
 		e.preventDefault();
 		const copy = { ...category };
-		copy.menuCategoryId = copy.menuCategoryId ? copy.menuCategoryId : null;
-		copy.createDateTime = new Date();
-		addMenuCategory(copy)
-			.then((res) => res.json())
+		copy.menuCategoryId = copy.menuCategoryId
+			? parseInt(copy.menuCategoryId)
+			: null;
+		copy.parentCategory = null;
+		return updateMenuCategory(copy)
 			.then(() => getMenu(menu.id))
-			.then(() => handleCloseAddCategory());
+			.then(() => handleCloseEditCategory());
 	};
+
 	return (
-		<Form onSubmit={handleSubmit}>
+		<Form onSubmit={handleUpdate}>
 			<Stack gap={3}>
 				<Stack direction='horizontal' gap={3} className='flex-wrap'>
 					<Stack>
@@ -111,7 +110,7 @@ export const AddMenuCategory = ({ getMenu, handleCloseAddCategory, menu }) => {
 					</Stack>
 					<Stack>
 						<Button type='submit' variant='primary'>
-							Add menu category
+							Update menu category
 						</Button>
 					</Stack>
 				</Stack>

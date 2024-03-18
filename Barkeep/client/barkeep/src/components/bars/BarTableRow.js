@@ -18,6 +18,17 @@ export const BarTableRow = ({ bar }) => {
 				</Button>
 			</td>
 			<td>
+				<Button
+					variant='success'
+					onClick={(e) => {
+						e.preventDefault();
+						navigate(`/bar/${bar.id}/pos`);
+					}}
+				>
+					Launch POS
+				</Button>
+			</td>
+			<td>
 				<Stack gap={1} className='justify-content-end'>
 					<Button
 						variant='outline-secondary'

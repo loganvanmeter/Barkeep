@@ -129,7 +129,7 @@ namespace Barkeep.Repositories
                         VALUES (@MenuItemId)";
 
 
-                    DbUtils.AddParameter(cmd, "@Name", build.MenuItemId);
+                    DbUtils.AddParameter(cmd, "@MenuItemId", build.MenuItemId);
 
                     build.Id = (int)cmd.ExecuteScalar();
                 }

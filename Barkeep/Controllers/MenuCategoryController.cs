@@ -43,6 +43,7 @@ namespace Barkeep.Controllers
         public IActionResult GetMenuCategories(int menuId)
         {
             var categories = _menuCategoryRepository.GetAllThisMenuCategories(menuId);
+    
             return Ok(categories);
         }
 
@@ -50,6 +51,7 @@ namespace Barkeep.Controllers
         public IActionResult GetMenuCategorySubCategories(int menuCategoryId)
         {
             var categories = _menuCategoryRepository.GetAllThisCategorySubCategories(menuCategoryId);
+
             return Ok(categories);
         }
 

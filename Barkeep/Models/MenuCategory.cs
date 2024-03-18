@@ -7,9 +7,9 @@
         public int? MenuCategoryId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public string? DisplayColor { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public string DisplayName { get; set; }
+        public bool? Enabled { get; set; }
+        public string? Name { get; set; }
+        public string? DisplayName { get; set; }
         public MenuCategory? ParentCategory { get; set; }
         public List<MenuCategory>? SubMenuCategories { get; set; }
         public List<MenuItem>? MenuItems { get; set; }

@@ -79,35 +79,38 @@ export const AddInventoryAdjustment = ({
 				getInventoryById(createdAdjustment.inventoryId).then((inventory) => {
 					setInventory(inventory);
 					setAdjustments(inventory.inventoryAdjustments);
-					if (
-						inventory.outInventoryLinks.length &&
-						createdAdjustment.inventoryAdjustmentTypeId == 3
-					) {
-						inventory.outInventoryLinks.forEach((link) => {
-							if (link.onlyAdjustsOnStock && link.id) {
-								const linkAdjustment = {
-									inventoryId: link.inInventoryId,
-									inventoryAdjustmentTypeId: 6,
-									distributorId: null,
-									quantity: createdAdjustment.quantity * link.yield,
-									itemsPerUnit: 1,
-									unitId: link.inUnitId,
-									unitSize: 1,
-									unitTypeId: inventory.unitTypeId,
-									cost: 0,
-									includeInInventoryCostPerOunce: false,
-									createDateTime: new Date(),
-									barUserId: barUser.id,
-								};
+					return getUnitById(createdAdjustment.unitId).then((unit) => {
+						if (
+							inventory.outInventoryLinks.length &&
+							createdAdjustment.inventoryAdjustmentTypeId == 3
+						) {
+							inventory.outInventoryLinks.forEach((link) => {
+								if (link.onlyAdjustsOnStock && link.id) {
+									const linkAdjustment = {
+										inventoryId: link.inInventoryId,
+										inventoryAdjustmentTypeId: 6,
+										distributorId: null,
+										quantity:
+											createdAdjustment.quantity * unit.size * link.yield,
+										itemsPerUnit: 1,
+										unitId: link.inUnitId,
+										unitSize: 1,
+										unitTypeId: inventory.unitTypeId,
+										cost: 0,
+										includeInInventoryCostPerOunce: false,
+										createDateTime: new Date(),
+										barUserId: barUser.id,
+									};
 
-								return addInventoryAdjustment(linkAdjustment).then((res) =>
-									handleClose()
-								);
-							}
-						});
-					} else {
-						return handleClose();
-					}
+									return addInventoryAdjustment(linkAdjustment).then((res) =>
+										handleClose()
+									);
+								}
+							});
+						} else {
+							return handleClose();
+						}
+					});
 				})
 			);
 	};

@@ -1,7 +1,12 @@
 import { Table } from "react-bootstrap";
 import { MenuCategoryTableRow } from "./MenuCategoryTableRow";
 
-export const MenuCategoryList = ({ categories }) => {
+export const MenuCategoryList = ({
+	categories,
+	getCategory,
+	handleShowEditCategory,
+	handleShowDeleteCategory,
+}) => {
 	return (
 		<Table striped>
 			<thead>
@@ -15,7 +20,15 @@ export const MenuCategoryList = ({ categories }) => {
 			</thead>
 			<tbody>
 				{categories.map((category) => {
-					return <MenuCategoryTableRow category={category} key={category.id} />;
+					return (
+						<MenuCategoryTableRow
+							category={category}
+							key={category.id}
+							getCategory={getCategory}
+							handleShowEditCategory={handleShowEditCategory}
+							handleShowDeleteCategory={handleShowDeleteCategory}
+						/>
+					);
 				})}
 			</tbody>
 		</Table>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllUnits, getUnitById } from "../../managers/UnitManager";
 import { Form, Stack } from "react-bootstrap";
 
-export const UnitDropDown = ({ unitId, setUnitId, adjustment }) => {
+export const UnitDropDown = ({ unitId, setUnitId, adjustment, part }) => {
 	const [units, setUnits] = useState([]);
 	const getUnits = () => {
 		return getAllUnits().then((units) => setUnits(units));

@@ -58,6 +58,10 @@ namespace Barkeep.Controllers
                             part.Unit = _unitRepository.GetById(part.UnitId);
                             part.Inventory = _inventoryRepository.GetById(part.InventoryId);
                         }
+                        if (item.MenuCategoryId != null)
+                        {
+                            item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
+                        }
                     }
                     if (category.MenuCategoryId != null)
                     {
@@ -73,6 +77,10 @@ namespace Barkeep.Controllers
                     {
                         part.Unit = _unitRepository.GetById(part.UnitId);
                         part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                    }
+                    if (item.MenuCategoryId != null)
+                    {
+                        item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
                     }
                 }
             }
@@ -118,6 +126,10 @@ namespace Barkeep.Controllers
                     {
                         part.Unit = _unitRepository.GetById(part.UnitId);
                         part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                    }
+                    if (item.MenuCategoryId != null)
+                    {
+                        item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
                     }
                 }
             }
@@ -167,6 +179,10 @@ namespace Barkeep.Controllers
                 {
                     part.Unit = _unitRepository.GetById(part.UnitId);
                     part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                }
+                if (item.MenuCategoryId != null)
+                {
+                    item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
                 }
             }
             return Ok(menu);

@@ -33,6 +33,7 @@ namespace Barkeep.Repositories
                 Price = DbUtils.GetDecimal(reader, "Price"),
                 Enabled = DbUtils.GetBoolean(reader, "Enabled"),
                 Notes = DbUtils.GetString(reader, "Notes"),
+                MenuCategory = new MenuCategory(),
                 Build = new Build()
 
             };
@@ -75,7 +76,7 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     var sql = GetMenuItems();
-                    sql += " WHERE mi.MenuId = @MenuId AND mi.MenuCategoryId IS NULL";
+                    sql += " WHERE mi.MenuId = @MenuId";
                     sql += OrderByName();
                     cmd.CommandText = sql;
 
@@ -164,7 +165,7 @@ namespace Barkeep.Repositories
                     cmd.CommandText = @"
                         INSERT INTO MenuItem ([MenuId], [MenuCategoryId], [Name], [DisplayName], [Price], [Enabled], [Notes])
                         OUTPUT INSERTED.ID
-                        VALUES (@MenuId, @MenuCategoryId @Name, @DisplayName @Price, @Enabled, @Notes)";
+                        VALUES (@MenuId, @MenuCategoryId, @Name, @DisplayName, @Price, @Enabled, @Notes)";
 
 
                     DbUtils.AddParameter(cmd, "@MenuId", menuItem.MenuId);

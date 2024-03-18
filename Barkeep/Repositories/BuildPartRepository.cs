@@ -11,7 +11,7 @@ namespace Barkeep.Repositories
         private string GetBuildParts()
         {
             return @"SELECT 
-                    bp.Id, bp.BuildId, bp.Amount, bp.UnitId, bp.InventoryId, bp.Order
+                    bp.Id, bp.BuildId, bp.Amount, bp.UnitId, bp.InventoryId, bp.[Order], bp.IsPrimary
                     
                     FROM [BuildPart] bp
     
@@ -32,6 +32,7 @@ namespace Barkeep.Repositories
                 UnitId = DbUtils.GetInt(reader, "UnitId"),
                 InventoryId = DbUtils.GetInt(reader, "InventoryId"),
                 Order = DbUtils.GetInt(reader, "Order"),
+                IsPrimary = DbUtils.GetBoolean(reader, "IsPrimary"),
                 Unit = new Unit(),
                 Inventory = new Inventory()
 
@@ -103,7 +104,7 @@ namespace Barkeep.Repositories
                 {
                     var sql = GetBuildParts();
                     sql += " WHERE bp.BuildId = @buildId";
-                    sql += " ORDER BY bp.Order";
+                    sql += " ORDER BY bp.[Order]";
                     cmd.CommandText = sql;
 
                     DbUtils.AddParameter(cmd, "@buildId", buildId);
@@ -131,15 +132,16 @@ namespace Barkeep.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO BuildPart ([BuildId], [Amount], [UnitId], [InventoryId], [Order])
+                        INSERT INTO BuildPart ([BuildId], [Amount], [UnitId], [InventoryId], [Order], [IsPrimary])
                         OUTPUT INSERTED.ID
-                        VALUES (@BuildId. @Amount, @UnitId, @InventoryId, @Order)";
+                        VALUES (@BuildId, @Amount, @UnitId, @InventoryId, @Order, @IsPrimary)";
 
 
                     DbUtils.AddParameter(cmd, "@BuildId", buildPart.BuildId);
                     DbUtils.AddParameter(cmd, "@Amount", buildPart.Amount);
                     DbUtils.AddParameter(cmd, "@UnitId", buildPart.UnitId);
                     DbUtils.AddParameter(cmd, "@InventoryId", buildPart.InventoryId);
+                    DbUtils.AddParameter(cmd, "@IsPrimary", buildPart.IsPrimary);
                     DbUtils.AddParameter(cmd, "@Order", buildPart.Order);
 
                     buildPart.Id = (int)cmd.ExecuteScalar();
@@ -161,16 +163,17 @@ namespace Barkeep.Repositories
                         Amount = @Amount,
                         UnitId = @UnitId,
                         InventoryId = @InventoryId,
-                        Order = @Order
+                        [Order] = @Order,
+                        IsPrimary = @IsPrimary
                         WHERE Id = @Id;
                     ";
 
                     DbUtils.AddParameter(cmd, "@Id", buildPart.Id);
                     DbUtils.AddParameter(cmd, "@BuildId", buildPart.BuildId);
-                    DbUtils.AddParameter(cmd, "@BuildId", buildPart.BuildId);
                     DbUtils.AddParameter(cmd, "@Amount", buildPart.Amount);
                     DbUtils.AddParameter(cmd, "@UnitId", buildPart.UnitId);
                     DbUtils.AddParameter(cmd, "@InventoryId", buildPart.InventoryId);
+                    DbUtils.AddParameter(cmd, "@IsPrimary", buildPart.IsPrimary);
                     DbUtils.AddParameter(cmd, "@Order", buildPart.Order);
 
                     cmd.ExecuteNonQuery();

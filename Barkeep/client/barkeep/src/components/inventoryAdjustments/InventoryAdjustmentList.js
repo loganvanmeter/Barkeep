@@ -15,6 +15,7 @@ export const InventoryAdjustmentList = ({
 					<th>Type</th>
 					<th>Quantity</th>
 					<th>Items Per Unit</th>
+					<th>UnitSize</th>
 					<th>Unit</th>
 					<th>Cost Per Unit</th>
 					<th></th>

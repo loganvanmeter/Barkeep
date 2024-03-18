@@ -21,7 +21,7 @@
             {
                 if (InUnit != null & OutUnit != null)
                 {
-                    return (InAmount * InUnit.Size) / (OutAmount * OutUnit.Size);
+                    return (InAmount * InUnit.Size * InUnit.ImperialConversion) / (OutAmount * OutUnit.Size * OutUnit.ImperialConversion);
                 }
                 else
                 {

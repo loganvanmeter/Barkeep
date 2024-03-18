@@ -10,7 +10,7 @@ export const MenuCategoryDropDown = ({ categories, object, setter }) => {
 	return (
 		<Form.Select
 			aria-label='Default select example'
-			value={object.menuCategoryId}
+			value={object.menuCategoryId ? object.menuCategoryId : 0}
 			onChange={handleChange}
 		>
 			<option value={0}>Select menu category</option>

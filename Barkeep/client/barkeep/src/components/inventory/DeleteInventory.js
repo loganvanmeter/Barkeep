@@ -4,16 +4,19 @@ import {
 	getBarInventory,
 } from "../../managers/InventoryManager";
 import { Link, useNavigate } from "react-router-dom";
+import { deleteOutInventoryLinks } from "../../managers/InventoryLinkManager";
 
 export const DeleteInventory = ({ inventory, handleClose, setInventories }) => {
 	const navigate = useNavigate();
 	const bar = JSON.parse(localStorage.getItem("bar"));
 	const handleDelete = () => {
-		return deleteInventory(inventory.id)
-			.then((response) =>
-				getBarInventory(bar.id).then((res) => setInventories(res))
-			)
-			.then(() => handleClose());
+		return deleteOutInventoryLinks(inventory.id).then((response) =>
+			deleteInventory(inventory.id)
+				.then((response) =>
+					getBarInventory(bar.id).then((res) => setInventories(res))
+				)
+				.then(() => handleClose())
+		);
 	};
 	return (
 		<Stack gap={3}>

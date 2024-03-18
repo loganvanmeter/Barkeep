@@ -1,6 +1,14 @@
-import { Button, Card, CardFooter, Container, Stack } from "react-bootstrap";
+import {
+	Alert,
+	Button,
+	Card,
+	CardFooter,
+	Container,
+	Stack,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { updateInventory } from "../../managers/InventoryManager";
+import { useEffect } from "react";
 
 export const Inventory = ({
 	inventory,
@@ -8,6 +16,7 @@ export const Inventory = ({
 	handleShow,
 	handleShowEditInventory,
 	adjustCost,
+	setAdjustCost,
 	averageAdjusmentCostPer,
 	getInventory,
 }) => {
@@ -19,11 +28,20 @@ export const Inventory = ({
 		if (copy.costPerUnit) {
 			copy.costPerUnit = parseFloat(averageAdjusmentCostPer);
 		}
-		updateInventory(copy).then(() => getInventory(copy.id));
+		if (!copy.costPerOunce && !copy.costPerUnit) {
+			if (copy?.unit?.name === "unit") {
+				copy.costPerUnit = getCostFromLink();
+			} else {
+				copy.costPerOunce = getCostFromLink();
+			}
+		}
+		updateInventory(copy)
+			.then(() => getInventory(copy.id))
+			.then(() => setAdjustCost(false));
 	};
 
 	const getCostFromLink = () => {
-		if (inventory?.outInventoryLinks.length) {
+		if (inventory.outInventoryLinks && inventory.outInventoryLinks.length) {
 			let subTotal = 0;
 			inventory?.outInventoryLinks.forEach((link) => {
 				if (link.inInventory?.unit?.name == "unit") {
@@ -35,9 +53,19 @@ export const Inventory = ({
 					subTotal += inInventoryCost;
 				}
 			});
-			return Number(subTotal / inventory?.outInventoryLinks.length).toFixed(2);
+			return Number(subTotal / inventory.outInventoryLinks.length);
 		}
 	};
+
+	useEffect(() => {
+		if (
+			!inventory.costPerOunce &&
+			!inventory.costPerUnit &&
+			averageAdjusmentCostPer
+		) {
+			handleUpdate();
+		}
+	}, [inventory, averageAdjusmentCostPer]);
 
 	return (
 		<Card>
@@ -94,7 +122,9 @@ export const Inventory = ({
 						</div>
 					</Stack>
 					<Stack direction='horizontal' gap={2}>
-						<h5 className='m-0'>{inventory.costPerOunce ? "CPO:" : "CPU:"}</h5>
+						<h5 className='m-0'>
+							{inventory?.unit?.name != "unit" ? "CPO:" : "CPU:"}
+						</h5>
 						<div>
 							{!inventory.costPerOunce &&
 							!inventory.costPerUnit &&
@@ -102,24 +132,55 @@ export const Inventory = ({
 								? `$0.00`
 								: !inventory.costPerOunce &&
 								  !inventory.costPerUnit &&
-								  inventory.outInventoryLinks
-								? `$${getCostFromLink()}`
+								  inventory.outInventoryLinks.length
+								? `$${getCostFromLink().toFixed(2)}`
 								: inventory.costPerOunce && !inventory.costPerUnit
 								? `$${Number(inventory.costPerOunce).toFixed(2)}`
 								: `$${Number(inventory.costPerUnit).toFixed(2)}`}
 						</div>
 					</Stack>
-					{adjustCost && inventory.costPerOunce ? (
+					{adjustCost && inventory.costPerOunce && !inventory.costPerUnit ? (
+						<Stack>
+							<Alert>
+								<Stack
+									direction='horizontal'
+									className='justify-content-between'
+								>
+									<div>
+										The average cost per ounce from your adjustments is
+										{averageAdjusmentCostPer > inventory.costPerOunce
+											? " higher "
+											: " lower "}{" "}
+										than your current inventory cost per ounce.
+									</div>
+									<div>
+										Update CPO to: ${Number(averageAdjusmentCostPer).toFixed(2)}
+									</div>
+									<Button
+										variant='success'
+										onClick={(e) => {
+											e.preventDefault();
+											handleUpdate();
+										}}
+									>
+										Update
+									</Button>
+								</Stack>
+							</Alert>
+						</Stack>
+					) : adjustCost && inventory.costPerUnit && !inventory.costPerOunce ? (
 						<Stack>
 							<div>
-								The average cost per ounce from your adjustments is
-								{averageAdjusmentCostPer > inventory.costPerOunce
+								The average cost per unit from your adjustments is
+								{averageAdjusmentCostPer > inventory.costPerUnit
 									? " higher "
 									: " lower "}{" "}
-								than your current inventory cost per ounce.
+								than your current inventory cost per unit.
 							</div>
 							<Stack direction='horizontal' className='justify-content-between'>
-								<div>Update CPO to: ${averageAdjusmentCostPer}</div>
+								<div>
+									Update CPU to: ${Number(averageAdjusmentCostPer).toFixed(2)}
+								</div>
 								<Button
 									variant='success'
 									onClick={(e) => {
@@ -131,17 +192,27 @@ export const Inventory = ({
 								</Button>
 							</Stack>
 						</Stack>
-					) : adjustCost && inventory.costPerUnit ? (
+					) : adjustCost &&
+					  !inventory.costPerUnit &&
+					  !inventory.costPerOunce ? (
 						<Stack>
-							<div>
-								The average cost per unit from your adjustments is
-								{averageAdjusmentCostPer > inventory.costPerUnit
-									? " higher "
-									: " lower "}{" "}
-								than your current inventory cost per unit.
-							</div>
-							<Stack direction='horizontal' className='justify-content-between'>
-								<div>Update CPU to: ${averageAdjusmentCostPer}</div>
+							<Stack
+								direction='horizontal'
+								gap={3}
+								className='justify-content-between'
+							>
+								<Stack>
+									<Alert>
+										<div>
+											Cost Per is currently being derived from this inventory's
+											adjustment links.
+										</div>
+										<div>
+											Update CPU/CPO to: ${Number(getCostFromLink()).toFixed(2)}
+											?
+										</div>
+									</Alert>
+								</Stack>
 								<Button
 									variant='success'
 									onClick={(e) => {

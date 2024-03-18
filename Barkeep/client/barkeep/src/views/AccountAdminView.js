@@ -50,11 +50,16 @@ import { AddInventory } from "../components/inventory/AddInventory";
 import { InventoryAdjustmentContainer } from "../components/inventoryAdjustments/InventoryAdjustmentContainer";
 import { MenuContainer } from "../components/menus/MenuContainer";
 import { MenuDashboard } from "../components/dashboards/MenuDashboard";
+import { POSDashboard } from "../components/dashboards/POSDashboard";
 
 export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 	return (
 		<>
-			<AccountAdminSideBar setIsLoggedIn={setIsLoggedIn} />
+			{!window.location.pathname.endsWith("pos") ? (
+				<AccountAdminSideBar setIsLoggedIn={setIsLoggedIn} />
+			) : (
+				""
+			)}
 			<Routes>
 				<Route path='/' element={<Hello />} />
 				<Route
@@ -144,6 +149,8 @@ export const AccountAdminView = ({ setIsLoggedIn, setIsViewingBar }) => {
 				{/*menu routes*/}
 				<Route path='bar/:barId/menu' element={<MenuContainer />} />
 				<Route path='bar/:barId/menu/:menuId' element={<MenuDashboard />} />
+				{/*pos routes*/}
+				<Route path='bar/:barId/pos' element={<POSDashboard />} />
 			</Routes>
 		</>
 	);

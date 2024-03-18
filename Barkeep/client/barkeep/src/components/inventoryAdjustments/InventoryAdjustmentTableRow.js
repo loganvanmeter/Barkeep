@@ -31,6 +31,7 @@ export const InventoryAdjustmentTableRow = ({
 
 			<td>{adjustment.quantity}</td>
 			<td>{adjustment.itemsPerUnit}</td>
+			<td>{adjustment.unitSize}</td>
 			<td>{adjustment?.unit?.name}</td>
 			<td>${Number(adjustment.cost).toFixed(2)}</td>
 			<td>

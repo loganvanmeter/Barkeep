@@ -15,19 +15,22 @@ namespace Barkeep.Controllers
         private readonly IBuildPartRepository _buildPartRepository;
         private readonly IUnitRepository _unitRepository;
         private readonly IInventoryRepository _inventoryRepository;
+        private readonly IMenuCategoryRepository _menuCategoryRepository;
         
 
         public MenuItemController(IMenuItemRepository menuItemRepository, 
             IBuildRepository buildRepository, 
             IBuildPartRepository buildPartRepository,
             IUnitRepository unitRepository,
-            IInventoryRepository inventoryRepository)
+            IInventoryRepository inventoryRepository,
+            IMenuCategoryRepository menuCategoryRepository)
         {
             _menuItemRepository = menuItemRepository;
             _buildRepository = buildRepository;
             _buildPartRepository = buildPartRepository;
             _unitRepository = unitRepository;
             _inventoryRepository = inventoryRepository;
+            _menuCategoryRepository = menuCategoryRepository;
 
         
         }
@@ -44,6 +47,10 @@ namespace Barkeep.Controllers
                 {
                     part.Unit = _unitRepository.GetById(part.UnitId);
                     part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                }
+                if (item.MenuCategoryId != null)
+                {
+                    item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
                 }
             }
            
@@ -63,6 +70,10 @@ namespace Barkeep.Controllers
                     part.Unit = _unitRepository.GetById(part.UnitId);
                     part.Inventory = _inventoryRepository.GetById(part.InventoryId);
                 }
+                if(item.MenuCategoryId != null)
+                {
+                    item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
+                }
             }
             return Ok(menuItems);
         }
@@ -79,6 +90,10 @@ namespace Barkeep.Controllers
                 {
                     part.Unit = _unitRepository.GetById(part.UnitId);
                     part.Inventory = _inventoryRepository.GetById(part.InventoryId);
+                }
+                if (item.MenuCategoryId != null)
+                {
+                    item.MenuCategory = _menuCategoryRepository.GetById((int)item.MenuCategoryId);
                 }
             }
             return Ok(menuItems);

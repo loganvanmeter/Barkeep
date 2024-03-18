@@ -34,12 +34,18 @@ namespace Barkeep.Repositories
                 CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
                 Enabled = DbUtils.GetBoolean(reader, "Enabled"),
                 DisplayColor = DbUtils.GetString(reader, "DisplayColor"),
-                ParentCategory = new MenuCategory(),
                 SubMenuCategories = new List<MenuCategory>(),
                 MenuItems = new List<MenuItem>()
-                
+
 
             };
+
+            if (menu.MenuCategoryId != null)
+            {
+                menu.ParentCategory = new MenuCategory();
+            }
+
+
             return menu;
         }
 
@@ -174,8 +180,8 @@ namespace Barkeep.Repositories
 
                     DbUtils.AddParameter(cmd, "@MenuId", menu.MenuId);
                     DbUtils.AddParameter(cmd, "@MenuCategoryId", DbUtils.ValueOrDBNull(menu.MenuCategoryId));
-                    DbUtils.AddParameter(cmd, "@Name", menu.Name);
-                    DbUtils.AddParameter(cmd, "@DisplayName", menu.DisplayName);
+                    DbUtils.AddParameter(cmd, "@Name", DbUtils.ValueOrDBNull(menu.Name));
+                    DbUtils.AddParameter(cmd, "@DisplayName", DbUtils.ValueOrDBNull(menu.DisplayName));
                     DbUtils.AddParameter(cmd, "@DisplayColor", DbUtils.ValueOrDBNull(menu.DisplayColor));
                     DbUtils.AddParameter(cmd, "@CreateDateTime", menu.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@Enabled", menu.Enabled);
@@ -209,8 +215,8 @@ namespace Barkeep.Repositories
                     DbUtils.AddParameter(cmd, "@Id", menu.Id);
                     DbUtils.AddParameter(cmd, "@MenuId", menu.MenuId);
                     DbUtils.AddParameter(cmd, "@MenuCategoryId", DbUtils.ValueOrDBNull(menu.MenuCategoryId));
-                    DbUtils.AddParameter(cmd, "@Name", menu.Name);
-                    DbUtils.AddParameter(cmd, "@DisplayName", menu.DisplayName);
+                    DbUtils.AddParameter(cmd, "@Name", DbUtils.ValueOrDBNull(menu.Name));
+                    DbUtils.AddParameter(cmd, "@DisplayName", DbUtils.ValueOrDBNull(menu.DisplayName));
                     DbUtils.AddParameter(cmd, "@DisplayColor", DbUtils.ValueOrDBNull(menu.DisplayColor));
                     DbUtils.AddParameter(cmd, "@CreateDateTime", menu.CreateDateTime);
                     DbUtils.AddParameter(cmd, "@Enabled", menu.Enabled);
